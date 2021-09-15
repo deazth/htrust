@@ -1,0 +1,7 @@
+POST https://trust.tm.com.my/api/UserLogin HTTP/1.1
+content-type: application/json
+
+{
+    "staff_no": "s53788",
+    "password": "Awesom02"
+} 
