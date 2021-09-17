@@ -21,6 +21,8 @@ import { useSelector } from 'react-redux';
 import { TeamMain } from '../screens/team/TeamMain';
 import { AoScanQR } from '../screens/ao/AoScanQR';
 import { AoSeatAvail } from '../screens/ao/AoSeatAvail';
+import { AoLocHist } from '../screens/ao/AoLocHist';
+import { Inprogress } from '../screens/general/Inprogress';
 
 const Stack = createNativeStackNavigator ();
 const Tab = createBottomTabNavigator ();
@@ -160,6 +162,30 @@ export function RootStack() {
             component={AoSeatAvail}
             options={{
               title: "Workspace Seat Availability",
+              headerShown: true,
+              headerTintColor: headerTint,
+              headerStyle: {
+                backgroundColor: headerbgc,
+              },
+            }}
+          />
+          <Stack.Screen
+            name="AoLocHist"
+            component={AoLocHist}
+            options={{
+              title: "Location History",
+              headerShown: true,
+              headerTintColor: headerTint,
+              headerStyle: {
+                backgroundColor: headerbgc,
+              },
+            }}
+          />
+          <Stack.Screen
+            name="Inprogress"
+            component={Inprogress}
+            options={{
+              title: "Under Development",
               headerShown: true,
               headerTintColor: headerTint,
               headerStyle: {

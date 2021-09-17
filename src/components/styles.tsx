@@ -47,7 +47,7 @@ export const BaseContainer = ({children}) => {
     <Box 
       flex={1}
       w="100%"
-      _light={{ bg: unifi_c5, }}
+      _light={{ bg: c_white, }}
       _dark={{ bg: unifi_c8, }}
       safeArea
       p={0}
@@ -69,7 +69,7 @@ export const FormWrapper = ({children, offset=-40}) => {
       // behavior="padding"
       // style={csstyle.container}
       keyboardVerticalOffset={offset}
-      _light={{ bg: unifi_c5, }}
+      _light={{ bg: c_white, }}
       _dark={{ bg: unifi_c8, }}
       h="100%"
     >
@@ -78,6 +78,22 @@ export const FormWrapper = ({children, offset=-40}) => {
       
       </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
+  );
+}
+
+export const InfoBox = ({children, ...props}) => {
+
+  return (
+    <Box 
+      w="95%"
+      p={2}
+      _light={{ bg: unifi_c5, }}
+      _dark={{ bg: c_black, }}
+      rounded="10px"
+      {...props}
+    >
+      {children}
+    </Box>
   );
 }
 
@@ -92,7 +108,7 @@ export const ClickableBox = ({btnText, clickAction, iconClass, iconName, minWidt
       
       minWidth={minWidth}
       m={2}
-      startIcon={<Icon as={iconClass} name={iconName} size={5} />}
+      startIcon={<Icon as={iconClass} name={iconName} size={5}/>}
       {...props}
     >
       {btnText}
@@ -104,7 +120,7 @@ export const ScreenWrapper = ({children}) => {
   return (
     <Box 
       flex={1} w="100%" h="100%"
-      _light={{ bg: unifi_c5, }}
+      _light={{ bg: c_white, }}
       _dark={{ bg: unifi_c8, }}
       // alignItems="center"
       justifyContent="center"
@@ -119,7 +135,7 @@ export const ChartScreenWrapper = ({children}) => {
   return (
     <Box 
       flex={1} w="100%" h="100%"
-      _light={{ bg: unifi_c5, }}
+      _light={{ bg: c_white, }}
       _dark={{ bg: unifi_c8, }}
     >
       {children}
@@ -253,5 +269,14 @@ export const FormTextInput = ({icon, placeholder, ...props}) => {
   </Box>
   );
   
+}
+
+export const DiaryEntries = () => {
+
+  return (
+    <Box>
+      
+    </Box>
+  );
 }
 

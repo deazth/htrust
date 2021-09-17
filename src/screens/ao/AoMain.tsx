@@ -8,9 +8,11 @@ import {
   DarkModeToggle, FormContainer, PageTitle, ScreenWrapper, unifi_c1, unifi_c4, unifi_c6, unifi_c7, unifi_primary
 } from '../../components/styles';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { RefreshControl } from 'react-native';
 
 
 export function AoMain({ navigation }) {
+  const [refreshing, setRefreshing] = React.useState(false);
 
   const cc_outer_bg = useColorModeValue(unifi_c6, unifi_c7);
   const cc_inner_bg = useColorModeValue(unifi_c1, unifi_c4);
@@ -37,12 +39,28 @@ export function AoMain({ navigation }) {
     // checkout. pastu maybe pull semula list
   };
 
-  
+  async function loadData() {
+    console.log("ao loading");
+    setRefreshing(true);
+    setList(curcheckins);
 
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+    console.log("ao loaded");
+    
+  }
+
+  React.useEffect(() => {
+    loadData();
+  }, []);
 
   return (
     <ScreenWrapper>
-      <ScrollView w="100%">
+      <ScrollView 
+        w="100%" 
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={loadData} />}
+      >
       <Box m={3}
       p={2}
         bg={cc_outer_bg}
@@ -72,7 +90,7 @@ export function AoMain({ navigation }) {
               
             </Box>
           )}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString()}
         />
           
         </>
@@ -107,13 +125,12 @@ export function AoMain({ navigation }) {
       <ClickableBox 
         btnText="Location History"
         clickAction={() => {
-          navigation.navigate('AoCLoc');
+          navigation.navigate('AoLocHist');
         }}
         iconClass={FontAwesome5}
         iconName="list-alt"
       />
       </ScrollView>
-      <DarkModeToggle />
     </ScreenWrapper>
   );
 }
