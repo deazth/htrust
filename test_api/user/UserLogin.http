@@ -1,0 +1,7 @@
+POST http://192.168.2.123/api/UserLogin HTTP/1.1
+content-type: application/json
+
+{
+    "staff_no": "s53788",
+    "password": "Awesom03"
+} 

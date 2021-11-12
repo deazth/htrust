@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
-import Constants from 'expo-constants';
 import {
   HStack,Spinner
 } from 'native-base';
@@ -11,22 +10,24 @@ import {
 } from '../../components/styles';
 
 // import { AuthContext } from '../../components/context';
-import { useDispatch } from 'react-redux';
-import { doneLoading, setTokerr, setUserID, setUserToken, setUserObj } from '../../app/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { doneLoading, setTokerr, setUserID, setUserToken, setUserObj, selectBaseUrl, setBaseUrl } from '../../app/userSlice';
 
 export function Loading() {
   console.log('loading: inside loading');
 
   const dispatch = useDispatch();
+  const baseurl = useSelector(selectBaseUrl);
   const [loadprogress, setLoadProg] = React.useState('Initializing..');
 
-
-  const checkLocalToken = async () => {
+  async function checkLocalToken () {
+    console.log('loading: init baseurl : ' + baseurl);
     console.log('loading: fetching token');
     setLoadProg('fetching stored token');
     const  stoken = await SecureStore.getItemAsync("apicoin");
     const  staff_no = await SecureStore.getItemAsync("staff_no");
     const  user_id = await SecureStore.getItemAsync("user_id");
+
     // alert(staff_no);
     // const  pnid = await SecureStore.getItemAsync("pnid");
     if (stoken) {
@@ -41,7 +42,8 @@ export function Loading() {
         const config = {
             headers: { Authorization: `Bearer ${stoken}` }
         };
-        const tokenurl = Constants.manifest.extra.base_url + 't/ValidateToken';
+        const tokenurl = baseurl + 't/ValidateToken';
+        console.log('loading: calling ' + tokenurl); 
         try {
           axios.post(
             tokenurl, {
@@ -72,18 +74,14 @@ export function Loading() {
 
       }
     } else {
-
       console.log('loading: no previous token');  
       // dispatch(setTokerr("No previous login"));
     }
-
-    
 
     setTimeout(() => {
       dispatch(doneLoading());
     }, 1000);
 
-    
   }
 
   useEffect(() => {

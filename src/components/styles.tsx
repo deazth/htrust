@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Platform, Keyboard, TouchableWithoutFeedback, ScrollView ,
-  StyleSheet, 
+  StyleSheet
 } from 'react-native';
 import { 
   Box, Text, VStack, useColorModeValue, Center,
@@ -97,18 +97,20 @@ export const InfoBox = ({children, ...props}) => {
   );
 }
 
-export const ClickableBox = ({btnText, clickAction, iconClass, iconName, minWidth = "50%", ...props}) => {
+export const ClickableBox = ({btnText, clickAction, iconClass, iconName, minWidth = "45%", iconSize = 5, ...props}) => {
 
   return (
     <Button 
       onPress={clickAction}
-      variant={useColorModeValue("solid", "outline")}
-      backgroundColor={useColorModeValue(unifi_primary, "transparent")}
-      colorScheme={useColorModeValue("orange", "orange")}
+      // variant={useColorModeValue("solid", "outline")}
+      backgroundColor={useColorModeValue(unifi_c4, unifi_primary)}
+      // colorScheme={useColorModeValue("orange", "orange")}
       
-      minWidth={minWidth}
-      m={2}
-      startIcon={<Icon as={iconClass} name={iconName} size={5}/>}
+      // minWidth={minWidth}
+      width="46%"
+      marginX={1}
+      marginY={2}
+      startIcon={<Icon as={iconClass} name={iconName} size={iconSize}/>}
       {...props}
     >
       {btnText}
@@ -171,7 +173,7 @@ export const DarkModeToggle = () => {
 export const PageTitle = ({children}) => {
   return (
     <VStack space={2} alignItems="center">
-      <Text bold color={ useColorModeValue(unifi_c4, unifi_c1)}>{children}</Text>
+      <Text m={2} bold color={ useColorModeValue(unifi_c4, unifi_c1)}>{children}</Text>
     </VStack>
   );
 }
@@ -271,10 +273,45 @@ export const FormTextInput = ({icon, placeholder, ...props}) => {
   
 }
 
-export const DiaryEntries = () => {
+export const ItemCards = ({title, text1, text2, showBtn=true, btnlabel = '', btnAction = null, btnIcon = '', itemid = 0}) => {
+
+  const cc_outer_bg = useColorModeValue(unifi_c5, c_black);
+  const main_text = useColorModeValue(unifi_primary, unifi_c4);
+  const cc_inner_bg = useColorModeValue(unifi_c4, unifi_primary);
+  const cc_btn_bg = useColorModeValue(unifi_c4, unifi_primary);
+  const cc_btn_var = "outline"; //useColorModeValue("solid", "outline");
 
   return (
-    <Box>
+    <Box p={2} m={2} bg={cc_inner_bg} rounded="10px" flexDirection='row'>
+      <View flex={showBtn ? 4 : 1} justifyContent="center" maxWidth="230px">
+        <Text color={main_text}>{title}</Text>
+        <Text fontSize="xs" color={cc_outer_bg} w="95%">{text1}</Text>
+        {text2 != '' && (
+          <Text fontSize="xs" color={cc_outer_bg} >{text2}</Text>
+        )}
+        
+      </View>
+      
+      
+      {showBtn && (
+        <View flex={1}>
+          <Button mt={2}
+            size="xs"
+            variant={cc_btn_var}
+            // endIcon={<Icon as={FontAwesome5} name={btnIcon} size={5} />}
+            backgroundColor={cc_btn_bg}
+            // color={main_text}
+            colorScheme="blue"
+            onPress={() => btnAction(itemid)}
+            p={1}
+          >
+            <Center flex={1}>
+              <Icon color={main_text} as={FontAwesome5} name={btnIcon} size={8} />
+              <Text color={main_text}>{btnlabel}</Text> 
+            </Center>
+          </Button>
+        </View>
+      )}
       
     </Box>
   );

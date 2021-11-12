@@ -13,13 +13,14 @@ import {
   DarkModeToggle, FormWrapper
 } from '../../components/styles';
 
-import { setUserToken, setUserID, setUserObj, selectTokerr, setTokerr } from '../../app/userSlice';
+import { setUserToken, setUserID, setUserObj, selectTokerr, setTokerr, setBaseUrl, selectBaseUrl } from '../../app/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 
 export function Login() {
   const dispatch = useDispatch();
   const initerr = useSelector(selectTokerr);
+  const currurl = useSelector(selectBaseUrl);
 
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [username, setUsername] = React.useState('');
@@ -67,7 +68,8 @@ export function Login() {
     setIsSubmitting(true);
     // alert(JSON.stringify({username, password}));
     // console.log("login: submitting - " + JSON.stringify({username, password}));
-    const loginurl = Constants.manifest.extra.base_url + 'UserLogin';
+    const loginurl = currurl + 'UserLogin';
+    console.log("login url: " + loginurl);
     
     var inputs;
 
@@ -83,6 +85,8 @@ export function Login() {
         password: password
       };
     }
+    
+    console.log(inputs);
 
     axios.post(
       loginurl, inputs
@@ -109,7 +113,7 @@ export function Login() {
       
     }).catch(error => {
       dispatch(setTokerr(error.message));
-      // setErrmsg(error.message);
+      alert(JSON.stringify(error));
       setIsSubmitting(false);
     })
     
@@ -137,8 +141,9 @@ export function Login() {
             <FormBtnSubmit onPress={doLogin} isLoading={isSubmitting} isLoadingText="Authenticating">Login</FormBtnSubmit>
           </VStack>
         </FormContainer>
-        { initerr !== null ? <Text m={2}>{initerr}</Text> : '' }        
+        { initerr !== null ? <Text m={2}>{initerr}</Text> : '' }    
         <DarkModeToggle />
+        
       </Center>
     
     </FormWrapper>

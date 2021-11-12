@@ -11,7 +11,7 @@ import {Feedback} from '../screens/general/Feedback';
 import {AoMain} from '../screens/ao/AoMain';
 import {DiaryMain} from '../screens/diary/DiaryMain';
 import { 
-  unifi_c1, unifi_c4, unifi_c7, unifi_c8, unifi_c9, unifi_primary, unifi_c2
+  unifi_c1, unifi_c4, unifi_c7, unifi_c8, unifi_c9, unifi_primary, unifi_c2, unifi_c5, c_black, unifi_c6
 } from '../components/styles';
 import { Loading } from '../screens/general/Loading';
 import { Info } from '../screens/general/Info';
@@ -23,17 +23,23 @@ import { AoScanQR } from '../screens/ao/AoScanQR';
 import { AoSeatAvail } from '../screens/ao/AoSeatAvail';
 import { AoLocHist } from '../screens/ao/AoLocHist';
 import { Inprogress } from '../screens/general/Inprogress';
+import { AoScanResult } from '../screens/ao/AoScanResult';
+import { AoAreaBook } from '../screens/ao/AoAreaBook';
 
 const Stack = createNativeStackNavigator ();
 const Tab = createBottomTabNavigator ();
 
 export function RootTab() {
+  let iconFocusCol = useColorModeValue(unifi_c4, unifi_primary);
+  let iconNormalCol = useColorModeValue(c_black, unifi_c5);
+
   return (
     <Tab.Navigator
     screenOptions={({ route }) => ({
       tabBarIcon: ({ focused, color, size }) => {
         let iconName;
-        var iconcolorr = focused ? unifi_c2 : useColorModeValue(unifi_c4, unifi_primary);
+        
+        var iconcolorr = focused ? iconFocusCol : iconNormalCol;
 
         if (route.name === 'Home') {
           iconName = 'home';
@@ -50,10 +56,10 @@ export function RootTab() {
         // You can return any component that you like here!
         return <FontAwesome5 name={iconName} size={size} color={iconcolorr} />;
       },
-      tabBarActiveTintColor: 'tomato',
-      tabBarInactiveTintColor: 'gray',
-      tabBarActiveBackgroundColor: useColorModeValue(unifi_c9, unifi_c4),
-      tabBarInactiveBackgroundColor: useColorModeValue(unifi_c9, unifi_c4)
+      tabBarActiveTintColor: iconFocusCol,
+      tabBarInactiveTintColor: iconNormalCol,
+      tabBarActiveBackgroundColor: useColorModeValue(unifi_c6, c_black),
+      tabBarInactiveBackgroundColor: useColorModeValue(unifi_c5, unifi_c8)
       
     })}
     >
@@ -161,7 +167,7 @@ export function RootStack() {
             name="AoSeatAvail"
             component={AoSeatAvail}
             options={{
-              title: "Workspace Seat Availability",
+              title: "Workspace Reservation",
               headerShown: true,
               headerTintColor: headerTint,
               headerStyle: {
@@ -170,10 +176,10 @@ export function RootStack() {
             }}
           />
           <Stack.Screen
-            name="AoLocHist"
-            component={AoLocHist}
+            name="AoAreaBook"
+            component={AoAreaBook}
             options={{
-              title: "Location History",
+              title: "Meeting Area Booking",
               headerShown: true,
               headerTintColor: headerTint,
               headerStyle: {
@@ -181,6 +187,21 @@ export function RootStack() {
               },
             }}
           />
+
+          <Stack.Screen
+            name="AoScanResult"
+            component={AoScanResult}
+            options={{
+              title: "QR Result",
+              headerShown: true,
+              headerTintColor: headerTint,
+              headerStyle: {
+                backgroundColor: headerbgc,
+              },
+            }}
+          />
+
+
           <Stack.Screen
             name="Inprogress"
             component={Inprogress}

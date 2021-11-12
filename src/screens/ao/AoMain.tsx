@@ -2,57 +2,142 @@ import React from 'react';
 import {
   Center, Button, View, Text, VStack, HStack, IconButton, Icon, ScrollView, Box, useColorModeValue, FlatList
 } from 'native-base';
-
+import axios from 'axios';
 import { 
   ClickableBox,
-  DarkModeToggle, FormContainer, PageTitle, ScreenWrapper, unifi_c1, unifi_c4, unifi_c6, unifi_c7, unifi_primary
+  DarkModeToggle, FormContainer, ItemCards, PageTitle, ScreenWrapper, unifi_c1, unifi_c4, unifi_c6, unifi_c7, unifi_primary
 } from '../../components/styles';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { RefreshControl } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { setTokerr, setUserObj, selectBaseUrl, selectUserToken } from '../../app/userSlice';
 
 
 export function AoMain({ navigation }) {
   const [refreshing, setRefreshing] = React.useState(false);
+  const dispatch = useDispatch();
+  
+  const baseurl = useSelector(selectBaseUrl);
+  const stoken = useSelector(selectUserToken);
 
   const cc_outer_bg = useColorModeValue(unifi_c6, unifi_c7);
-  const cc_inner_bg = useColorModeValue(unifi_c1, unifi_c4);
-  const cc_btn_bg = useColorModeValue(unifi_primary, "transparent");
-  const cc_btn_var = useColorModeValue("solid", "outline");
 
-  const curcheckins = [{
-    id: 1,
-    location: 'meja bulat',
-    from: '2021-03-01 23:22:11'
-  }, {
-    id: 3,
-    location: 'Meeting yang agak panjang',
-    from: '2021-03-01 23:22:11'
-  }, {
-    id: 5,
-    location: 'alamat rumah',
-    from: '2021-03-01 23:22:11'
-  }];
-
+  // current check in list
   const [list, setList] = React.useState([]);
+  // active reservations
+  const [reserves, setReserves] = React.useState([]);
+  const config = {
+      headers: { Authorization: `Bearer ${stoken}` }
+  };
 
   const handleCheckout = (index: number) => {
-    // checkout. pastu maybe pull semula list
+    
+    const theinput = { 
+      id: index
+    };
+
+    axios.post(
+      baseurl + 't/ao/doCheckout', theinput, config
+    ).then(async (response) => {
+      // check for status code
+      if(response.data.status_code != '200'){
+        alert(JSON.stringify(response.data));
+      } else {
+        if(response.data.msg == 'Success'){
+          alert('Check-out Successful. ')
+          loadData();
+        } else {
+          alert('Check-in failed. ' + response.data.msg)
+        }
+      }
+      
+    }).catch(error => {
+      // dispatch(setTokerr(error.message));
+      if(error.response) {
+        if(error.response.data.message == 'Unauthenticated.'){
+          dispatch(setTokerr('Session expired 2'));
+          dispatch(setUserObj(null));
+        } else {
+          alert(JSON.stringify(error.response));
+        }
+      } else {
+        alert(JSON.stringify(error));
+      }
+
+      // navigation.goBack();
+      return;
+      
+    });
+
   };
 
   async function loadData() {
     console.log("ao loading");
     setRefreshing(true);
-    setList(curcheckins);
+    const getckurl = baseurl + 't/ao/getCurrentCheckins';
+    const getrsvpurl = baseurl + 't/ao/getCurrentReservations';
+    
 
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
-    console.log("ao loaded");
+    axios.post(
+      getckurl, null, config
+    ).then(async (response) => {
+      // check for status code
+      if(response.data.status_code != '200'){
+        alert(response.data.msg);
+      } else {
+        setList(response.data.data.checkins);
+        console.log("ck loaded");
+        setRefreshing(false);
+      }
+      
+    }).catch(error => {
+      // dispatch(setTokerr(error.message));
+      if(error.response) {
+        if(error.response.data.message == 'Unauthenticated.'){
+          dispatch(setTokerr('Session expired 2'));
+          dispatch(setUserObj(null));
+        } else {
+          alert(JSON.stringify(error.response.data));
+        }
+      }
+      
+    });
+
+    axios.post(
+      getrsvpurl, null, config
+    ).then(async (response) => {
+      // check for status code
+      if(response.data.status_code != '200'){
+        alert(response.data.msg);
+      } else {
+        setReserves(response.data.data.checkins);
+        console.log("rsvp loaded");
+        setRefreshing(false);
+      }
+      
+    }).catch(error => {
+      // dispatch(setTokerr(error.message));
+      if(error.response) {
+        if(error.response.data.message == 'Unauthenticated.'){
+          dispatch(setTokerr('Session expired 2'));
+          dispatch(setUserObj(null));
+        } else {
+          alert(JSON.stringify(error.response.data));
+        }
+      }
+      
+    });
     
   }
 
   React.useEffect(() => {
     loadData();
+
+    const willFocusSubscription = navigation.addListener('focus', () => {
+      loadData();
+    });
+
+    return willFocusSubscription;
   }, []);
 
   return (
@@ -70,67 +155,98 @@ export function AoMain({ navigation }) {
       
       { list.length > 0 ? (
         <>
-        <Text m={2}>Current checkins</Text>
+        <Text m={2}>Current workspace checkins</Text>
         <FlatList 
           data={list}
           horizontal={true}
           renderItem={({item}) => (
-            <Box p={2} m={2} bg={cc_inner_bg} rounded="10px">
-              <Text w="90%">{item.location}</Text>
-              <Text fontSize="xs" w="90%">{item.from}</Text>
-              <Button mt={2}
-                size="xs"
-                variant={cc_btn_var}
-                endIcon={<Icon as={FontAwesome5} name="sign-out-alt" size={5} />}
-                backgroundColor={cc_btn_bg}
-                colorScheme="orange"
-              >
-                Check-out
-              </Button>
-              
-            </Box>
+            <ItemCards
+            title={item.location}
+            text1={'Since ' + item.from}
+            text2=""
+            btnAction={handleCheckout}
+            btnIcon="sign-out-alt"
+            btnlabel="Check-out"
+            itemid={item.id}
+          />
           )}
           keyExtractor={(item) => item.id.toString()}
         />
           
         </>
-      ) : (<Text>No active checkins</Text>)
+      ) : (<Center><Text>No active workspace checkins</Text></Center>)
       }
       </Box>
+      <Box m={3}
+      p={2}
+        bg={cc_outer_bg}
+        w="95%"
+        rounded="10px"
+      >
+      
+      { reserves.length > 0 ? (
+        <>
+        <Text m={2}>Active seat reservations</Text>
+        <FlatList 
+          data={reserves}
+          horizontal={true}
+          renderItem={({item}) => (
+            <ItemCards
+            title={item.seat}
+            text1={item.from + ' to ' + item.to}
+            text2={item.location}
+            showBtn={false}
+            itemid={item.id}
+          />
+          )}
+          keyExtractor={(item) => item.id.toString()}
+        />
+          
+        </>
+      ) : (<Center><Text>No active seat reservations</Text></Center>)
+      }
+      </Box>
+      <HStack space={3} alignItems="center">
+        <ClickableBox 
+          btnText="Check-in (Scan QR)"
+          clickAction={() => {
+            navigation.navigate('AoScanQR');
+          }}
+          iconClass={FontAwesome5}
+          iconName="qrcode"
+        />
+        <ClickableBox 
+          btnText="Reserve Workspace"
+          clickAction={() => {
+            navigation.navigate('AoSeatAvail');
+          }}
+          iconClass={FontAwesome5}
+          iconName="chair"
+        />
+      </HStack>
+      <HStack space={3} alignItems="center">
+        <ClickableBox 
+          btnText="Check-in Location"
+          clickAction={() => {
+            navigation.navigate('AoCLoc');
+          }}
+          iconClass={FontAwesome5}
+          iconName="map-marker-alt"
+        />
+        <ClickableBox 
+          btnText="Meeting Area Booking"
+          clickAction={() => {
+            navigation.navigate('AoAreaBook');
+          }}
+          iconClass={FontAwesome5}
+          iconName="list-alt"
+        />
+      </HStack>
 
-      <ClickableBox 
-        btnText="Check-in Workspace"
-        clickAction={() => {
-          navigation.navigate('AoScanQR');
-        }}
-        iconClass={FontAwesome5}
-        iconName="qrcode"
-      />
-      <ClickableBox 
-        btnText="Seat Availability"
-        clickAction={() => {
-          navigation.navigate('AoSeatAvail');
-        }}
-        iconClass={FontAwesome5}
-        iconName="chair"
-      />
-      <ClickableBox 
-        btnText="Check-in Location"
-        clickAction={() => {
-          navigation.navigate('AoCLoc');
-        }}
-        iconClass={FontAwesome5}
-        iconName="map-marker-alt"
-      />
-      <ClickableBox 
-        btnText="Location History"
-        clickAction={() => {
-          navigation.navigate('AoLocHist');
-        }}
-        iconClass={FontAwesome5}
-        iconName="list-alt"
-      />
+      
+      
       </ScrollView>
+      <DarkModeToggle />
     </ScreenWrapper>
   );
 }
