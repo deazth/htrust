@@ -54,6 +54,8 @@ export function AoScanResult({route, navigation}){
 
     const theinput = { code: qrcode};
 
+    console.log(theinput);
+
     axios.post(
       baseurl + endpoint, theinput, config
     ).then(async (response) => {
@@ -61,6 +63,7 @@ export function AoScanResult({route, navigation}){
       if(response.data.status_code != '200'){
         alert(JSON.stringify(qrcode));
       } else {
+        console.log(response.data.data.id);
         setSid(response.data.data.id);
         setSlabel(response.data.data.label);
         setSstatus(response.data.data.status);
@@ -96,6 +99,9 @@ export function AoScanResult({route, navigation}){
       lat: loclat,
       long: loclong
     };
+
+    console.log("doSeatCheckin");
+    console.log(theinput);
 
     axios.post(
       baseurl + 't/ao/doSeatCheckin', theinput, config
@@ -161,7 +167,8 @@ export function AoScanResult({route, navigation}){
           dispatch(setTokerr('Session expired 2'));
           dispatch(setUserObj(null));
         } else {
-          alert(JSON.stringify(error.response));
+          alert(JSON.stringify("Error: Most likely the seat no longer exist."));
+          console.log(error.response);
         }
       } else {
         alert(JSON.stringify(error));
@@ -221,7 +228,7 @@ export function AoScanResult({route, navigation}){
             btnAction={handleSeatCheckin}
             btnIcon="sign-in-alt"
             btnlabel="Check-in"
-            itemid={4}
+            itemid={sid}
           />
           {( stype != 'Seat') && (
             <Box m={3}

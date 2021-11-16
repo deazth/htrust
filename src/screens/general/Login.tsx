@@ -131,12 +131,16 @@ export function Login() {
               icon="user"
               placeholder="Username"
               onChangeText={setUsername}
+              textContentType="username"
+              autoComplete="username"
             />
             <FormTextInput 
               icon="lock"
               placeholder="password"
+              textContentType="password"
               onChangeText={setPassword}
               type="password"
+              autoComplete="password"
             />
             <FormBtnSubmit onPress={doLogin} isLoading={isSubmitting} isLoadingText="Authenticating">Login</FormBtnSubmit>
           </VStack>

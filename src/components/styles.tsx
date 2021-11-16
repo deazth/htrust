@@ -8,7 +8,7 @@ import {
   Image, View, KeyboardAvoidingView, Input, Icon, Button,
   useColorMode, Switch, HStack, StatusBar
  } from 'native-base';
- import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 //  import {  } from '@react-navigation/native';
 
 
@@ -25,22 +25,6 @@ export const unifi_primary = '#ff6624';
 export const unifi_c9 = '#ffc132';
 export const c_black = '#000000';
 export const c_white = '#ffffff';
-
-const csstyle = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: "100%",
-  },
-  inner: {
-    padding: 24,
-    flex: 1,
-    justifyContent: "space-around"
-  },
-  bottomContainer: {
-    flex: 1,
-    justifyContent: 'space-between',
-  },
-});
 
 export const BaseContainer = ({children}) => {
   return (
@@ -149,7 +133,7 @@ export const DarkModeToggle = () => {
   const { colorMode, toggleColorMode } = useColorMode();
 
   return (
-    <View style={csstyle.bottomContainer} marginTop="20px">
+    <Center my="5px">
       <HStack space={3} alignItems="center">
       <FontAwesome5 
         color={ useColorModeValue(c_black, unifi_c9)}
@@ -166,7 +150,7 @@ export const DarkModeToggle = () => {
       </HStack>
           
     
-    </View>
+    </Center>
   );
 }
 

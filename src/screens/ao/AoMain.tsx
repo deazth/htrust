@@ -233,14 +233,14 @@ export function AoMain({ navigation }) {
           iconClass={FontAwesome5}
           iconName="map-marker-alt"
         />
-        <ClickableBox 
+        {/* <ClickableBox 
           btnText="Meeting Area Booking"
           clickAction={() => {
             navigation.navigate('AoAreaBook');
           }}
           iconClass={FontAwesome5}
           iconName="list-alt"
-        />
+        /> */}
       </HStack>
 
       

@@ -1,4 +1,4 @@
-POST http://192.168.2.123/api/UserLogin HTTP/1.1
+POST https://trustbp.tm.com.my/api/UserLogin HTTP/1.1
 content-type: application/json
 
 {
