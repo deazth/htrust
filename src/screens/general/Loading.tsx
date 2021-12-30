@@ -2,8 +2,9 @@ import React, {useEffect} from 'react';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import {
-  HStack,Spinner
+  HStack,Spinner, Text, useColorMode
 } from 'native-base';
+import Constants from 'expo-constants';
 
 import { 
   PageTitle, ScreenWrapper, TrustLogo
@@ -15,8 +16,10 @@ import { doneLoading, setTokerr, setUserID, setUserToken, setUserObj, selectBase
 
 export function Loading() {
   console.log('loading: inside loading');
+  const curversion = Constants.manifest.version;
 
   const dispatch = useDispatch();
+  const { colorMode, toggleColorMode } = useColorMode();
   const baseurl = useSelector(selectBaseUrl);
   const [loadprogress, setLoadProg] = React.useState('Initializing..');
 
@@ -27,6 +30,8 @@ export function Loading() {
     const  stoken = await SecureStore.getItemAsync("apicoin");
     const  staff_no = await SecureStore.getItemAsync("staff_no");
     const  user_id = await SecureStore.getItemAsync("user_id");
+    const  color_mode = await SecureStore.getItemAsync("color_mode");
+    
 
     // alert(staff_no);
     // const  pnid = await SecureStore.getItemAsync("pnid");
@@ -38,6 +43,15 @@ export function Loading() {
         // alert("token is empty");
         dispatch(setTokerr("blank token"));
       } else {
+        console.log('stored color: ' + color_mode); 
+        console.log('current color: ' + colorMode); 
+
+        if(color_mode){
+          if(colorMode != color_mode){
+            toggleColorMode();
+          }
+        }
+
         // validate the token here
         const config = {
             headers: { Authorization: `Bearer ${stoken}` }
@@ -95,6 +109,7 @@ export function Loading() {
         <PageTitle>{loadprogress}</PageTitle>
         <Spinner accessibilityLabel="Loading" />
       </HStack>
+      <Text>Version: {curversion}</Text>
     </ScreenWrapper>
   );
 }

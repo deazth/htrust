@@ -21,10 +21,10 @@ import { useSelector } from 'react-redux';
 import { TeamMain } from '../screens/team/TeamMain';
 import { AoScanQR } from '../screens/ao/AoScanQR';
 import { AoSeatAvail } from '../screens/ao/AoSeatAvail';
-import { AoLocHist } from '../screens/ao/AoLocHist';
 import { Inprogress } from '../screens/general/Inprogress';
 import { AoScanResult } from '../screens/ao/AoScanResult';
 import { AoAreaBook } from '../screens/ao/AoAreaBook';
+import { DiaryEdit } from '../screens/diary/DiaryEdit';
 
 const Stack = createNativeStackNavigator ();
 const Tab = createBottomTabNavigator ();
@@ -63,11 +63,11 @@ export function RootTab() {
       
     })}
     >
-      <Tab.Screen name="Home" component={Home}  
+      {/* <Tab.Screen name="Home" component={Home}  
         options={{
 					headerShown: false,
 				}}
-      />
+      /> */}
       <Tab.Screen name="Agile Office" component={AoMain}  
         options={{
 					headerShown: false,
@@ -78,11 +78,11 @@ export function RootTab() {
 					headerShown: false,
 				}}
       />
-      <Tab.Screen name="Team" component={TeamMain} 
+      {/* <Tab.Screen name="Team" component={TeamMain} 
         options={{
 					headerShown: false,
 				}}
-      />
+      /> */}
       <Tab.Screen name="Misc" component={Setting} 
         options={{
 					headerShown: false,
@@ -207,6 +207,18 @@ export function RootStack() {
             component={Inprogress}
             options={{
               title: "Under Development",
+              headerShown: true,
+              headerTintColor: headerTint,
+              headerStyle: {
+                backgroundColor: headerbgc,
+              },
+            }}
+          />
+          <Stack.Screen
+            name="DiaryCrud"
+            component={DiaryEdit}
+            options={{
+              title: "Diary Entry",
               headerShown: true,
               headerTintColor: headerTint,
               headerStyle: {

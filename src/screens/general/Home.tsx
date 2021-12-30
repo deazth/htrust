@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Center, Button, Spinner, Text
+  Center, Button, Spinner, Text, Box
 } from 'native-base';
 import Constants from 'expo-constants';
 import * as SecureStore from 'expo-secure-store';
@@ -34,8 +34,13 @@ export function Home({ navigation }) {
 
   return (
     <ScreenWrapper>
-      <PageTitle>hai {nama}</PageTitle>
-      <Text>{baseurl}</Text>
+      <PageTitle>Welcome {nama}</PageTitle>
+      <Box width="95%">
+
+      <Text>The new trUSt is now live.</Text>
+      <Text>More improvement shall be made in the future ^_^</Text>
+      </Box>
+      
     </ScreenWrapper>
   );
 }

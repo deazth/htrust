@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 
 export function Login() {
+  const curversion = Constants.manifest.version;
   const dispatch = useDispatch();
   const initerr = useSelector(selectTokerr);
   const currurl = useSelector(selectBaseUrl);
@@ -86,7 +87,7 @@ export function Login() {
       };
     }
     
-    console.log(inputs);
+    // console.log(inputs);
 
     axios.post(
       loginurl, inputs
@@ -147,6 +148,7 @@ export function Login() {
         </FormContainer>
         { initerr !== null ? <Text m={2}>{initerr}</Text> : '' }    
         <DarkModeToggle />
+        <Text>Version: {curversion}</Text>
         
       </Center>
     

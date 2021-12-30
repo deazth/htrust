@@ -70,8 +70,8 @@ export function AoCLoc({ navigation }) {
     setLocation({
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
-      latitudeDelta: 0.0006,
-      longitudeDelta: 0.0006,
+      latitudeDelta: 0.001,
+      longitudeDelta: 0.001,
     });
 
     getLastKnownLoc(location.coords.latitude, location.coords.longitude);

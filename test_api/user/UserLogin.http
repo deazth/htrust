@@ -1,4 +1,4 @@
-POST https://trustbp.tm.com.my/api/UserLogin HTTP/1.1
+POST https://bptrust.test/api/UserLogin HTTP/1.1
 content-type: application/json
 
 {

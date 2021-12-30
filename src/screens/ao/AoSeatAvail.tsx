@@ -1,13 +1,17 @@
 import React from 'react';
-import { c_black, c_white, DarkModeToggle, ScreenWrapper, unifi_c1, unifi_c2, unifi_c3, unifi_c4, unifi_c5, unifi_c6, unifi_c7, unifi_c8, unifi_c9, unifi_primary } from '../../components/styles';
+import { c_black, c_white, DarkModeToggle, ScreenWrapper, unifi_c1, 
+  unifi_c2, unifi_c3, unifi_c4, unifi_c5, unifi_c6, unifi_c7, 
+  unifi_c8, unifi_c9, unifi_primary } from '../../components/styles';
 // import {StackedBarChart, YAxis } from 'react-native-svg-charts';
-import { Button, Box, CheckIcon, HStack, ScrollView, Select, Spacer, Text, useColorModeValue, Accordion, Icon, Flex, AlertDialog } from 'native-base';
+import { Button, Box, CheckIcon, HStack, ScrollView, Select, Spacer, 
+  Text, useColorModeValue, Accordion, Icon, Flex, AlertDialog, Modal, Image } from 'native-base';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectBaseUrl, selectUserToken, setTokerr, setUserObj } from '../../app/userSlice';
 import axios from 'axios';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Platform } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
+import * as WebBrowser from 'expo-web-browser';
 
 
 export function AoSeatAvail({navigation}) {
@@ -41,7 +45,11 @@ export function AoSeatAvail({navigation}) {
   
   const [cfromtime, setCFromtime] = React.useState(new Date());
   const [ctotime, setCTotime] = React.useState(new Date());
-  const cancelRef = React.useRef(null)
+  const cancelRef = React.useRef(null);
+  
+  const [showLayout, setShowLayout] = React.useState(false);
+  const [layoutUrl, setLayoutUrl] = React.useState(null);
+
 
   // center spacing to and from
   const fontFamily = Platform.OS === 'ios' ? 'Courier' : 'monospace';
@@ -52,6 +60,18 @@ export function AoSeatAvail({navigation}) {
   const acco_fc_color = useColorModeValue(unifi_c9, unifi_c2);
   const placeholder_color = useColorModeValue(unifi_c4, unifi_c9);
   const btn_bg_color=useColorModeValue(unifi_c4, unifi_primary);
+
+  function showFloorLayout(floor_id){
+    // setLayoutUrl(baseurl + 'ao/getFloorLayout?id=' + floor_id);
+    WebBrowser.openBrowserAsync(baseurl + 'ao/getFloorLayout?id=' + floor_id);
+    // setShowLayout(true);
+  }
+
+  function showSectionLayout(fcc_id){
+    // setLayoutUrl(baseurl + 'ao/getSectionLayout?id=' + fcc_id);
+    WebBrowser.openBrowserAsync(baseurl + 'ao/getSectionLayout?id=' + fcc_id);
+    // setShowLayout(true);
+  }
   
 
   function selectBuilding(building_id){
@@ -204,12 +224,18 @@ export function AoSeatAvail({navigation}) {
     setIsloading(true);
     setCFromtime(fromtime);
     setCTotime(totime);
+    setSearchPressed(false);
+
+    const offsetMs = fromtime.getTimezoneOffset() * 60 * 1000;
+    const dateLocalF = new Date(fromtime.getTime() - offsetMs);
+    const dateLocalT = new Date(totime.getTime() - offsetMs);
+
     let inputs = {
       building_id: bID,
       floor_id: fID,
       floor_section_id: fcID,
-      start_time: fromtime.toLocaleString(),
-      end_time: totime.toLocaleString()
+      start_time: dateLocalF.toISOString().slice(0, 19).replace("T", " "),
+      end_time: dateLocalT.toISOString().slice(0, 19).replace("T", " ")
     };
 
     console.log("search seat availability");
@@ -222,18 +248,22 @@ export function AoSeatAvail({navigation}) {
     ).then((response) => {
       // check for status code
       if(response.data.status_code != '200'){
-        alert(JSON.stringify(response.data));
+        alert(JSON.stringify(response.data.msg));
+        setIsloading(false);
       } else {
         if(response.data.msg == 'Success'){
-          console.log(response.data.data);
+          // console.log(response.data.data);
           // alert(JSON.stringify(response.data.data));
           setSResult(response.data.data);
+          setIsloading(false);
+          setSearchPressed(true);
           
           console.log(sResult);
           
           // alert(JSON.stringify(response.data.data));
         } else {
           alert(response.data.msg);
+          setIsloading(false);
         }
       }
       
@@ -243,6 +273,7 @@ export function AoSeatAvail({navigation}) {
       if(error.response) {
         console.log("Seat finder - got error with response");
         if(error.response.data.message == 'Unauthenticated.'){
+          alert("Your session has expired");
           dispatch(setTokerr('Session expired 2'));
           dispatch(setUserObj(null));
         } else {
@@ -256,12 +287,12 @@ export function AoSeatAvail({navigation}) {
       }
 
       // navigation.goBack();
+      setIsloading(false);
       return;
       
     });
 
-    setSearchPressed(true);
-    setIsloading(false);
+    
   }
 
   function selectSeat(seatid, seatlabel){
@@ -273,10 +304,15 @@ export function AoSeatAvail({navigation}) {
 
   function doSeatReserve(){
     setIsloading(true);
+
+    const offsetMs = cfromtime.getTimezoneOffset() * 60 * 1000;
+    const dateLocalF = new Date(cfromtime.getTime() - offsetMs);
+    const dateLocalT = new Date(ctotime.getTime() - offsetMs);
+
     let inputs = {
       seat_id: seatID,
-      stime: cfromtime.toLocaleString(),
-      etime: ctotime.toLocaleString()
+      stime: dateLocalF.toISOString().slice(0, 19).replace("T", " "),
+      etime: dateLocalT.toISOString().slice(0, 19).replace("T", " ")
     };
 
     console.log("do seat reserve");
@@ -294,7 +330,6 @@ export function AoSeatAvail({navigation}) {
         if(response.data.msg == 'Success'){
           console.log(response.data.data);
           alert("Reservation successful");
-          console.log(sResult);
           navigation.goBack();
           return;
           
@@ -323,10 +358,6 @@ export function AoSeatAvail({navigation}) {
 
       // navigation.goBack();
       return;
-
-      
-
-      
       
     });
 
@@ -385,7 +416,6 @@ export function AoSeatAvail({navigation}) {
 
   return (
     <ScreenWrapper>
-      <Text>Work in progress</Text>
       <ScrollView  w="100%">
         <Box border={1}
           m={3}
@@ -454,7 +484,7 @@ export function AoSeatAvail({navigation}) {
           <HStack my={3} alignItems="flex-start">
             <Text fontSize="sm" style={{fontFamily}}>From : </Text>
             <Spacer />
-            <Text fontSize="sm" color={placeholder_color} onPress={() => showChangeFromDate()}>{fromtime.toDateString()}</Text>
+            <Text fontSize="sm" color={placeholder_color} onPress={() => showChangeFromDate()}>{fromtime.toLocaleDateString()}</Text>
             <Spacer />
             <Text fontSize="sm" color={placeholder_color}  onPress={() => showChangeFromTime()}>{fromtime.toLocaleTimeString()}</Text>
 
@@ -463,7 +493,7 @@ export function AoSeatAvail({navigation}) {
           <HStack mb={3} alignItems="flex-start">
             <Text fontSize="sm" style={{fontFamily}}>To   : </Text>
             <Spacer />
-            <Text fontSize="sm" color={placeholder_color}  onPress={() => showChangeToDate()}>{totime.toDateString()}</Text>
+            <Text fontSize="sm" color={placeholder_color}  onPress={() => showChangeToDate()}>{totime.toLocaleDateString()}</Text>
             <Spacer />
             <Text fontSize="sm" color={placeholder_color}  onPress={() => showChangeToTime()}>{totime.toLocaleTimeString()}</Text>
 
@@ -535,6 +565,9 @@ export function AoSeatAvail({navigation}) {
                         <Accordion.Icon />
                       </Accordion.Summary>
                       <Accordion.Details>
+                        { rec.gotlayout && (
+                          <Button onPress={() => showFloorLayout(rec.id)}>View Floor Layout</Button>
+                        )}
                         <Accordion>
                         { rec.fcs.map(fc => {
                           return (
@@ -544,6 +577,9 @@ export function AoSeatAvail({navigation}) {
                               <Accordion.Icon />
                             </Accordion.Summary>
                             <Accordion.Details>
+                            { fc.gotlayout && (
+                              <Button onPress={() => showSectionLayout(fc.id)}>View Section Layout</Button>
+                            )}
                             <Flex direction="row" flexWrap="wrap" justifyContent="space-evenly">
                             { fc.seats.map(seat => {
                               return (
@@ -582,7 +618,11 @@ export function AoSeatAvail({navigation}) {
               <AlertDialog.Content>
                 <AlertDialog.CloseButton icon={<Icon as={FontAwesome5} name="times" size={4} />}/>
                 <AlertDialog.Header>{seatLabel}</AlertDialog.Header>
-                <AlertDialog.Body>Confirm reserve this workspace?</AlertDialog.Body>
+                <AlertDialog.Body>
+                  <Text>Confirm reserve this workspace?</Text>
+                  <Text>From: {cfromtime.toLocaleString()}</Text>
+                  <Text>To: {ctotime.toLocaleString()}</Text>
+                  </AlertDialog.Body>
                 <AlertDialog.Footer>
                   <Button.Group space={2}>
                     <Button
@@ -600,7 +640,7 @@ export function AoSeatAvail({navigation}) {
             </AlertDialog>
           </Box>
         )}
-      <DarkModeToggle />
+
       </ScrollView>
     </ScreenWrapper>
   );

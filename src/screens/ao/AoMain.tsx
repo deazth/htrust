@@ -206,15 +206,8 @@ export function AoMain({ navigation }) {
       ) : (<Center><Text>No active seat reservations</Text></Center>)
       }
       </Box>
-      <HStack space={3} alignItems="center">
-        <ClickableBox 
-          btnText="Check-in (Scan QR)"
-          clickAction={() => {
-            navigation.navigate('AoScanQR');
-          }}
-          iconClass={FontAwesome5}
-          iconName="qrcode"
-        />
+      <Center>
+      {/* <HStack space={3} alignItems="center"> */}
         <ClickableBox 
           btnText="Reserve Workspace"
           clickAction={() => {
@@ -223,8 +216,16 @@ export function AoMain({ navigation }) {
           iconClass={FontAwesome5}
           iconName="chair"
         />
-      </HStack>
-      <HStack space={3} alignItems="center">
+        <ClickableBox 
+          btnText="Check-in (Scan QR)"
+          clickAction={() => {
+            navigation.navigate('AoScanQR');
+          }}
+          iconClass={FontAwesome5}
+          iconName="qrcode"
+        />
+      {/* </HStack>
+      <HStack space={3} alignItems="center"> */}
         <ClickableBox 
           btnText="Check-in Location"
           clickAction={() => {
@@ -241,12 +242,12 @@ export function AoMain({ navigation }) {
           iconClass={FontAwesome5}
           iconName="list-alt"
         /> */}
-      </HStack>
+      {/* </HStack> */}
+      </Center>
 
       
       
       </ScrollView>
-      <DarkModeToggle />
     </ScreenWrapper>
   );
 }

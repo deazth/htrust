@@ -29,14 +29,14 @@ export function Setting({navigation}) {
   return (
     <ScreenWrapper>
 
-      <ClickableBox 
+      {/* <ClickableBox 
         btnText="Feedback"
         clickAction={() => {
           navigation.navigate('Feedback');
         }}
         iconClass={FontAwesome5}
         iconName="head-side-cough"
-      />
+      /> */}
       <ClickableBox 
         btnText="Info"
         clickAction={() => {

@@ -1,33 +1,61 @@
 {
   "expo": {
-    "name": "htrust",
-    "slug": "htrust",
-    "version": "1.0.0",
+    "name": "trUSt",
+    "description": "New trUSt for Hijrah Project",
+    "slug": "trUSt",
+    "ios": {
+      "bundleIdentifier": "com.tm.trUSt",
+      "supportsTablet": true,
+      "buildNumber": "3.0.1",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "trUSt app requires your location for your team and supervisor able to track your working location",
+        "NSCameraUsageDescription": "trUSt would like to use your Camera to scan barcode in workspace area"
+      },
+      "config": {
+        "googleMapsApiKey": "AIzaSyDN7HeU6Fup4nuDDheP4__O6t7-K0TKa94",
+        "googleSignIn": {
+          "reservedClientId": "com.googleusercontent.apps.510205589026-pkkg0m89n8oae8q316i04hsq4rpnaabe"
+        }
+      }
+    },
+    "android": {
+      "package": "com.tm.trUSt",
+      "versionCode": 8,
+      "googleServicesFile": "./google-services.json",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCKOjpWsq34EXU2Ucc7hCS-Ivhq4-67tIk"
+        }
+      },
+      "permissions": [
+        "CAMERA",
+        "ACCESS_FINE_LOCATION"
+      ]
+    },
+    "privacy": "public",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "version": "3.0.1",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/TrustNew.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/TrustNew.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "notification": {
+      "icon": "./assets/TrustNew.png"
+    },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 15000,
+      "checkAutomatically": "ON_LOAD",
+      "enabled": true
     },
     "assetBundlePatterns": [
       "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "description": ""
+    ]
   }
 }

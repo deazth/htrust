@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "510205589026",
+    "firebase_url": "https://trust-a8ccf.firebaseio.com",
+    "project_id": "trust-a8ccf",
+    "storage_bucket": "trust-a8ccf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:510205589026:android:50167eca2883b8aa",
+        "android_client_info": {
+          "package_name": "com.tm.trUSt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "510205589026-8ol5fn2b5nb2is7qqf7a53id2jt9bnm1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCn0Sb5LrQsAOueVNvH3V3FDfSPtD-I-a4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "510205589026-8ol5fn2b5nb2is7qqf7a53id2jt9bnm1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "510205589026-pkkg0m89n8oae8q316i04hsq4rpnaabe.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tm.trUSt"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
