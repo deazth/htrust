@@ -4,13 +4,13 @@ import {
   ImageBackground,
   TouchableWithoutFeedback,
   Keyboard,
+  View,
 } from "react-native";
 import {
   Center,
   Text,
   Image,
   VStack,
-  Button,
   KeyboardAvoidingView,
   Checkbox,
   HStack,
@@ -19,6 +19,7 @@ import Constants from "expo-constants";
 import { useAssets } from "expo-asset";
 
 import FormTextInput from "./components/FormtextInput";
+import Button from "./components/Button";
 import useLoginStore from "./useLoginStore";
 
 const Login: React.FC = () => {
@@ -37,30 +38,31 @@ const Login: React.FC = () => {
   const [assets, _error] = useAssets([
     require("assets/logo.png"),
     require("assets/background.jpg"),
+    require("assets/logo-tm.png"),
   ]);
 
   const [isRememberMe, setIsRememberMe] = useState<boolean>(false);
 
   useEffect(() => {
-    Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
-    Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
+    const didShow = Keyboard.addListener("keyboardDidShow", () =>
+      setKeyboardShown(true)
+    );
+    const didHide = Keyboard.addListener("keyboardDidHide", () =>
+      setKeyboardShown(false)
+    );
 
-    // cleanup function
-    return () => {
-      Keyboard.emit("keyboardDidShow", _keyboardDidShow);
-      Keyboard.emit("keyboardDidHide", _keyboardDidHide);
-    };
     GetPushID();
+    return () => {
+      didShow.remove();
+      didHide.remove();
+    };
   }, []);
-  useEffect(() => {}, []);
 
   const [isKeyboardShown, setKeyboardShown] = useState<boolean>(false);
-  const _keyboardDidShow = () => setKeyboardShown(true);
-  const _keyboardDidHide = () => setKeyboardShown(false);
   return (
     <ImageBackground
       resizeMode="cover"
-      source={assets && assets[1]}
+      source={assets?.[1]}
       style={{ width: "100%", height: "100%" }}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -79,7 +81,7 @@ const Login: React.FC = () => {
             </Text>
             <Image
               alt="logo"
-              source={assets && assets[0]}
+              source={assets?.[0]}
               resizeMode="contain"
               style={{ width: "40%", height: "30%" }}
             />
@@ -114,16 +116,27 @@ const Login: React.FC = () => {
                 <Text style={{ fontSize: 14 }}>Remember me</Text>
               </HStack>
               <Button
+                loading={isSubmitting}
                 onPress={doLogin}
-                isLoading={isSubmitting}
-                isLoadingText="Authenticating"
-              >
-                Login
-              </Button>
+                label={isSubmitting ? "Authenticating" : "Login"}
+              />
             </VStack>
-            <Text style={{ fontSize: 12, marginTop: 10 }}>
-              Version: {version}
-            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: 10,
+                marginBottom: 50,
+                alignItems: "flex-end",
+              }}
+            >
+              <Text style={{ fontSize: 12 }}>powered by</Text>
+              <Image
+                alt="logo tm"
+                source={assets?.[2]}
+                style={{ height: 20, width: 60, resizeMode: "contain" }}
+              />
+            </View>
+            <Text style={{ fontSize: 12 }}>Version: {version}</Text>
           </Center>
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
