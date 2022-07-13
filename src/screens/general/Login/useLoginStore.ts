@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 
 import * as SecureStore from "expo-secure-store";
-import Device from "expo-device";
+import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 
 import {
@@ -58,7 +58,8 @@ const useLoginStore = () => {
   }
 
   async function doLogin() {
-    setIsSubmitting(true);
+    if (isSubmitting) return;
+    dispatch(setTokerr(""));
     const loginurl = currurl + "UserLogin";
 
     const inputs = {
@@ -66,6 +67,7 @@ const useLoginStore = () => {
       password,
       pnid: Device.isDevice && pnid != "" ? pnid : undefined,
     };
+    setIsSubmitting(true);
 
     axios
       .post(loginurl, inputs)
@@ -74,7 +76,6 @@ const useLoginStore = () => {
         if (response.data.status_code != "200") {
           dispatch(setTokerr(response.data.msg));
           // setErrmsg(response.data.msg);
-          setIsSubmitting(false);
         } else {
           // success login
           console.log("login: success");
@@ -98,10 +99,8 @@ const useLoginStore = () => {
           console.log("login: done setting up data");
         }
       })
-      .catch((error) => {
-        dispatch(setTokerr(error.message));
-        setIsSubmitting(false);
-      });
+      .catch((error) => dispatch(setTokerr(error.message)))
+      .finally(() => setIsSubmitting(false));
   }
 
   return {
