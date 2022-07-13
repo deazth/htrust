@@ -18,7 +18,7 @@ import {
 import Constants from "expo-constants";
 import { useAssets } from "expo-asset";
 
-import { FormTextInput } from "./components/FormtextInput";
+import FormTextInput from "./components/FormtextInput";
 import useLoginStore from "./useLoginStore";
 
 const Login: React.FC = () => {
