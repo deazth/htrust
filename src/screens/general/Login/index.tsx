@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Platform,
   ImageBackground,
@@ -33,12 +33,13 @@ const Login: React.FC = () => {
     doLogin,
   } = useLoginStore();
 
-  const [assets, error] = useAssets([
+  //TODO: image error handling
+  const [assets, _error] = useAssets([
     require("assets/logo.png"),
     require("assets/background.jpg"),
   ]);
 
-  const [isRememberMe, setIsRememberMe] = React.useState(false);
+  const [isRememberMe, setIsRememberMe] = useState<boolean>(false);
 
   useEffect(() => {
     GetPushID();
@@ -113,4 +114,5 @@ const Login: React.FC = () => {
     </ImageBackground>
   );
 };
+
 export default Login;
