@@ -4,49 +4,51 @@ import {
   ImageBackground,
   TouchableWithoutFeedback,
   Keyboard,
-} from "react-native"; 
+} from "react-native";
 import {
   Center,
   Text,
   Image,
-  VStack, 
+  VStack,
   Button,
   KeyboardAvoidingView,
   Checkbox,
   HStack,
 } from "native-base";
 import Constants from "expo-constants";
- 
- 
-import logo from "assets/logo.png";
-import background from "assets/background.jpg"; 
+import { useAssets } from "expo-asset";
 
-  
 import { FormTextInput } from "./components/FormtextInput";
 import useLoginStore from "./useLoginStore";
 
-export function Login() {
+const Login: React.FC = () => {
   const { version } = Constants.manifest;
- 
-  
- 
-  const [isRememberMe, setIsRememberMe] = React.useState(false);
- 
-  const { initerr,isSubmitting, setUsername,setPassword,GetPushID,doLogin} = useLoginStore()
 
-   
+  const {
+    initerr,
+    isSubmitting,
+    setUsername,
+    setPassword,
+    GetPushID,
+    doLogin,
+  } = useLoginStore();
+
+  const [assets, error] = useAssets([
+    require("assets/logo.png"),
+    require("assets/background.jpg"),
+  ]);
+
+  const [isRememberMe, setIsRememberMe] = React.useState(false);
 
   useEffect(() => {
     GetPushID();
   }, []);
 
-   
-
   return (
     <ImageBackground
       resizeMode="cover"
-      source={background}
-      style={{ width: "100%", height: "100%", backgroundColor: "red" }}
+      source={assets && assets[1]}
+      style={{ width: "100%", height: "100%" }}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <KeyboardAvoidingView
@@ -60,7 +62,7 @@ export function Login() {
             </Text>
             <Image
               alt="logo"
-              source={logo}
+              source={assets && assets[0]}
               resizeMode="contain"
               style={{ width: "40%", height: "30%" }}
             />
@@ -86,8 +88,8 @@ export function Login() {
               />
               <HStack space={2}>
                 <Checkbox.Group
-                  onChange={() => setIsRememberMe(v =>!v)}
-                  value={isRememberMe ? ["1"]:[]}
+                  onChange={() => setIsRememberMe((v) => !v)}
+                  value={isRememberMe ? ["1"] : []}
                   accessibilityLabel="choose numbers"
                 >
                   <Checkbox borderColor="#1C04E3" value="1" />
@@ -110,4 +112,5 @@ export function Login() {
       </TouchableWithoutFeedback>
     </ImageBackground>
   );
-}
+};
+export default Login;
