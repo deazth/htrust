@@ -188,14 +188,13 @@ export const TrustLogo = () => {
       w="70%"
       // bgColor={c_white}
       borderRadius="50px"
-      marginTop="50px"
     >
       <Image
-        source={require("../../assets/TrustNew.png")}
+        source={require("../../assets/thrust-loading-logo.png")}
         alt="TrustLogo.png"
-        resizeMode="cover"
-        width="250px"
-        height="250px"
+        resizeMode="contain"
+        width="150px"
+        height="150px"
       />
     </Center>
   );
