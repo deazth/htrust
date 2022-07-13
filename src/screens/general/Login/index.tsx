@@ -42,9 +42,21 @@ const Login: React.FC = () => {
   const [isRememberMe, setIsRememberMe] = useState<boolean>(false);
 
   useEffect(() => {
+    Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
+    Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
+
+    // cleanup function
+    return () => {
+      Keyboard.emit("keyboardDidShow", _keyboardDidShow);
+      Keyboard.emit("keyboardDidHide", _keyboardDidHide);
+    };
     GetPushID();
   }, []);
+  useEffect(() => {}, []);
 
+  const [isKeyboardShown, setKeyboardShown] = useState<boolean>(false);
+  const _keyboardDidShow = () => setKeyboardShown(true);
+  const _keyboardDidHide = () => setKeyboardShown(false);
   return (
     <ImageBackground
       resizeMode="cover"
@@ -57,7 +69,11 @@ const Login: React.FC = () => {
           keyboardVerticalOffset={-40}
           h="100%"
         >
-          <Center>
+          <Center
+            style={{
+              marginTop: isKeyboardShown ? 0 : "20%",
+            }}
+          >
             <Text style={{ color: "#1C04E3", fontWeight: "bold" }}>
               Welcome to
             </Text>
