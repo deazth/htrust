@@ -20,7 +20,7 @@ export default ({ label, loading, onPress, ...props }) => {
       onPressIn={() => scale(0.97)}
       onPressOut={() => scale(1)}
       {...props}
-      style={{ transform: [{ scale: scaleAnim }] }}
+      style={{ transform: [{ scale: scaleAnim }], width: "100%" }}
     >
       <LinearGradient
         colors={["#3B6EC9", "#1C04E3"]}

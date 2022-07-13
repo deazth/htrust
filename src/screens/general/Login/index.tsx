@@ -17,9 +17,9 @@ import {
 } from "native-base";
 import Constants from "expo-constants";
 import { useAssets } from "expo-asset";
+import Button from "components/Button";
 
 import FormTextInput from "./components/FormtextInput";
-import Button from "./components/Button";
 import useLoginStore from "./useLoginStore";
 
 const Login: React.FC = () => {

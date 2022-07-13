@@ -39,52 +39,40 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 export function RootTab() {
-  let iconFocusCol = useColorModeValue(unifi_c4, unifi_primary);
-  let iconNormalCol = useColorModeValue(c_black, unifi_c5);
+  let iconFocusCol = useColorModeValue("#1C03E3", unifi_primary);
+  let iconNormalCol = useColorModeValue("#C7C7C7", unifi_c5);
 
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
+        tabBarIcon: ({ focused, size }) => {
+          let name;
 
-          var iconcolorr = focused ? iconFocusCol : iconNormalCol;
+          const color = focused ? iconFocusCol : iconNormalCol;
 
-          if (route.name === "Home") {
-            iconName = "home";
-          } else if (route.name === "Agile Office") {
-            iconName = "map-marked-alt";
-          } else if (route.name === "Diary") {
-            iconName = "edit";
-          } else if (route.name === "Misc") {
-            iconName = "info-circle";
-          } else if (route.name === "Team") {
-            iconName = "users";
-          }
+          if (route.name === "Home") name = "home";
+          else if (route.name === "Agile Office") name = "map-marked-alt";
+          else if (route.name === "Diary") name = "edit";
+          else if (route.name === "Misc") name = "info-circle";
+          else if (route.name === "Team") name = "users";
 
           // You can return any component that you like here!
-          return (
-            <FontAwesome5 name={iconName} size={size} color={iconcolorr} />
-          );
+          return <FontAwesome5 {...{ name, size, color }} />;
         },
         tabBarActiveTintColor: iconFocusCol,
         tabBarInactiveTintColor: iconNormalCol,
-        tabBarActiveBackgroundColor: useColorModeValue(unifi_c6, c_black),
-        tabBarInactiveBackgroundColor: useColorModeValue(unifi_c5, unifi_c8),
+        // tabBarActiveBackgroundColor: useColorModeValue(unifi_c6, c_black),
+        // tabBarInactiveBackgroundColor: useColorModeValue(unifi_c5, unifi_c8),
       })}
     >
-      {/* <Tab.Screen name="Home" component={Home}  
-        options={{
-					headerShown: false,
-				}}
-      /> */}
       <Tab.Screen
-        name="Agile Office"
-        component={AoMain}
+        name="Home"
+        component={Home}
         options={{
           headerShown: false,
         }}
       />
+      <Tab.Screen name="Agile Office" component={AoMain} />
       <Tab.Screen
         name="Diary"
         component={DiaryMain}
