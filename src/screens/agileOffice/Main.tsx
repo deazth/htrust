@@ -27,7 +27,7 @@ import {
 } from "../../app/userSlice";
 import { useAssets } from "expo-asset";
 
-export function AoMain({ navigation }) {
+export function Main({ navigation }) {
   const [refreshing, setRefreshing] = React.useState(false);
   const dispatch = useDispatch();
   const [assets] = useAssets([require("assets/menara.jpg")]);
@@ -215,20 +215,20 @@ export function AoMain({ navigation }) {
         </Box>
         <Button
           label="Reserve Workspace"
-          onPress={() => navigation.navigate("AoSeatAvail")}
+          onPress={() => navigation.navigate("SeatAvail")}
         />
         <Button
           label="Check-in (Scan QR)"
-          onPress={() => navigation.navigate("AoScanQR")}
+          onPress={() => navigation.navigate("ScanQR")}
         />
         <Button
           label="Check-in Location"
-          onPress={() => navigation.navigate("AoCLoc")}
+          onPress={() => navigation.navigate("CLoc")}
         />
         {/* <ClickableBox 
           btnText="Meeting Area Booking"
           clickAction={() => {
-            navigation.navigate('AoAreaBook');
+            navigation.navigate('AreaBook');
           }}
           iconClass={FontAwesome5}
           iconName="list-alt"

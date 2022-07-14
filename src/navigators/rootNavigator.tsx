@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useColorModeValue } from "native-base";
@@ -8,7 +8,7 @@ import Login from "../screens/general/Login";
 import { Home } from "../screens/general/Home";
 import { Setting } from "../screens/general/Setting";
 import { Feedback } from "../screens/general/Feedback";
-import { AoMain } from "../screens/ao/AoMain";
+import { Main } from "../screens/agileOffice/Main";
 import { DiaryMain } from "../screens/diary/DiaryMain";
 import {
   unifi_c1,
@@ -24,15 +24,15 @@ import {
 } from "../components/styles";
 import { Loading } from "../screens/general/Loading";
 import { Info } from "../screens/general/Info";
-import { AoCLoc } from "../screens/ao/AoCLoc";
+import { CLoc } from "../screens/agileOffice/CLoc";
 import { selectIsLoading, selectUserID, selectUserObj } from "../app/userSlice";
 import { useSelector } from "react-redux";
 import { TeamMain } from "../screens/team/TeamMain";
-import { AoScanQR } from "../screens/ao/AoScanQR";
-import { AoSeatAvail } from "../screens/ao/AoSeatAvail";
+import { ScanQR } from "../screens/agileOffice/ScanQR";
+import { SeatAvail } from "../screens/agileOffice/SeatAvail";
 import { Inprogress } from "../screens/general/Inprogress";
-import { AoScanResult } from "../screens/ao/AoScanResult";
-import { AoAreaBook } from "../screens/ao/AoAreaBook";
+import { ScanResult } from "../screens/agileOffice/ScanResult";
+import { AreaBook } from "../screens/agileOffice/AreaBook";
 import { DiaryEdit } from "../screens/diary/DiaryEdit";
 
 const Stack = createNativeStackNavigator();
@@ -72,7 +72,7 @@ export function RootTab() {
           headerShown: false,
         }}
       />
-      <Tab.Screen name="Agile Office" component={AoMain} />
+      <Tab.Screen name="Agile Office" component={Main} />
       <Tab.Screen
         name="Diary"
         component={DiaryMain}
@@ -150,8 +150,8 @@ export function RootStack() {
             }}
           />
           <Stack.Screen
-            name="AoCLoc"
-            component={AoCLoc}
+            name="CLoc"
+            component={CLoc}
             options={{
               title: "Location Update",
               headerShown: true,
@@ -162,8 +162,8 @@ export function RootStack() {
             }}
           />
           <Stack.Screen
-            name="AoScanQR"
-            component={AoScanQR}
+            name="ScanQR"
+            component={ScanQR}
             options={{
               title: "Workspace Checkin - QR",
               headerShown: true,
@@ -174,8 +174,8 @@ export function RootStack() {
             }}
           />
           <Stack.Screen
-            name="AoSeatAvail"
-            component={AoSeatAvail}
+            name="SeatAvail"
+            component={SeatAvail}
             options={{
               title: "Workspace Reservation",
               headerShown: true,
@@ -186,8 +186,8 @@ export function RootStack() {
             }}
           />
           <Stack.Screen
-            name="AoAreaBook"
-            component={AoAreaBook}
+            name="AreaBook"
+            component={AreaBook}
             options={{
               title: "Meeting Area Booking",
               headerShown: true,
@@ -199,8 +199,8 @@ export function RootStack() {
           />
 
           <Stack.Screen
-            name="AoScanResult"
-            component={AoScanResult}
+            name="ScanResult"
+            component={ScanResult}
             options={{
               title: "QR Result",
               headerShown: true,
