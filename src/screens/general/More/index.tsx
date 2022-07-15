@@ -44,7 +44,7 @@ export function More({ navigation }) {
             label: "Settings",
             iconClass: FontAwesome5,
             iconName: "cog",
-            onPress: () => navigation.navigate("TODO"),
+            onPress: () => navigation.navigate("Setting"),
           },
         ].map((i) => (
           <RowButton {...i} />
@@ -64,7 +64,7 @@ export function More({ navigation }) {
             onPress: () => navigation.navigate("TODO"),
           },
           {
-            label: "Settings",
+            label: "Share this App",
             iconClass: FontAwesome5,
             iconName: "share-alt",
             onPress: () => navigation.navigate("TODO"),

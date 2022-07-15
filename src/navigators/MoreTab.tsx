@@ -3,6 +3,7 @@ import { useAssets } from "expo-asset";
 import { Image } from "native-base";
 import { About } from "screens/general/About";
 import { More } from "screens/general/More";
+import { Setting } from "screens/general/Setting";
 const Stack = createNativeStackNavigator();
 
 export function MoreTab() {
@@ -28,6 +29,7 @@ export function MoreTab() {
     <Stack.Navigator initialRouteName="More" screenOptions={options}>
       <Stack.Screen name="More" component={More} />
       <Stack.Screen name="About" component={About} />
+      <Stack.Screen name="Setting" component={Setting} />
     </Stack.Navigator>
   );
 }

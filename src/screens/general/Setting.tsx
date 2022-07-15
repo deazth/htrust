@@ -1,8 +1,8 @@
 import React from "react";
-import { Text, ScrollView, View } from "native-base";
+import { Center, Text, ScrollView, View } from "native-base";
 import Constants from "expo-constants";
 
-import { ScreenWrapper } from "../../components/styles";
+import { DarkModeToggle, ScreenWrapper } from "../../components/styles";
 import { StyleSheet } from "react-native";
 import { LogoutButton } from "components/LogoutButton";
 
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
 });
 
 const { version } = Constants.manifest;
-export function About({ navigation }) {
+export function Setting({ navigation }) {
   return (
     <ScreenWrapper>
       <ScrollView
