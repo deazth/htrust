@@ -176,149 +176,144 @@ export function RootStack() {
         />
       </Stack.Navigator>
     );
-  } else {
-    console.log("loading status is done");
-    if (userid) {
-      console.log("showing content screen");
-      return (
-        <Stack.Navigator initialRouteName="Hometab">
-          <Stack.Screen
-            name="Hometab"
-            component={RootTab}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Feedback"
-            component={Feedback}
-            options={{
-              ...options,
-              headerShown: true,
-              headerTintColor: headerTint,
-              headerStyle: {
-                backgroundColor: headerbgc,
-              },
-            }}
-          />
-          <Stack.Screen
-            name="Info"
-            component={Info}
-            options={{
-              title: "Maklumat",
-              ...options,
-              headerShown: true,
-              headerTintColor: headerTint,
-              headerStyle: {
-                backgroundColor: headerbgc,
-              },
-            }}
-          />
-          <Stack.Screen
-            name="AgileOfficeCLoc"
-            component={AgileOfficeCLoc}
-            options={{
-              title: "Location Update",
-              ...options,
-              headerShown: true,
-              headerTintColor: headerTint,
-              headerStyle: {
-                backgroundColor: headerbgc,
-              },
-            }}
-          />
-          <Stack.Screen
-            name="AgileOfficeScanQR"
-            component={AgileOfficeScanQR}
-            options={{
-              title: "Workspace Checkin - QR",
-              ...options,
-              headerShown: true,
-              headerTintColor: headerTint,
-              headerStyle: {
-                backgroundColor: headerbgc,
-              },
-            }}
-          />
-          <Stack.Screen
-            name="AgileOfficeSeatAvail"
-            component={AgileOfficeSeatAvail}
-            options={{
-              title: "Workspace Reservation",
-              ...options,
-              headerShown: true,
-              headerTintColor: headerTint,
-              headerStyle: {
-                backgroundColor: headerbgc,
-              },
-            }}
-          />
-          <Stack.Screen
-            name="AgileOfficeAreaBook"
-            component={AgileOfficeAreaBook}
-            options={{
-              ...options,
-              title: "Meeting Area Booking",
-              ...options,
-              headerShown: true,
-              headerTintColor: headerTint,
-              headerStyle: {
-                backgroundColor: headerbgc,
-              },
-            }}
-          />
-
-          <Stack.Screen
-            name="AgileOfficeScanResult"
-            component={AgileOfficeScanResult}
-            options={{
-              title: "QR Result",
-              ...options,
-              headerShown: true,
-              headerTintColor: headerTint,
-              headerStyle: {
-                backgroundColor: headerbgc,
-              },
-            }}
-          />
-
-          <Stack.Screen
-            name="Inprogress"
-            component={Inprogress}
-            options={{
-              title: "Under Development",
-              ...options,
-              headerShown: true,
-              headerTintColor: headerTint,
-              headerStyle: {
-                backgroundColor: headerbgc,
-              },
-            }}
-          />
-          <Stack.Screen
-            name="DiaryCrud"
-            component={DiaryEdit}
-            options={{
-              title: "Diary Entry",
-              ...options,
-              headerShown: true,
-              headerTintColor: headerTint,
-              headerStyle: {
-                backgroundColor: headerbgc,
-              },
-            }}
-          />
-        </Stack.Navigator>
-      );
-    } else {
-      console.log("no active user. showing login screen");
-      return (
-        <Stack.Navigator initialRouteName="Login">
-          <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{ headerShown: false }}
-          />
-        </Stack.Navigator>
-      );
-    }
   }
+  if (userid) {
+    return (
+      <Stack.Navigator initialRouteName="Hometab">
+        <Stack.Screen
+          name="Hometab"
+          component={RootTab}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Feedback"
+          component={Feedback}
+          options={{
+            ...options,
+            headerShown: true,
+            headerTintColor: headerTint,
+            headerStyle: {
+              backgroundColor: headerbgc,
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Info"
+          component={Info}
+          options={{
+            title: "Maklumat",
+            ...options,
+            headerShown: true,
+            headerTintColor: headerTint,
+            headerStyle: {
+              backgroundColor: headerbgc,
+            },
+          }}
+        />
+        <Stack.Screen
+          name="AgileOfficeCLoc"
+          component={AgileOfficeCLoc}
+          options={{
+            title: "Location Update",
+            ...options,
+            headerShown: true,
+            headerTintColor: headerTint,
+            headerStyle: {
+              backgroundColor: headerbgc,
+            },
+          }}
+        />
+        <Stack.Screen
+          name="AgileOfficeScanQR"
+          component={AgileOfficeScanQR}
+          options={{
+            title: "Workspace Checkin - QR",
+            ...options,
+            headerShown: true,
+            headerTintColor: headerTint,
+            headerStyle: {
+              backgroundColor: headerbgc,
+            },
+          }}
+        />
+        <Stack.Screen
+          name="AgileOfficeSeatAvail"
+          component={AgileOfficeSeatAvail}
+          options={{
+            title: "Workspace Reservation",
+            ...options,
+            headerShown: true,
+            headerTintColor: headerTint,
+            headerStyle: {
+              backgroundColor: headerbgc,
+            },
+          }}
+        />
+        <Stack.Screen
+          name="AgileOfficeAreaBook"
+          component={AgileOfficeAreaBook}
+          options={{
+            ...options,
+            title: "Meeting Area Booking",
+            ...options,
+            headerShown: true,
+            headerTintColor: headerTint,
+            headerStyle: {
+              backgroundColor: headerbgc,
+            },
+          }}
+        />
+
+        <Stack.Screen
+          name="AgileOfficeScanResult"
+          component={AgileOfficeScanResult}
+          options={{
+            title: "QR Result",
+            ...options,
+            headerShown: true,
+            headerTintColor: headerTint,
+            headerStyle: {
+              backgroundColor: headerbgc,
+            },
+          }}
+        />
+
+        <Stack.Screen
+          name="Inprogress"
+          component={Inprogress}
+          options={{
+            title: "Under Development",
+            ...options,
+            headerShown: true,
+            headerTintColor: headerTint,
+            headerStyle: {
+              backgroundColor: headerbgc,
+            },
+          }}
+        />
+        <Stack.Screen
+          name="DiaryCrud"
+          component={DiaryEdit}
+          options={{
+            title: "Diary Entry",
+            ...options,
+            headerShown: true,
+            headerTintColor: headerTint,
+            headerStyle: {
+              backgroundColor: headerbgc,
+            },
+          }}
+        />
+      </Stack.Navigator>
+    );
+  }
+  return (
+    <Stack.Navigator initialRouteName="Login">
+      <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
 }
