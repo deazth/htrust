@@ -1,17 +1,15 @@
-import React from 'react';
-import {
-  Center, Button
-} from 'native-base';
+import React from "react";
+import { Center, Button } from "native-base";
 
-import { 
-  DarkModeToggle, PageTitle, ScreenWrapper
-} from '../../components/styles';
+import {
+  DarkModeToggle,
+  PageTitle,
+  ScreenWrapper,
+} from "../../components/styles";
 
 export function Inprogress({ navigation }) {
-
-
   return (
-    <ScreenWrapper>
+    <ScreenWrapper justifyContent="center">
       <PageTitle>In queue for development</PageTitle>
     </ScreenWrapper>
   );

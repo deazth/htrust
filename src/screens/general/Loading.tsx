@@ -108,7 +108,7 @@ export const Loading = () => {
   }, []);
 
   return (
-    <ScreenWrapper>
+    <ScreenWrapper justifyContent="center">
       <TrustLogo />
       <HStack space={2} marginTop={5} alignItems="center">
         <PageTitle>{loadprogress}</PageTitle>

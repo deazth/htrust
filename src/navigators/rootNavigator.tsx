@@ -98,10 +98,20 @@ export function RootTab() {
         name="Agile Office"
         component={AgileOfficeMain}
         options={{
+          headerTitleAlign: "center",
           headerShown: true,
           headerTintColor: headerTint,
           headerStyle: {
             backgroundColor: headerbgc,
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 4,
+            },
+            shadowOpacity: 0,
+            shadowRadius: 4.65,
+
+            elevation: 8,
           },
           ...options,
         }}

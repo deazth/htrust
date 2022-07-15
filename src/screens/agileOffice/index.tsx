@@ -1,7 +1,7 @@
 import React from "react";
 import { RefreshControl } from "react-native";
 import { useAssets } from "expo-asset";
-import { ScrollView, Image, VStack } from "native-base";
+import { ScrollView, Image, VStack, useColorModeValue } from "native-base";
 
 import Button from "../../components/Button";
 import { ScreenWrapper } from "../../components/styles";
@@ -21,7 +21,7 @@ const AgileOfficeMain = ({ navigation }) => {
   return (
     <ScreenWrapper>
       <ScrollView
-        contentContainerStyle={{ padding: 15 }}
+        contentContainerStyle={{ padding: 15, marginTop: 30 }}
         w="100%"
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={loadData} />
