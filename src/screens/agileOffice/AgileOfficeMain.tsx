@@ -215,20 +215,20 @@ export function AoMain({ navigation }) {
         </Box>
         <Button
           label="Reserve Workspace"
-          onPress={() => navigation.navigate("AoSeatAvail")}
+          onPress={() => navigation.navigate("AgileOfficeSeatAvail")}
         />
         <Button
           label="Check-in (Scan QR)"
-          onPress={() => navigation.navigate("AoScanQR")}
+          onPress={() => navigation.navigate("AgileOfficeScanQR")}
         />
         <Button
           label="Check-in Location"
-          onPress={() => navigation.navigate("AoCLoc")}
+          onPress={() => navigation.navigate("AgileOfficeCLoc")}
         />
         {/* <ClickableBox 
           btnText="Meeting Area Booking"
           clickAction={() => {
-            navigation.navigate('AoAreaBook');
+            navigation.navigate('AgileOfficeAreaBook');
           }}
           iconClass={FontAwesome5}
           iconName="list-alt"
