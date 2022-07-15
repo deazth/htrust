@@ -40,7 +40,11 @@ export function MoreTab() {
 
   return (
     <Stack.Navigator initialRouteName="MoreSetting" screenOptions={options}>
-      <Stack.Screen name="MoreSetting" component={More} />
+      <Stack.Screen
+        name="MoreSetting"
+        component={More}
+        options={{ title: "More" }}
+      />
       <Stack.Screen name="About" component={About} />
       <Stack.Screen name="Settings" component={Setting} />
     </Stack.Navigator>
