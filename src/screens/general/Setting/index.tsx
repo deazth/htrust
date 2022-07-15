@@ -1,12 +1,12 @@
 import React from "react";
+import { StyleSheet } from "react-native";
 import { ScrollView, Text, View } from "native-base";
 import Constants from "expo-constants";
 
-import { FontAwesome5 } from "@expo/vector-icons";
 import { ScreenWrapper } from "components/styles";
 import { LogoutButton } from "components/LogoutButton";
-import RowButton from "./RowButton";
-import { StyleSheet } from "react-native";
+import RowButton from "./components/RowButton";
+import { appDetails, appOverviewDetails } from "./constants";
 
 const { version } = Constants.manifest;
 
@@ -19,7 +19,10 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
 });
+
 export function Setting({ navigation }) {
+  const appDetailLists = appDetails(navigation);
+  const appOverviewDetailLists = appOverviewDetails(navigation);
   return (
     <ScreenWrapper>
       <ScrollView
@@ -27,51 +30,16 @@ export function Setting({ navigation }) {
         w="100%"
         contentContainerStyle={{ paddingVertical: 15 }}
       >
-        {[
-          {
-            label: "About",
-            iconClass: FontAwesome5,
-            iconName: "lightbulb",
-            onPress: () => navigation.navigate("About"),
-          },
-          {
-            label: "FAQ",
-            iconClass: FontAwesome5,
-            iconName: "question-circle",
-            onPress: () => navigation.navigate("TODO"),
-          },
-          {
-            label: "Settings",
-            iconClass: FontAwesome5,
-            iconName: "cog",
-            onPress: () => navigation.navigate("TODO"),
-          },
-        ].map((i) => (
-          <RowButton {...i} />
+        {appDetailLists.map((detailEntry, index) => (
+          <RowButton key={index + `app-detail`} {...detailEntry} />
         ))}
+
         <View style={{ margin: 20 }} />
-        {[
-          {
-            label: "Terms of Use",
-            iconClass: FontAwesome5,
-            iconName: "sticky-note",
-            onPress: () => navigation.navigate("TODO"),
-          },
-          {
-            label: "Rate this App",
-            iconClass: FontAwesome5,
-            iconName: "star",
-            onPress: () => navigation.navigate("TODO"),
-          },
-          {
-            label: "Settings",
-            iconClass: FontAwesome5,
-            iconName: "share-alt",
-            onPress: () => navigation.navigate("TODO"),
-          },
-        ].map((i) => (
-          <RowButton {...i} />
+
+        {appOverviewDetailLists.map((detailEntry, index) => (
+          <RowButton key={index + `app-overview-detail`} {...detailEntry} />
         ))}
+
         <View style={{ padding: 20, marginTop: 40 }}>
           <Text style={{ color: "#1C03E3", fontSize: 14, textAlign: "center" }}>
             Version {version}

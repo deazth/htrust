@@ -24,8 +24,8 @@ export function MoreTab() {
   };
 
   return (
-    <Stack.Navigator initialRouteName="More" screenOptions={options}>
-      <Stack.Screen name="More" component={Setting} />
+    <Stack.Navigator initialRouteName="MoreSetting" screenOptions={options}>
+      <Stack.Screen name="MoreSetting" component={Setting} />
       <Stack.Screen name="About" component={About} />
     </Stack.Navigator>
   );
