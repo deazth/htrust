@@ -1,31 +1,49 @@
-import React from 'react';
+import React from "react";
 import {
-  Center, Button, Text, FlatList,ScrollView, HStack, Spacer, Icon, Modal, Spinner
-} from 'native-base';
-import axios from 'axios';
-import {Calendar} from 'react-native-calendars';
-import { FontAwesome5 } from '@expo/vector-icons';
+  Center,
+  Button,
+  Text,
+  FlatList,
+  ScrollView,
+  HStack,
+  Spacer,
+  Icon,
+  Modal,
+  Spinner,
+} from "native-base";
+import axios from "axios";
+import { Calendar } from "react-native-calendars";
+import { FontAwesome5 } from "@expo/vector-icons";
 
-import { 
-  DarkModeToggle, DiaryItemCards, FormBtnSubmit, InfoBox, ItemCards, PageTitle, ScreenWrapper
-} from '../../components/styles';
-import { RefreshControl, Alert  } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { setTokerr, setUserObj, selectBaseUrl, selectUserToken } from '../../app/userSlice';
-
+import {
+  DarkModeToggle,
+  DiaryItemCards,
+  FormBtnSubmit,
+  InfoBox,
+  ItemCards,
+  PageTitle,
+  ScreenWrapper,
+} from "../../components/styles";
+import { RefreshControl, Alert } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setTokerr,
+  setUserObj,
+  selectBaseUrl,
+  selectUserToken,
+} from "../../app/userSlice";
 
 export function DiaryMain({ navigation }) {
-
   const dispatch = useDispatch();
   const baseurl = useSelector(selectBaseUrl);
   const stoken = useSelector(selectUserToken);
   const config = {
-    headers: { Authorization: `Bearer ${stoken}` }
+    headers: { Authorization: `Bearer ${stoken}` },
   };
 
   var tomorrow = new Date();
 
-  const [textdisp, setTextdisp] = React.useState('Please select a date');
+  const [textdisp, setTextdisp] = React.useState("Please select a date");
   const [refreshing, setRefreshing] = React.useState(false);
   const [isLoadingGwd, setIsLoadingGwd] = React.useState(false);
   const [isFutureDate, setIsFutureDate] = React.useState(false);
@@ -37,19 +55,18 @@ export function DiaryMain({ navigation }) {
 
   var tomorrow = new Date();
 
-  function selectedDate(indate = inDate){
-    
+  function selectedDate(indate = inDate) {
     var d1 = new Date();
-    d1.setHours(0,0,0,0);
+    d1.setHours(0, 0, 0, 0);
     var d2 = new Date(indate);
-    d2.setHours(0,0,0,0);
+    d2.setHours(0, 0, 0, 0);
 
     setIsFutureDate(d2 > d1);
 
     setInDate(indate);
 
-    if(d2 > d1){
-      alert('Future date is not allowed');
+    if (d2 > d1) {
+      alert("Future date is not allowed");
       setDayEntry([]);
       return;
     }
@@ -57,257 +74,272 @@ export function DiaryMain({ navigation }) {
     setIsLoadingGwd(true);
 
     // fetch from db
-    console.log('GetGwdEntries input ' + indate);
-    const theinput = { 
-      indate: indate
+    console.log("GetGwdEntries input " + indate);
+    const theinput = {
+      indate: indate,
     };
 
-    axios.post(
-      baseurl + 't/diary/GetGwdEntries', theinput, config
-    ).then(async (response) => {
-      // check for status code
-      if(response.data.status_code != '200'){
-        alert(JSON.stringify(response.data));
-        setIsLoadingGwd(true);
-      } else {
-        if(response.data.msg == 'Success'){
-          let reval = response.data.data.entries;
-          console.log(reval);
-          setDayEntry(reval);
-          console.log(response.data.data.total);
-          setDayTotalHours(response.data.data.total);
-          setIsLoadingGwd(false);
-        } 
-      }
-      
-    }).catch(error => {
-      // dispatch(setTokerr(error.message));
-      if(error.response) {
-        if(error.response.data.message == 'Unauthenticated.'){
-          dispatch(setTokerr('Session expired 2'));
-          dispatch(setUserObj(null));
+    axios
+      .post(baseurl + "t/diary/GetGwdEntries", theinput, config)
+      .then(async (response) => {
+        // check for status code
+        if (response.data.status_code != "200") {
+          alert(JSON.stringify(response.data));
+          setIsLoadingGwd(true);
         } else {
-          alert(JSON.stringify(error.response));
+          if (response.data.msg == "Success") {
+            let reval = response.data.data.entries;
+            console.log(reval);
+            setDayEntry(reval);
+            console.log(response.data.data.total);
+            setDayTotalHours(response.data.data.total);
+            setIsLoadingGwd(false);
+          }
         }
-      } else {
-        alert(JSON.stringify(error));
-      }
+      })
+      .catch((error) => {
+        // dispatch(setTokerr(error.message));
+        if (error.response) {
+          if (error.response.data.message == "Unauthenticated.") {
+            dispatch(setTokerr("Session expired 2"));
+            dispatch(setUserObj(null));
+          } else {
+            alert(JSON.stringify(error.response));
+          }
+        } else {
+          alert(JSON.stringify(error));
+        }
 
-      setIsLoadingGwd(true);
-      
-    });
-
+        setIsLoadingGwd(true);
+      });
   }
 
-  function addEntry(){
-    navigation.navigate('DiaryCrud', {
-      gwdid: '-',
+  function addEntry() {
+    navigation.navigate("DiaryCrud", {
+      gwdid: "-",
       seldate: inDate,
-      action: 'Add'
+      action: "Add",
     });
   }
 
-  function editEntry(gwd_id){
-    navigation.navigate('DiaryCrud', {
+  function editEntry(gwd_id) {
+    navigation.navigate("DiaryCrud", {
       gwdid: gwd_id,
       seldate: inDate,
-      action: 'Edit'
+      action: "Edit",
     });
-
   }
 
-  function deleteEntry(gwd_id, gwd_title){
-    
-    Alert.alert('Confirm delete?', gwd_title, [
-      {
-        text: 'Delete!', onPress: () => doDeleteEntry(gwd_id)
-      }, 
-      {
-        text: 'Cancel', onPress: () => {}, style: 'cancel'
-      }
-    ], { cancelable: true });
+  function deleteEntry(gwd_id, gwd_title) {
+    Alert.alert(
+      "Confirm delete?",
+      gwd_title,
+      [
+        {
+          text: "Delete!",
+          onPress: () => doDeleteEntry(gwd_id),
+        },
+        {
+          text: "Cancel",
+          onPress: () => {},
+          style: "cancel",
+        },
+      ],
+      { cancelable: true }
+    );
   }
 
-  function doDeleteEntry(gwd_id){
+  function doDeleteEntry(gwd_id) {
     setIsLoadingGwd(true);
-    console.log('DelGwd input: ' + gwd_id);
-    const theinput = { 
-      gwd_id: gwd_id
+    console.log("DelGwd input: " + gwd_id);
+    const theinput = {
+      gwd_id: gwd_id,
     };
 
-    axios.post(
-      baseurl + 't/diary/DelGwd', theinput, config
-    ).then(async (response) => {
-      // check for status code
-      if(response.data.status_code != '200'){
-        alert(JSON.stringify(response.data));
-      } else {
-        if(response.data.msg == 'Success'){
-          alert('Record deleted');
-        } 
-      }
-      
-    }).catch(error => {
-      // dispatch(setTokerr(error.message));
-      if(error.response) {
-        if(error.response.data.message == 'Unauthenticated.'){
-          dispatch(setTokerr('Session expired 2'));
-          dispatch(setUserObj(null));
+    axios
+      .post(baseurl + "t/diary/DelGwd", theinput, config)
+      .then(async (response) => {
+        // check for status code
+        if (response.data.status_code != "200") {
+          alert(JSON.stringify(response.data));
         } else {
-          alert('Error ' + error.response.data.status_code + ': ' + error.response.data.message);
+          if (response.data.msg == "Success") {
+            alert("Record deleted");
+          }
         }
-      } else {
-        alert('Unknown error. ref: DelGwd');
-      }
-      
-    });
+      })
+      .catch((error) => {
+        // dispatch(setTokerr(error.message));
+        if (error.response) {
+          if (error.response.data.message == "Unauthenticated.") {
+            dispatch(setTokerr("Session expired 2"));
+            dispatch(setUserObj(null));
+          } else {
+            alert(
+              "Error " +
+                error.response.data.status_code +
+                ": " +
+                error.response.data.message
+            );
+          }
+        } else {
+          alert("Unknown error. ref: DelGwd");
+        }
+      });
 
     setIsLoadingGwd(false);
 
     selectedDate(inDate);
   }
 
-  function loadCalendar(indate = selMonth){
-    console.log('GetMonCalendar input ' + indate);
-    const theinput = { 
-      indate: indate
+  function loadCalendar(indate = selMonth) {
+    console.log("GetMonCalendar input " + indate);
+    const theinput = {
+      indate: indate,
     };
 
-    axios.post(
-      baseurl + 't/diary/GetMonCalendar', theinput, config
-    ).then(async (response) => {
-      // check for status code
-      if(response.data.status_code != '200'){
-        alert(JSON.stringify(response.data));
-      } else {
-        if(response.data.msg == 'Success'){
-          let reval = response.data.data;
-          console.log(reval);
-
-          if(reval){
-            setMarkDates(reval);
-          }
-
-          if(inDate){
-            selectedDate();
-          }
-        } 
-      }
-      
-    }).catch(error => {
-      // dispatch(setTokerr(error.message));
-      if(error.response) {
-        if(error.response.data.message == 'Unauthenticated.'){
-          dispatch(setTokerr('Session expired 2'));
-          dispatch(setUserObj(null));
+    axios
+      .post(baseurl + "t/diary/GetMonCalendar", theinput, config)
+      .then(async (response) => {
+        // check for status code
+        if (response.data.status_code != "200") {
+          alert(JSON.stringify(response.data));
         } else {
-          alert('Error ' + error.response.data.status_code + ': ' + error.response.data.message);
-        }
-      } else {
-        alert('Unknown error. ref: GetMonCalendar');
-      }
+          if (response.data.msg == "Success") {
+            let reval = response.data.data;
+            console.log(reval);
 
-      // navigation.goBack();
-      return;
-      
-    });
+            if (reval) {
+              setMarkDates(reval);
+            }
+
+            if (inDate) {
+              selectedDate();
+            }
+          }
+        }
+      })
+      .catch((error) => {
+        // dispatch(setTokerr(error.message));
+        if (error.response) {
+          if (error.response.data.message == "Unauthenticated.") {
+            dispatch(setTokerr("Session expired 2"));
+            dispatch(setUserObj(null));
+          } else {
+            alert(
+              "Error " +
+                error.response.data.status_code +
+                ": " +
+                error.response.data.message
+            );
+          }
+        } else {
+          alert("Unknown error. ref: GetMonCalendar");
+        }
+
+        // navigation.goBack();
+        return;
+      });
   }
 
   React.useEffect(() => {
     loadCalendar();
 
-    const willFocusSubscription = navigation.addListener('focus', () => {
+    const willFocusSubscription = navigation.addListener("focus", () => {
       loadCalendar();
     });
 
     return willFocusSubscription;
-    
   }, []);
-
 
   return (
     <>
-      <Modal isOpen={isLoadingGwd} >
+      <Modal isOpen={isLoadingGwd}>
         <Modal.Content maxWidth="400px">
           <Modal.Body>
-          <Center flex={1} px="3">
-          <HStack space={2} alignItems="center">
-            <Spinner accessibilityLabel="Loading posts" />
-            <PageTitle>Loading</PageTitle>
-          </HStack>
-          </Center>
+            <Center flex={1} px="3">
+              <HStack space={2} alignItems="center">
+                <Spinner accessibilityLabel="Loading posts" />
+                <PageTitle>Loading</PageTitle>
+              </HStack>
+            </Center>
           </Modal.Body>
         </Modal.Content>
       </Modal>
-    <ScreenWrapper>
-      <PageTitle fontSize="xl">trUSt Diary</PageTitle>
-      <ScrollView 
-        w="100%" 
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => loadCalendar(tomorrow)} />}
-      >
-        <Calendar 
-          maxDate={tomorrow}
-          current={tomorrow}
-          onMonthChange={(month) => {
-            setSelMonth(month.dateString);
-            loadCalendar(month.dateString);
-          }}
-          markingType={'period'}
-          markedDates={markDates}
-          onDayPress={(dateobj) => { 
-            // dateobj.selected = true;
-            // alert(JSON.stringify(dateobj));
-            selectedDate(dateobj.dateString) ;
-          }}
-        />
-        <InfoBox m={3}>
-          { inDate ? (
-            <>
-            <HStack alignItems="flex-start" p={2}>
-              <Text>{new Date(inDate).toDateString()} : { !isFutureDate && (dayTotalHours + " hours")}</Text>
-              <Spacer />
-              { !isFutureDate && (
-                <FormBtnSubmit 
-                  size="xs"
-                  onPress={() => addEntry()}
-                  endIcon={<Icon as={FontAwesome5} name="plus" size={5} />}
-                >Add</FormBtnSubmit>
-              )}
-            </HStack>
-              
-              { dayEntry.length > 0 ? (
-                <>
-                {
-                  dayEntry.map((item, index) => (
-                    <DiaryItemCards
-                      key={index}
-                      title={item.title}
-                      text1={item.tag_desc + ' - ' + item.type_desc}
-                      text2={item.hours_spent + ' hours'}
-                      editAction={editEntry}
-                      deleteAction={deleteEntry}
-                      itemid={item.id}
-                    />
-                  ))
-                }
-                </>
-              ) : (
-                <>
-                <Text>No entry for this date</Text>
-                </>
-              )}
-            </>
-          ) : (
-            <>
-            <Text>Please select a date</Text>
-            </>
-            
-          )}
-          
-          
-        </InfoBox>
-      </ScrollView>
-    </ScreenWrapper>
+      <ScreenWrapper justifyContent="center">
+        <PageTitle fontSize="xl">trUSt Diary</PageTitle>
+        <ScrollView
+          w="100%"
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => loadCalendar(tomorrow)}
+            />
+          }
+        >
+          <Calendar
+            maxDate={tomorrow}
+            current={tomorrow}
+            onMonthChange={(month) => {
+              setSelMonth(month.dateString);
+              loadCalendar(month.dateString);
+            }}
+            markingType={"period"}
+            markedDates={markDates}
+            onDayPress={(dateobj) => {
+              // dateobj.selected = true;
+              // alert(JSON.stringify(dateobj));
+              selectedDate(dateobj.dateString);
+            }}
+          />
+          <InfoBox m={3}>
+            {inDate ? (
+              <>
+                <HStack alignItems="flex-start" p={2}>
+                  <Text>
+                    {new Date(inDate).toDateString()} :{" "}
+                    {!isFutureDate && dayTotalHours + " hours"}
+                  </Text>
+                  <Spacer />
+                  {!isFutureDate && (
+                    <FormBtnSubmit
+                      size="xs"
+                      onPress={() => addEntry()}
+                      endIcon={<Icon as={FontAwesome5} name="plus" size={5} />}
+                    >
+                      Add
+                    </FormBtnSubmit>
+                  )}
+                </HStack>
+
+                {dayEntry.length > 0 ? (
+                  <>
+                    {dayEntry.map((item, index) => (
+                      <DiaryItemCards
+                        key={index}
+                        title={item.title}
+                        text1={item.tag_desc + " - " + item.type_desc}
+                        text2={item.hours_spent + " hours"}
+                        editAction={editEntry}
+                        deleteAction={deleteEntry}
+                        itemid={item.id}
+                      />
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    <Text>No entry for this date</Text>
+                  </>
+                )}
+              </>
+            ) : (
+              <>
+                <Text>Please select a date</Text>
+              </>
+            )}
+          </InfoBox>
+        </ScrollView>
+      </ScreenWrapper>
     </>
   );
 }

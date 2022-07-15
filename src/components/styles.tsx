@@ -23,6 +23,7 @@ import {
   HStack,
   StatusBar,
   Spacer,
+  IBoxProps,
 } from "native-base";
 import { FontAwesome5 } from "@expo/vector-icons";
 //  import {  } from '@react-navigation/native';
@@ -39,6 +40,8 @@ export const unifi_primary = "#ff6624";
 export const unifi_c9 = "#ffc132";
 export const c_black = "#000000";
 export const c_white = "#ffffff";
+export const header_light = "#f8f8f8";
+export const background_light = "#F6F8FC";
 
 export const BaseContainer = ({ children }) => {
   return (
@@ -112,17 +115,17 @@ export const ClickableBox = ({
   );
 };
 
-export const ScreenWrapper = ({ children }) => {
+export const ScreenWrapper: React.FC<IBoxProps> = ({ children, ...props }) => {
   return (
     <Box
       flex={1}
       w="100%"
       h="100%"
-      _light={{ bg: c_white }}
+      _light={{ bg: background_light }}
       _dark={{ bg: unifi_c8 }}
       // alignItems="center"
-      justifyContent="center"
       // mx='auto'
+      {...props}
     >
       <Center>{children}</Center>
     </Box>

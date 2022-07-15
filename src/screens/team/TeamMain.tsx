@@ -1,32 +1,31 @@
-import React from 'react';
-import { FontAwesome5 } from '@expo/vector-icons';
-import {
-  Center, Button
-} from 'native-base';
+import React from "react";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { Center, Button } from "native-base";
 
-import { 
+import {
   ClickableBox,
-  DarkModeToggle, PageTitle, ScreenWrapper
-} from '../../components/styles';
+  DarkModeToggle,
+  PageTitle,
+  ScreenWrapper,
+} from "../../components/styles";
 
 export function TeamMain({ navigation }) {
-
   return (
-    <ScreenWrapper>
-      <ClickableBox 
+    <ScreenWrapper justifyContent="center">
+      <ClickableBox
         minWidth="75%"
         btnText="Whereabout"
         clickAction={() => {
-          navigation.navigate('Inprogress');
+          navigation.navigate("Inprogress");
         }}
         iconClass={FontAwesome5}
         iconName="map-marked-alt"
       />
-      <ClickableBox 
+      <ClickableBox
         minWidth="75%"
         btnText="Work-time Utilization"
         clickAction={() => {
-          navigation.navigate('Inprogress');
+          navigation.navigate("Inprogress");
         }}
         iconClass={FontAwesome5}
         iconName="clock"

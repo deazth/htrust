@@ -1,14 +1,14 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useColorModeValue } from "native-base";
+import { Image, useColorModeValue } from "native-base";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 import Login from "../screens/general/Login";
 import { Home } from "../screens/general/Home";
 import { Setting } from "../screens/general/Setting";
 import { Feedback } from "../screens/general/Feedback";
-import { AoMain } from "../screens/ao/AoMain";
+import AgileOfficeMain from "../screens/agileOffice";
 import { DiaryMain } from "../screens/diary/DiaryMain";
 import {
   unifi_c1,
@@ -21,68 +21,99 @@ import {
   unifi_c5,
   c_black,
   unifi_c6,
+  c_white,
+  header_light,
 } from "../components/styles";
 import { Loading } from "../screens/general/Loading";
 import { Info } from "../screens/general/Info";
-import { AoCLoc } from "../screens/ao/AoCLoc";
+import { AgileOfficeCLoc } from "../screens/agileOffice/AgileOfficeCLoc";
 import { selectIsLoading, selectUserID, selectUserObj } from "../app/userSlice";
 import { useSelector } from "react-redux";
 import { TeamMain } from "../screens/team/TeamMain";
-import { AoScanQR } from "../screens/ao/AoScanQR";
-import { AoSeatAvail } from "../screens/ao/AoSeatAvail";
+import { AgileOfficeScanQR } from "../screens/agileOffice/AgileOfficeScanQR";
+import { AgileOfficeSeatAvail } from "../screens/agileOffice/AgileOfficeSeatAvail";
 import { Inprogress } from "../screens/general/Inprogress";
-import { AoScanResult } from "../screens/ao/AoScanResult";
-import { AoAreaBook } from "../screens/ao/AoAreaBook";
+import { AgileOfficeScanResult } from "../screens/agileOffice/AgileOfficeScanResult";
+import { AgileOfficeAreaBook } from "../screens/agileOffice/AgileOfficeAreaBook";
 import { DiaryEdit } from "../screens/diary/DiaryEdit";
+import { useAssets } from "expo-asset";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 export function RootTab() {
-  let iconFocusCol = useColorModeValue(unifi_c4, unifi_primary);
-  let iconNormalCol = useColorModeValue(c_black, unifi_c5);
+  const iconFocusCol = useColorModeValue("#1C03E3", unifi_primary);
+  const iconNormalCol = useColorModeValue("#C7C7C7", unifi_c5);
+  const headerTint = useColorModeValue(unifi_c4, unifi_c1);
+  const headerbgc = useColorModeValue(header_light, unifi_c7);
+  const [assets] = useAssets([require("assets/logo-tm.png")]);
+
+  const options = {
+    headerRight: () => (
+      <Image
+        source={assets?.[0]}
+        alt="logo"
+        style={{
+          resizeMode: "contain",
+          width: 50,
+          height: 20,
+          marginTop: -10,
+          marginRight: 15,
+        }}
+      />
+    ),
+  };
 
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
+        tabBarIcon: ({ focused, size }) => {
+          let name;
 
-          var iconcolorr = focused ? iconFocusCol : iconNormalCol;
+          const color = focused ? iconFocusCol : iconNormalCol;
 
-          if (route.name === "Home") {
-            iconName = "home";
-          } else if (route.name === "Agile Office") {
-            iconName = "map-marked-alt";
-          } else if (route.name === "Diary") {
-            iconName = "edit";
-          } else if (route.name === "Misc") {
-            iconName = "info-circle";
-          } else if (route.name === "Team") {
-            iconName = "users";
-          }
+          if (route.name === "Home") name = "home";
+          else if (route.name === "Agile Office") name = "map-marked-alt";
+          else if (route.name === "Diary") name = "edit";
+          else if (route.name === "Misc") name = "info-circle";
+          else if (route.name === "Team") name = "users";
 
           // You can return any component that you like here!
-          return (
-            <FontAwesome5 name={iconName} size={size} color={iconcolorr} />
-          );
+          return <FontAwesome5 {...{ name, size, color }} />;
         },
         tabBarActiveTintColor: iconFocusCol,
         tabBarInactiveTintColor: iconNormalCol,
-        tabBarActiveBackgroundColor: useColorModeValue(unifi_c6, c_black),
-        tabBarInactiveBackgroundColor: useColorModeValue(unifi_c5, unifi_c8),
+        tabBarInactiveBackgroundColor: useColorModeValue(c_white, unifi_c8),
+        tabBarActiveBackgroundColor: useColorModeValue(c_white, unifi_c8),
       })}
     >
-      {/* <Tab.Screen name="Home" component={Home}  
-        options={{
-					headerShown: false,
-				}}
-      /> */}
       <Tab.Screen
-        name="Agile Office"
-        component={AoMain}
+        name="Home"
+        component={Home}
         options={{
           headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Agile Office"
+        component={AgileOfficeMain}
+        options={{
+          headerTitleAlign: "center",
+          headerShown: true,
+          headerTintColor: headerTint,
+          headerStyle: {
+            backgroundColor: headerbgc,
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 4,
+            },
+            shadowOpacity: 0,
+            shadowRadius: 4.65,
+
+            elevation: 8,
+          },
+          ...options,
         }}
       />
       <Tab.Screen
@@ -114,6 +145,23 @@ export function RootStack() {
   const headerTint = useColorModeValue(unifi_c4, unifi_c1);
   const headerbgc = useColorModeValue(unifi_c1, unifi_c7);
 
+  const [assets] = useAssets([require("assets/logo-tm.png")]);
+
+  const options = {
+    headerRight: () => (
+      <Image
+        source={assets?.[0]}
+        alt="logo"
+        style={{
+          resizeMode: "contain",
+          width: 50,
+          height: 20,
+          marginTop: -10,
+        }}
+      />
+    ),
+  };
+
   // show loading screen if still not ready
   if (isloading) {
     console.log("showing loading screen");
@@ -130,7 +178,6 @@ export function RootStack() {
     console.log("loading status is done");
     if (userid) {
       console.log("showing content screen");
-      // console.log(userid);
       return (
         <Stack.Navigator initialRouteName="Hometab">
           <Stack.Screen
@@ -142,6 +189,7 @@ export function RootStack() {
             name="Feedback"
             component={Feedback}
             options={{
+              ...options,
               headerShown: true,
               headerTintColor: headerTint,
               headerStyle: {
@@ -154,6 +202,7 @@ export function RootStack() {
             component={Info}
             options={{
               title: "Maklumat",
+              ...options,
               headerShown: true,
               headerTintColor: headerTint,
               headerStyle: {
@@ -162,10 +211,11 @@ export function RootStack() {
             }}
           />
           <Stack.Screen
-            name="AoCLoc"
-            component={AoCLoc}
+            name="AgileOfficeCLoc"
+            component={AgileOfficeCLoc}
             options={{
               title: "Location Update",
+              ...options,
               headerShown: true,
               headerTintColor: headerTint,
               headerStyle: {
@@ -174,10 +224,11 @@ export function RootStack() {
             }}
           />
           <Stack.Screen
-            name="AoScanQR"
-            component={AoScanQR}
+            name="AgileOfficeScanQR"
+            component={AgileOfficeScanQR}
             options={{
               title: "Workspace Checkin - QR",
+              ...options,
               headerShown: true,
               headerTintColor: headerTint,
               headerStyle: {
@@ -186,10 +237,11 @@ export function RootStack() {
             }}
           />
           <Stack.Screen
-            name="AoSeatAvail"
-            component={AoSeatAvail}
+            name="AgileOfficeSeatAvail"
+            component={AgileOfficeSeatAvail}
             options={{
               title: "Workspace Reservation",
+              ...options,
               headerShown: true,
               headerTintColor: headerTint,
               headerStyle: {
@@ -198,10 +250,12 @@ export function RootStack() {
             }}
           />
           <Stack.Screen
-            name="AoAreaBook"
-            component={AoAreaBook}
+            name="AgileOfficeAreaBook"
+            component={AgileOfficeAreaBook}
             options={{
+              ...options,
               title: "Meeting Area Booking",
+              ...options,
               headerShown: true,
               headerTintColor: headerTint,
               headerStyle: {
@@ -211,10 +265,11 @@ export function RootStack() {
           />
 
           <Stack.Screen
-            name="AoScanResult"
-            component={AoScanResult}
+            name="AgileOfficeScanResult"
+            component={AgileOfficeScanResult}
             options={{
               title: "QR Result",
+              ...options,
               headerShown: true,
               headerTintColor: headerTint,
               headerStyle: {
@@ -228,6 +283,7 @@ export function RootStack() {
             component={Inprogress}
             options={{
               title: "Under Development",
+              ...options,
               headerShown: true,
               headerTintColor: headerTint,
               headerStyle: {
@@ -240,6 +296,7 @@ export function RootStack() {
             component={DiaryEdit}
             options={{
               title: "Diary Entry",
+              ...options,
               headerShown: true,
               headerTintColor: headerTint,
               headerStyle: {
