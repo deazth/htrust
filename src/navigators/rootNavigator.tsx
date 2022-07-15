@@ -8,7 +8,7 @@ import Login from "../screens/general/Login";
 import { Home } from "../screens/general/Home";
 import { Setting } from "../screens/general/Setting";
 import { Feedback } from "../screens/general/Feedback";
-import { AgileOfficeMain } from "../screens/agileOffice/AgileOfficeMain";
+import AgileOfficeMain from "../screens/agileOffice";
 import { DiaryMain } from "../screens/diary/DiaryMain";
 import {
   unifi_c1,
@@ -21,6 +21,8 @@ import {
   unifi_c5,
   c_black,
   unifi_c6,
+  c_white,
+  header_light,
 } from "../components/styles";
 import { Loading } from "../screens/general/Loading";
 import { Info } from "../screens/general/Info";
@@ -42,7 +44,8 @@ const Tab = createBottomTabNavigator();
 export function RootTab() {
   const iconFocusCol = useColorModeValue("#1C03E3", unifi_primary);
   const iconNormalCol = useColorModeValue("#C7C7C7", unifi_c5);
-
+  const headerTint = useColorModeValue(unifi_c4, unifi_c1);
+  const headerbgc = useColorModeValue(header_light, unifi_c7);
   const [assets] = useAssets([require("assets/logo-tm.png")]);
 
   const options = {
@@ -80,8 +83,8 @@ export function RootTab() {
         },
         tabBarActiveTintColor: iconFocusCol,
         tabBarInactiveTintColor: iconNormalCol,
-        // tabBarActiveBackgroundColor: useColorModeValue(unifi_c6, c_black),
-        // tabBarInactiveBackgroundColor: useColorModeValue(unifi_c5, unifi_c8),
+        tabBarInactiveBackgroundColor: useColorModeValue(c_white, unifi_c8),
+        tabBarActiveBackgroundColor: useColorModeValue(c_white, unifi_c8),
       })}
     >
       <Tab.Screen
@@ -94,7 +97,14 @@ export function RootTab() {
       <Tab.Screen
         name="Agile Office"
         component={AgileOfficeMain}
-        options={options}
+        options={{
+          headerShown: true,
+          headerTintColor: headerTint,
+          headerStyle: {
+            backgroundColor: headerbgc,
+          },
+          ...options,
+        }}
       />
       <Tab.Screen
         name="Diary"

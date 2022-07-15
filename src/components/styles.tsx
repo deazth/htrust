@@ -39,6 +39,7 @@ export const unifi_primary = "#ff6624";
 export const unifi_c9 = "#ffc132";
 export const c_black = "#000000";
 export const c_white = "#ffffff";
+export const header_light = "#F6F8FC";
 
 export const BaseContainer = ({ children }) => {
   return (

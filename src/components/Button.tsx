@@ -1,30 +1,43 @@
 import React, { useRef } from "react";
+import { ActivityIndicator, Animated } from "react-native";
 import {
-  Pressable,
-  Text,
+  useColorModeValue,
   View,
-  ActivityIndicator,
-  Animated,
-} from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
+  Text,
+  Pressable,
+  IPressableProps,
+} from "native-base";
+import { c_white, unifi_c4, unifi_primary } from "./styles";
+
+interface Props extends IPressableProps {
+  label: string;
+  loading?: boolean;
+}
 
 const Root = Animated.createAnimatedComponent(Pressable);
 
-export default ({ label, loading, onPress, ...props }) => {
+const Button: React.FC<Props> = ({ label, loading, onPress, ...props }) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const scale = (toValue) =>
     Animated.spring(scaleAnim, { toValue, useNativeDriver: true }).start();
+
   return (
     <Root
-      onPress={() => !loading && onPress()}
+      onPress={(event) => !loading && onPress(event)}
       onPressIn={() => scale(0.97)}
       onPressOut={() => scale(1)}
       {...props}
-      style={{ transform: [{ scale: scaleAnim }], width: "100%" }}
+      style={{
+        transform: [{ scale: scaleAnim }],
+        width: "100%",
+      }}
     >
-      <LinearGradient
-        colors={["#3B6EC9", "#1C04E3"]}
-        style={{ borderRadius: 5, padding: 12 }}
+      <View
+        style={{
+          borderRadius: 5,
+          padding: 12,
+          backgroundColor: useColorModeValue(unifi_c4, unifi_primary),
+        }}
       >
         <View
           style={{
@@ -44,7 +57,8 @@ export default ({ label, loading, onPress, ...props }) => {
             {label}
           </Text>
         </View>
-      </LinearGradient>
+      </View>
     </Root>
   );
 };
+export default Button;
