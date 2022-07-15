@@ -1,10 +1,10 @@
 import React from "react";
+import { StyleSheet } from "react-native";
 import { Text, ScrollView, View } from "native-base";
 import Constants from "expo-constants";
 
-import { ScreenWrapper } from "../../components/styles";
-import { StyleSheet } from "react-native";
 import { LogoutButton } from "components/LogoutButton";
+import { ScreenWrapper } from "../../components/styles";
 
 const styles = StyleSheet.create({
   copyright: {
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
 });
 
 const { version } = Constants.manifest;
-export function About({ navigation }) {
+const About: React.FC = () => {
   return (
     <ScreenWrapper>
       <ScrollView
@@ -55,4 +55,6 @@ export function About({ navigation }) {
       </ScrollView>
     </ScreenWrapper>
   );
-}
+};
+
+export default About;

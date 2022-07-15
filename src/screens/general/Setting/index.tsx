@@ -2,7 +2,7 @@ import React from "react";
 import { Text, ScrollView, View, Switch, Icon } from "native-base";
 import Constants from "expo-constants";
 
-import { ScreenWrapper } from "../../components/styles";
+import { ScreenWrapper } from "components/styles";
 import { StyleSheet } from "react-native";
 import { LogoutButton } from "components/LogoutButton";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -21,7 +21,6 @@ const styles = StyleSheet.create({
     marginTop: 14,
   },
 });
-
 const { version } = Constants.manifest;
 export function Setting({ navigation }) {
   return (
