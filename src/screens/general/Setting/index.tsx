@@ -1,13 +1,10 @@
 import React from "react";
-import * as SecureStore from "expo-secure-store";
 import { ScrollView, Text, View } from "native-base";
 import Constants from "expo-constants";
 
 import { FontAwesome5 } from "@expo/vector-icons";
-import { setUserToken, setUserID, setUserObj } from "../../../app/userSlice";
-import { useDispatch } from "react-redux";
 import { ScreenWrapper } from "components/styles";
-import Button from "components/Button";
+import { LogoutButton } from "components/LogoutButton";
 import RowButton from "./RowButton";
 import { StyleSheet } from "react-native";
 
@@ -23,17 +20,6 @@ const styles = StyleSheet.create({
   },
 });
 export function Setting({ navigation }) {
-  const dispatch = useDispatch();
-
-  function signOut() {
-    SecureStore.deleteItemAsync("apicoin");
-    SecureStore.deleteItemAsync("user_id");
-    SecureStore.deleteItemAsync("staff_no");
-    dispatch(setUserToken(null));
-    dispatch(setUserID(null));
-    dispatch(setUserObj(null));
-  }
-
   return (
     <ScreenWrapper>
       <ScrollView
@@ -46,7 +32,7 @@ export function Setting({ navigation }) {
             label: "About",
             iconClass: FontAwesome5,
             iconName: "lightbulb",
-            onPress: () => navigation.navigate("Info"),
+            onPress: () => navigation.navigate("About"),
           },
           {
             label: "FAQ",
@@ -93,7 +79,7 @@ export function Setting({ navigation }) {
           <Text style={styles.copyright}>
             Copyright 2022 Telekom Malaysia Berhad. All rights reserved.
           </Text>
-          <Button label="Logout" onPress={signOut} />
+          <LogoutButton />
         </View>
       </ScrollView>
     </ScreenWrapper>
