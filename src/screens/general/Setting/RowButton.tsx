@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import { Animated, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet } from "react-native";
 import { View, Text, Pressable, IPressableProps, Icon } from "native-base";
 
 interface Props extends IPressableProps {
