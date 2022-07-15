@@ -1,14 +1,14 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useColorModeValue } from "native-base";
+import { Image, useColorModeValue } from "native-base";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 import Login from "../screens/general/Login";
 import { Home } from "../screens/general/Home";
 import { Setting } from "../screens/general/Setting";
 import { Feedback } from "../screens/general/Feedback";
-import { AoMain } from "../screens/agileOffice/AgileOfficeMain";
+import { AgileOfficeMain } from "../screens/agileOffice/AgileOfficeMain";
 import { DiaryMain } from "../screens/diary/DiaryMain";
 import {
   unifi_c1,
@@ -34,13 +34,31 @@ import { Inprogress } from "../screens/general/Inprogress";
 import { AgileOfficeScanResult } from "../screens/agileOffice/AgileOfficeScanResult";
 import { AgileOfficeAreaBook } from "../screens/agileOffice/AgileOfficeAreaBook";
 import { DiaryEdit } from "../screens/diary/DiaryEdit";
+import { useAssets } from "expo-asset";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 export function RootTab() {
-  let iconFocusCol = useColorModeValue("#1C03E3", unifi_primary);
-  let iconNormalCol = useColorModeValue("#C7C7C7", unifi_c5);
+  const iconFocusCol = useColorModeValue("#1C03E3", unifi_primary);
+  const iconNormalCol = useColorModeValue("#C7C7C7", unifi_c5);
+
+  const [assets] = useAssets([require("assets/logo-tm.png")]);
+
+  const options = {
+    headerRight: () => (
+      <Image
+        source={assets?.[0]}
+        alt="logo"
+        style={{
+          resizeMode: "contain",
+          width: 50,
+          height: 20,
+          marginTop: -10,
+        }}
+      />
+    ),
+  };
 
   return (
     <Tab.Navigator
@@ -72,7 +90,11 @@ export function RootTab() {
           headerShown: false,
         }}
       />
-      <Tab.Screen name="Agile Office" component={AoMain} />
+      <Tab.Screen
+        name="Agile Office"
+        component={AgileOfficeMain}
+        options={options}
+      />
       <Tab.Screen
         name="Diary"
         component={DiaryMain}
@@ -102,6 +124,23 @@ export function RootStack() {
   const headerTint = useColorModeValue(unifi_c4, unifi_c1);
   const headerbgc = useColorModeValue(unifi_c1, unifi_c7);
 
+  const [assets] = useAssets([require("assets/logo-tm.png")]);
+
+  const options = {
+    headerRight: () => (
+      <Image
+        source={assets?.[0]}
+        alt="logo"
+        style={{
+          resizeMode: "contain",
+          width: 50,
+          height: 20,
+          marginTop: -10,
+        }}
+      />
+    ),
+  };
+
   // show loading screen if still not ready
   if (isloading) {
     console.log("showing loading screen");
@@ -118,7 +157,6 @@ export function RootStack() {
     console.log("loading status is done");
     if (userid) {
       console.log("showing content screen");
-      // console.log(userid);
       return (
         <Stack.Navigator initialRouteName="Hometab">
           <Stack.Screen
@@ -130,6 +168,7 @@ export function RootStack() {
             name="Feedback"
             component={Feedback}
             options={{
+              ...options,
               headerShown: true,
               headerTintColor: headerTint,
               headerStyle: {
@@ -142,6 +181,7 @@ export function RootStack() {
             component={Info}
             options={{
               title: "Maklumat",
+              ...options,
               headerShown: true,
               headerTintColor: headerTint,
               headerStyle: {
@@ -154,6 +194,7 @@ export function RootStack() {
             component={AgileOfficeCLoc}
             options={{
               title: "Location Update",
+              ...options,
               headerShown: true,
               headerTintColor: headerTint,
               headerStyle: {
@@ -166,6 +207,7 @@ export function RootStack() {
             component={AgileOfficeScanQR}
             options={{
               title: "Workspace Checkin - QR",
+              ...options,
               headerShown: true,
               headerTintColor: headerTint,
               headerStyle: {
@@ -178,6 +220,7 @@ export function RootStack() {
             component={AgileOfficeSeatAvail}
             options={{
               title: "Workspace Reservation",
+              ...options,
               headerShown: true,
               headerTintColor: headerTint,
               headerStyle: {
@@ -189,7 +232,9 @@ export function RootStack() {
             name="AgileOfficeAreaBook"
             component={AgileOfficeAreaBook}
             options={{
+              ...options,
               title: "Meeting Area Booking",
+              ...options,
               headerShown: true,
               headerTintColor: headerTint,
               headerStyle: {
@@ -203,6 +248,7 @@ export function RootStack() {
             component={AgileOfficeScanResult}
             options={{
               title: "QR Result",
+              ...options,
               headerShown: true,
               headerTintColor: headerTint,
               headerStyle: {
@@ -216,6 +262,7 @@ export function RootStack() {
             component={Inprogress}
             options={{
               title: "Under Development",
+              ...options,
               headerShown: true,
               headerTintColor: headerTint,
               headerStyle: {
@@ -228,6 +275,7 @@ export function RootStack() {
             component={DiaryEdit}
             options={{
               title: "Diary Entry",
+              ...options,
               headerShown: true,
               headerTintColor: headerTint,
               headerStyle: {

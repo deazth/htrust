@@ -27,7 +27,7 @@ import {
 } from "../../app/userSlice";
 import { useAssets } from "expo-asset";
 
-export function AoMain({ navigation }) {
+export function AgileOfficeMain({ navigation }) {
   const [refreshing, setRefreshing] = React.useState(false);
   const dispatch = useDispatch();
   const [assets] = useAssets([require("assets/menara.jpg")]);
