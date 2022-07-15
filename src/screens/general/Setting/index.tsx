@@ -36,7 +36,11 @@ export function Setting({ navigation }) {
 
   return (
     <ScreenWrapper>
-      <ScrollView w="100%" contentContainerStyle={{ paddingVertical: 15 }}>
+      <ScrollView
+        h="100%"
+        w="100%"
+        contentContainerStyle={{ paddingVertical: 15 }}
+      >
         {[
           {
             label: "About",
