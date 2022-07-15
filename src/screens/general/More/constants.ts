@@ -17,12 +17,10 @@ export const appDetails = (navigation): List[] => [
     },
   },
   {
-    label: "App Settings",
+    label: "Settings",
     iconClass: FontAwesome5,
     iconName: "cog",
-    onPress: () => {
-      // TODO: Navigation to Settings
-    },
+    onPress: () => navigation.navigate("Settings"),
   },
 ];
 

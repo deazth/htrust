@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import { StyleSheet } from "react-native";
-import { View, Text, Pressable, IPressableProps, Icon } from "native-base";
+import {
+  View,
+  Text,
+  Pressable,
+  IPressableProps,
+  Icon,
+  useColorModeValue,
+} from "native-base";
+import { header_light, unifi_c7 } from "components/styles";
 
 interface Props extends IPressableProps {
   label: string;
@@ -13,6 +21,8 @@ const styles = StyleSheet.create({
   root: {
     marginTop: 5,
     width: "100%",
+    borderWidth: 1,
+    borderColor: "#f0f0f0",
     flexDirection: "row",
     paddingHorizontal: 25,
     paddingVertical: 13,
@@ -26,7 +36,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   label: {
-    color: "#1C03E3",
     textAlign: "center",
     fontSize: 16,
     marginLeft: 10,
@@ -56,18 +65,23 @@ const RowButton: React.FC<Props> = ({
       onPressIn={() => setTouched(true)}
       onPressOut={() => setTouched(false)}
       {...props}
-      style={styles.root}
+      style={{
+        ...styles.root,
+        backgroundColor: useColorModeValue(header_light, unifi_c7),
+      }}
     >
       <View style={styles.leftContainer}>
-        <Icon color="#1C03E3" as={iconClass} name={iconName} size={5} />
-        <Text style={styles.label}>{label}</Text>
+        <Icon as={iconClass} name={iconName} size={5} />
+        <Text
+          style={{
+            ...styles.label,
+            color: useColorModeValue("#1C03E3", "white"),
+          }}
+        >
+          {label}
+        </Text>
       </View>
-      <Icon
-        color="#1C03E3"
-        as={iconClass}
-        name="chevron-circle-right"
-        size={5}
-      />
+      <Icon as={iconClass} name="chevron-circle-right" size={5} />
       {touched && <View style={styles.pressed} />}
     </Pressable>
   );
