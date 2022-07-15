@@ -40,14 +40,9 @@ const Button: React.FC<Props> = ({ label, loading, onPress, ...props }) => {
             ? ["#3353CF", "#3C51D6", "#241EDC", "#241EDC"]
             : [unifi_primary, unifi_primary]
         }
-        style={{ borderRadius: 5, padding: 9 }}
+        style={{ borderRadius: 5, padding: 3 }}
       >
-        <View
-          style={{
-            borderRadius: 5,
-            padding: 8,
-          }}
-        >
+        <View style={{ borderRadius: 5, padding: 8 }}>
           <View
             style={{
               flexDirection: "row",
