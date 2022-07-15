@@ -7,9 +7,9 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import Login from "../screens/general/Login";
 import { Home } from "../screens/general/Home";
 import { Feedback } from "../screens/general/Feedback";
-import AgileOfficeMain from "../screens/agileOffice";
 import { DiaryMain } from "../screens/diary/DiaryMain";
 import { MoreTab } from "./MoreTab";
+import { AgileOfficeTab } from "./AgileOfficeTab";
 import {
   unifi_c1,
   unifi_c4,
@@ -25,15 +25,10 @@ import {
   header_light,
 } from "../components/styles";
 import { Loading } from "../screens/general/Loading";
-import { AgileOfficeCLoc } from "../screens/agileOffice/AgileOfficeCLoc";
 import { selectIsLoading, selectUserID, selectUserObj } from "../app/userSlice";
 import { useSelector } from "react-redux";
 import { TeamMain } from "../screens/team/TeamMain";
-import { AgileOfficeScanQR } from "../screens/agileOffice/AgileOfficeScanQR";
-import { AgileOfficeSeatAvail } from "../screens/agileOffice/AgileOfficeSeatAvail";
 import { Inprogress } from "../screens/general/Inprogress";
-import { AgileOfficeScanResult } from "../screens/agileOffice/AgileOfficeScanResult";
-import { AgileOfficeAreaBook } from "../screens/agileOffice/AgileOfficeAreaBook";
 import { DiaryEdit } from "../screens/diary/DiaryEdit";
 import { useAssets } from "expo-asset";
 
@@ -43,31 +38,6 @@ const Tab = createBottomTabNavigator();
 export function RootTab() {
   const iconFocusCol = useColorModeValue("#1C03E3", unifi_primary);
   const iconNormalCol = useColorModeValue("#C7C7C7", unifi_c5);
-  const headerTint = useColorModeValue(unifi_c4, unifi_c1);
-  const headerbgc = useColorModeValue(header_light, unifi_c7);
-  const [assets] = useAssets([require("assets/logo-tm.png")]);
-
-  const options = {
-    // TODO: make header shadow similar like design
-    // headerStyle: {
-    //   elevation: 3,
-    //   shadowOpacity: 1,
-    // },
-    headerTintColor: "#1C03E3",
-    headerRight: () => (
-      <Image
-        source={assets?.[0]}
-        alt="logo"
-        style={{
-          resizeMode: "contain",
-          width: 50,
-          height: 20,
-          marginTop: -10,
-          marginRight: 15,
-        }}
-      />
-    ),
-  };
 
   return (
     <Tab.Navigator
@@ -101,23 +71,9 @@ export function RootTab() {
       />
       <Tab.Screen
         name="Agile Office"
-        component={AgileOfficeMain}
+        component={AgileOfficeTab}
         options={{
-          headerTitleAlign: "center",
-          headerShown: true,
-          headerTintColor: headerTint,
-          headerStyle: {
-            backgroundColor: headerbgc,
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 4,
-            },
-            shadowOpacity: 0,
-            shadowRadius: 4.65,
-            elevation: 8,
-          },
-          ...options,
+          headerShown: false,
         }}
       />
       <Tab.Screen
@@ -199,74 +155,6 @@ export function RootStack() {
             },
           }}
         />
-        <Stack.Screen
-          name="AgileOfficeCLoc"
-          component={AgileOfficeCLoc}
-          options={{
-            title: "Location Update",
-            ...options,
-            headerShown: true,
-            headerTintColor: headerTint,
-            headerStyle: {
-              backgroundColor: headerbgc,
-            },
-          }}
-        />
-        <Stack.Screen
-          name="AgileOfficeScanQR"
-          component={AgileOfficeScanQR}
-          options={{
-            title: "Workspace Checkin - QR",
-            ...options,
-            headerShown: true,
-            headerTintColor: headerTint,
-            headerStyle: {
-              backgroundColor: headerbgc,
-            },
-          }}
-        />
-        <Stack.Screen
-          name="AgileOfficeSeatAvail"
-          component={AgileOfficeSeatAvail}
-          options={{
-            title: "Workspace Reservation",
-            ...options,
-            headerShown: true,
-            headerTintColor: headerTint,
-            headerStyle: {
-              backgroundColor: headerbgc,
-            },
-          }}
-        />
-        <Stack.Screen
-          name="AgileOfficeAreaBook"
-          component={AgileOfficeAreaBook}
-          options={{
-            ...options,
-            title: "Meeting Area Booking",
-            ...options,
-            headerShown: true,
-            headerTintColor: headerTint,
-            headerStyle: {
-              backgroundColor: headerbgc,
-            },
-          }}
-        />
-
-        <Stack.Screen
-          name="AgileOfficeScanResult"
-          component={AgileOfficeScanResult}
-          options={{
-            title: "QR Result",
-            ...options,
-            headerShown: true,
-            headerTintColor: headerTint,
-            headerStyle: {
-              backgroundColor: headerbgc,
-            },
-          }}
-        />
-
         <Stack.Screen
           name="Inprogress"
           component={Inprogress}
