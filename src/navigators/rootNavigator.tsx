@@ -6,10 +6,10 @@ import { FontAwesome5 } from "@expo/vector-icons";
 
 import Login from "../screens/general/Login";
 import { Home } from "../screens/general/Home";
-import { Setting } from "../screens/general/Setting";
 import { Feedback } from "../screens/general/Feedback";
 import AgileOfficeMain from "../screens/agileOffice";
 import { DiaryMain } from "../screens/diary/DiaryMain";
+import { MoreTab } from "./MoreTab";
 import {
   unifi_c1,
   unifi_c4,
@@ -135,7 +135,13 @@ export function RootTab() {
           headerShown: false,
         }}
       />
-      <Tab.Screen name="More" component={Setting} options={options} />
+      <Tab.Screen
+        name="More"
+        component={MoreTab}
+        options={{
+          headerShown: false,
+        }}
+      />
     </Tab.Navigator>
   );
 }
