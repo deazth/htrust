@@ -9,6 +9,7 @@ export function MoreTab() {
   const [assets] = useAssets([require("assets/logo-tm.png")]);
 
   const options = {
+    headerTintColor: "#1C03E3",
     headerRight: () => (
       <Image
         source={assets?.[0]}
