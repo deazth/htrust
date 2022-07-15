@@ -1,10 +1,11 @@
 import React from "react";
-import { Center, Text, ScrollView, View } from "native-base";
+import { Text, ScrollView, View, Switch, Icon } from "native-base";
 import Constants from "expo-constants";
 
-import { DarkModeToggle, ScreenWrapper } from "../../components/styles";
+import { ScreenWrapper } from "../../components/styles";
 import { StyleSheet } from "react-native";
 import { LogoutButton } from "components/LogoutButton";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 const styles = StyleSheet.create({
   copyright: {
@@ -14,11 +15,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 30,
   },
-  line: {
-    backgroundColor: "#C7C7C7",
-    height: 1,
-    marginVertical: 15,
-    marginHorizontal: -5,
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 14,
   },
 });
 
@@ -32,16 +32,28 @@ export function Setting({ navigation }) {
         contentContainerStyle={{ paddingVertical: 15 }}
       >
         <View style={{ backgroundColor: "white", padding: 18 }}>
-          <Text style={{ color: "#1C03E3", fontSize: 16 }}>About</Text>
-          <View style={styles.line} />
-          <Text style={{ color: "#464646", fontSize: 14 }}>
-            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-            nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-            erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-            et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est
-            Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
-            sadipscing elitr, sed diam nonumy eirmod
-          </Text>
+          <Text style={{ color: "#1C03E3", fontSize: 16 }}>Settings</Text>
+          {[
+            { label: "Dark Mode", iconClass: FontAwesome5, iconName: "adjust" },
+            {
+              label: "Push Notification",
+              iconClass: FontAwesome5,
+              iconName: "bell",
+            },
+            {
+              label: "Inbox Notification",
+              iconClass: FontAwesome5,
+              iconName: "envelope",
+            },
+          ].map((i) => (
+            <View key={i.label} style={styles.row}>
+              <View style={{ flexDirection: "row" }}>
+                <Icon as={i.iconClass} name={i.iconName} size={5} />
+                <Text style={{ marginLeft: 10, fontSize: 15 }}>{i.label}</Text>
+              </View>
+              <Switch size="sm" offTrackColor="#000" onTrackColor="#1C03E3" />
+            </View>
+          ))}
         </View>
         <View style={{ padding: 20, marginTop: 40 }}>
           <Text style={{ color: "#1C03E3", fontSize: 14, textAlign: "center" }}>
