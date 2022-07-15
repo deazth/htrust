@@ -23,6 +23,7 @@ const AgileOfficeMain = ({ navigation }) => {
       <ScrollView
         contentContainerStyle={{ padding: 15, marginTop: 30 }}
         w="100%"
+        h="100%"
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={loadData} />
         }
