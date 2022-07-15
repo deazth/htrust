@@ -148,30 +148,24 @@ export const ChartScreenWrapper = ({ children }) => {
 
 export const DarkModeToggle = () => {
   const { colorMode, toggleColorMode } = useColorMode();
-
   return (
-    <Center my="5px">
-      <HStack space={3} alignItems="center">
-        <FontAwesome5 color={useColorModeValue(c_black, unifi_c9)} name="sun" />
-        <Switch
-          ml="auto"
-          onToggle={async () => {
-            let newcolor = "dark";
-            if (colorMode == "dark") {
-              newcolor = "light";
-            }
-            toggleColorMode();
-            console.log("new color: " + newcolor);
-            await SecureStore.setItemAsync("color_mode", newcolor);
-          }}
-          isChecked={colorMode === "dark"}
-        />
-        <FontAwesome5
-          name="moon"
-          color={useColorModeValue(c_black, unifi_c9)}
-        />
-      </HStack>
-    </Center>
+    <Switch
+      size="sm"
+      isChecked={colorMode === "dark"}
+      offTrackColor="#000"
+      onTrackColor="#1C03E3"
+      onChange={async () =>
+        await SecureStore.setItemAsync("color_mode", colorMode)
+      }
+      onToggle={async () => {
+        let newcolor = "dark";
+        if (colorMode == "dark") {
+          newcolor = "light";
+        }
+        console.log("new color: " + newcolor);
+        toggleColorMode();
+      }}
+    />
   );
 };
 
