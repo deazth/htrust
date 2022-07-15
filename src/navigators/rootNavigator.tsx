@@ -25,7 +25,6 @@ import {
   header_light,
 } from "../components/styles";
 import { Loading } from "../screens/general/Loading";
-import { Info } from "../screens/general/Info";
 import { AgileOfficeCLoc } from "../screens/agileOffice/AgileOfficeCLoc";
 import { selectIsLoading, selectUserID, selectUserObj } from "../app/userSlice";
 import { useSelector } from "react-redux";
@@ -169,9 +168,7 @@ export function RootStack() {
     ),
   };
 
-  // show loading screen if still not ready
   if (isloading) {
-    console.log("showing loading screen");
     return (
       <Stack.Navigator initialRouteName="Loading">
         <Stack.Screen
@@ -194,19 +191,6 @@ export function RootStack() {
           name="Feedback"
           component={Feedback}
           options={{
-            ...options,
-            headerShown: true,
-            headerTintColor: headerTint,
-            headerStyle: {
-              backgroundColor: headerbgc,
-            },
-          }}
-        />
-        <Stack.Screen
-          name="Info"
-          component={Info}
-          options={{
-            title: "Maklumat",
             ...options,
             headerShown: true,
             headerTintColor: headerTint,
