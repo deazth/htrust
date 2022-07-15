@@ -55,6 +55,7 @@ export function RootTab() {
           width: 50,
           height: 20,
           marginTop: -10,
+          marginRight: 15,
         }}
       />
     ),
