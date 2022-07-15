@@ -49,6 +49,12 @@ export function RootTab() {
   const [assets] = useAssets([require("assets/logo-tm.png")]);
 
   const options = {
+    // TODO: make header shadow similar like design
+    // headerStyle: {
+    //   elevation: 3,
+    //   shadowOpacity: 1,
+    // },
+    headerTintColor: "#1C03E3",
     headerRight: () => (
       <Image
         source={assets?.[0]}
@@ -74,9 +80,9 @@ export function RootTab() {
 
           if (route.name === "Home") name = "home";
           else if (route.name === "Agile Office") name = "map-marked-alt";
-          else if (route.name === "Diary") name = "edit";
-          else if (route.name === "Misc") name = "info-circle";
-          else if (route.name === "Team") name = "users";
+          else if (route.name === "Diary") name = "book";
+          else if (route.name === "More") name = "info-circle";
+          else if (route.name === "Profile") name = "user-circle";
 
           // You can return any component that you like here!
           return <FontAwesome5 {...{ name, size, color }} />;
@@ -123,18 +129,14 @@ export function RootTab() {
           headerShown: false,
         }}
       />
-      {/* <Tab.Screen name="Team" component={TeamMain} 
-        options={{
-					headerShown: false,
-				}}
-      /> */}
       <Tab.Screen
-        name="Misc"
-        component={Setting}
+        name="Profile"
+        component={TeamMain}
         options={{
           headerShown: false,
         }}
       />
+      <Tab.Screen name="More" component={Setting} options={options} />
     </Tab.Navigator>
   );
 }
