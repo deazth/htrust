@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
 });
-export function Setting({ navigation }) {
+export function More({ navigation }) {
   return (
     <ScreenWrapper>
       <ScrollView

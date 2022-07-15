@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useAssets } from "expo-asset";
 import { Image } from "native-base";
 import { About } from "screens/general/About";
-import { Setting } from "screens/general/Setting";
+import { More } from "screens/general/More";
 const Stack = createNativeStackNavigator();
 
 export function MoreTab() {
@@ -26,7 +26,7 @@ export function MoreTab() {
 
   return (
     <Stack.Navigator initialRouteName="More" screenOptions={options}>
-      <Stack.Screen name="More" component={Setting} />
+      <Stack.Screen name="More" component={More} />
       <Stack.Screen name="About" component={About} />
     </Stack.Navigator>
   );
