@@ -116,7 +116,6 @@ export function RootTab() {
             },
             shadowOpacity: 0,
             shadowRadius: 4.65,
-
             elevation: 8,
           },
           ...options,
