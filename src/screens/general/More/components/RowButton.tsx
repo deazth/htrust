@@ -8,7 +8,7 @@ import {
   Icon,
   useColorModeValue,
 } from "native-base";
-import { header_light, unifi_c7 } from "components/styles";
+import { c_white, header_light, unifi_c4, unifi_c7 } from "components/styles";
 
 interface Props extends IPressableProps {
   label: string;
@@ -75,7 +75,7 @@ const RowButton: React.FC<Props> = ({
         <Text
           style={{
             ...styles.label,
-            color: useColorModeValue("#1C03E3", "white"),
+            color: useColorModeValue(unifi_c4, c_white),
           }}
         >
           {label}

@@ -31,7 +31,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 export const unifi_c1 = "#f89c33";
 export const unifi_c2 = "#ec1c24";
 export const unifi_c3 = "#a32383";
-export const unifi_c4 = "#143e8c";
+export const unifi_c4 = "#1C03E3";
 export const unifi_c5 = "#cccccc";
 export const unifi_c6 = "#c4c4c4";
 export const unifi_c7 = "#666666";
