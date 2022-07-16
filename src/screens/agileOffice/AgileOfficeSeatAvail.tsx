@@ -411,12 +411,7 @@ export function AgileOfficeSeatAvail({ navigation }) {
 
   return (
     <ScreenWrapper>
-      <ScrollView
-        style={{ backgroundColor: "#F2F5FD" }}
-        w="100%"
-        h="100%"
-        contentContainerStyle={{ padding: 20 }}
-      >
+      <ScrollView w="100%" h="100%" contentContainerStyle={{ padding: 20 }}>
         <Text style={{ color, fontSize: 14 }}>
           Search for available workspace
         </Text>
