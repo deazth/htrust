@@ -1,7 +1,7 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Image, useColorModeValue } from "native-base";
+import { Image, useColorModeValue, View } from "native-base";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 import Login from "../screens/general/Login";
@@ -38,6 +38,7 @@ const Tab = createBottomTabNavigator();
 export function RootTab() {
   const iconFocusCol = useColorModeValue("#1C03E3", unifi_primary);
   const iconNormalCol = useColorModeValue("#C7C7C7", unifi_c5);
+  const backgroundColor = useColorModeValue(c_white, unifi_c8);
 
   return (
     <Tab.Navigator
@@ -58,8 +59,9 @@ export function RootTab() {
         },
         tabBarActiveTintColor: iconFocusCol,
         tabBarInactiveTintColor: iconNormalCol,
-        tabBarInactiveBackgroundColor: useColorModeValue(c_white, unifi_c8),
-        tabBarActiveBackgroundColor: useColorModeValue(c_white, unifi_c8),
+        tabBarBackground: () => (
+          <View style={{ backgroundColor, height: "100%", width: "100%" }} />
+        ),
       })}
     >
       <Tab.Screen
