@@ -2,7 +2,6 @@ import React from "react";
 import {
   c_black,
   c_white,
-  DarkModeToggle,
   ScreenWrapper,
   unifi_c1,
   unifi_c2,
@@ -14,8 +13,8 @@ import {
   unifi_c8,
   unifi_c9,
   unifi_primary,
-} from "../../components/styles";
-// import {StackedBarChart, YAxis } from 'react-native-svg-charts';
+} from "components/styles";
+import MainButton from "components/Button";
 import {
   Button,
   Box,
@@ -30,8 +29,7 @@ import {
   Icon,
   Flex,
   AlertDialog,
-  Modal,
-  Image,
+  Checkbox,
 } from "native-base";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -42,7 +40,7 @@ import {
 } from "../../app/userSlice";
 import axios from "axios";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Platform } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import * as WebBrowser from "expo-web-browser";
 
@@ -60,6 +58,7 @@ export function AgileOfficeSeatAvail({ navigation }) {
   const [fcID, setFcid] = React.useState(null);
   const [seatID, setSeatid] = React.useState(null);
   const [seatLabel, setSeatLabel] = React.useState(null);
+  const [isMoreThan1Day, setIsMoreThan1Day] = React.useState(false);
   const [showFromDPicker, setShowFromDPicker] = React.useState(false);
   const [showToDPicker, setShowToDPicker] = React.useState(false);
   const [showFromTPicker, setShowFromTPicker] = React.useState(false);
@@ -79,8 +78,8 @@ export function AgileOfficeSeatAvail({ navigation }) {
   const [ctotime, setCTotime] = React.useState(new Date());
   const cancelRef = React.useRef(null);
 
-  const [showLayout, setShowLayout] = React.useState(false);
-  const [layoutUrl, setLayoutUrl] = React.useState(null);
+  // const [showLayout, setShowLayout] = React.useState(false);
+  // const [layoutUrl, setLayoutUrl] = React.useState(null);
 
   // center spacing to and from
   const fontFamily = Platform.OS === "ios" ? "Courier" : "monospace";
@@ -89,8 +88,14 @@ export function AgileOfficeSeatAvail({ navigation }) {
   const acco_text_color = useColorModeValue(c_black, c_white);
   const acco_floor_color = useColorModeValue(unifi_primary, unifi_c3);
   const acco_fc_color = useColorModeValue(unifi_c9, unifi_c2);
-  const placeholder_color = useColorModeValue(unifi_c4, unifi_c9);
+  const placeholderTextColor = useColorModeValue("#C2C2C2", unifi_c9);
   const btn_bg_color = useColorModeValue(unifi_c4, unifi_primary);
+
+  const selectStyle = {
+    placeholderTextColor,
+    borderColor: "#707070",
+    backgroundColor: "white",
+  };
 
   function showFloorLayout(floor_id) {
     // setLayoutUrl(baseurl + 'ao/getFloorLayout?id=' + floor_id);
@@ -136,8 +141,8 @@ export function AgileOfficeSeatAvail({ navigation }) {
         } else {
           if (response.data.msg == "Success") {
             // alert(JSON.stringify(response.data.data));
-            var resptime = new Date(response.headers.date);
-            var futtime = new Date(resptime.getTime() + 5 * 60000);
+            const resptime = new Date(response.headers.date);
+            const futtime = new Date(resptime.getTime() + 5 * 60000);
             setFromtime(futtime);
             setTotime(futtime);
             setBuildList(response.data.data);
@@ -165,7 +170,6 @@ export function AgileOfficeSeatAvail({ navigation }) {
         }
 
         // navigation.goBack();
-        return;
       });
   }
 
@@ -257,7 +261,7 @@ export function AgileOfficeSeatAvail({ navigation }) {
     const dateLocalF = new Date(fromtime.getTime() - offsetMs);
     const dateLocalT = new Date(totime.getTime() - offsetMs);
 
-    let inputs = {
+    const inputs = {
       building_id: bID,
       floor_id: fID,
       floor_section_id: fcID,
@@ -267,30 +271,19 @@ export function AgileOfficeSeatAvail({ navigation }) {
 
     console.log("search seat availability");
     console.log(inputs);
-
-    // alert(JSON.stringify(inputs));
-
     axios
       .post(baseurl + "t/ao/searchAvailableSeat", inputs, config)
       .then((response) => {
-        // check for status code
         if (response.data.status_code != "200") {
           alert(JSON.stringify(response.data.msg));
-          setIsloading(false);
         } else {
           if (response.data.msg == "Success") {
             // console.log(response.data.data);
             // alert(JSON.stringify(response.data.data));
             setSResult(response.data.data);
-            setIsloading(false);
             setSearchPressed(true);
-
-            console.log(sResult);
-
-            // alert(JSON.stringify(response.data.data));
           } else {
             alert(response.data.msg);
-            setIsloading(false);
           }
         }
       })
@@ -314,9 +307,8 @@ export function AgileOfficeSeatAvail({ navigation }) {
         }
 
         // navigation.goBack();
-        setIsloading(false);
-        return;
-      });
+      })
+      .finally(() => setIsloading(false));
   }
 
   function selectSeat(seatid, seatlabel) {
@@ -326,13 +318,11 @@ export function AgileOfficeSeatAvail({ navigation }) {
   }
 
   function doSeatReserve() {
-    setIsloading(true);
-
     const offsetMs = cfromtime.getTimezoneOffset() * 60 * 1000;
     const dateLocalF = new Date(cfromtime.getTime() - offsetMs);
     const dateLocalT = new Date(ctotime.getTime() - offsetMs);
 
-    let inputs = {
+    const inputs = {
       seat_id: seatID,
       stime: dateLocalF.toISOString().slice(0, 19).replace("T", " "),
       etime: dateLocalT.toISOString().slice(0, 19).replace("T", " "),
@@ -341,8 +331,7 @@ export function AgileOfficeSeatAvail({ navigation }) {
     console.log("do seat reserve");
     console.log(inputs);
 
-    // alert(JSON.stringify(inputs));
-
+    setIsloading(true);
     axios
       .post(baseurl + "t/ao/doSeatReserve", inputs, config)
       .then((response) => {
@@ -375,57 +364,41 @@ export function AgileOfficeSeatAvail({ navigation }) {
         } else {
           console.log("Seat reserve - got error without response");
           console.log(error);
-          // alert(JSON.stringify(error));
         }
 
         // navigation.goBack();
-        return;
-      });
+      })
+      .finally(() => setIsloading(false));
 
     setShowConfirm(false);
-    setIsloading(false);
   }
 
-  function showChangeFromDate() {
-    setShowFromDPicker(true);
-    // alert('from date');
-  }
+  const showChangeFromDate = () => setShowFromDPicker(true);
 
-  function showChangeToDate() {
-    setShowToDPicker(true);
-  }
+  const showChangeToDate = () => setShowToDPicker(true);
 
-  function showChangeFromTime() {
-    setShowFromTPicker(true);
-    // alert('from date');
-  }
+  const showChangeFromTime = () => setShowFromTPicker(true);
 
-  function showChangeToTime() {
-    setShowToTPicker(true);
-  }
+  const showChangeToTime = () => setShowToTPicker(true);
 
   const changeFromDate = (event, selectedDate) => {
-    const currentDate = selectedDate || fromtime;
     setShowFromDPicker(false);
-    setFromtime(currentDate);
+    setFromtime(selectedDate || fromtime);
   };
 
   const changeFromTime = (event, selectedDate) => {
-    const currentDate = selectedDate || fromtime;
     setShowFromTPicker(false);
-    setFromtime(currentDate);
+    setFromtime(selectedDate || fromtime);
   };
 
   const changeToDate = (event, selectedDate) => {
-    const currentDate = selectedDate || fromtime;
     setShowToDPicker(false);
-    setTotime(currentDate);
+    setTotime(selectedDate || fromtime);
   };
 
   const changeToTime = (event, selectedDate) => {
-    const currentDate = selectedDate || fromtime;
     setShowToTPicker(false);
-    setTotime(currentDate);
+    setTotime(selectedDate || fromtime);
   };
 
   React.useEffect(() => {
@@ -434,200 +407,202 @@ export function AgileOfficeSeatAvail({ navigation }) {
     setIsloading(false);
   }, []);
 
+  const color = useColorModeValue(unifi_c4, unifi_c1);
+
   return (
     <ScreenWrapper>
-      <ScrollView w="100%">
-        <Box border={1} m={3} p={2} bg={form_bg_color} w="95%" rounded="10px">
-          <Text>Search for available workspace</Text>
-          <Select
-            selectedValue={bID}
-            accessibilityLabel="Choose Building"
-            placeholder="Choose Building"
-            placeholderTextColor={placeholder_color}
-            _selectedItem={{
-              bg: "teal.600",
-              endIcon: <CheckIcon size="5" />,
-            }}
-            mt={1}
-            onValueChange={(itemValue) => selectBuilding(itemValue)}
+      <ScrollView
+        style={{ backgroundColor: "#F2F5FD" }}
+        w="100%"
+        h="100%"
+        contentContainerStyle={{ padding: 20 }}
+      >
+        <Text style={{ color, fontSize: 14 }}>
+          Search for available workspace
+        </Text>
+        <Text style={styles.label}>Choose Building</Text>
+        <Select
+          selectedValue={bID}
+          accessibilityLabel="Choose Building"
+          placeholder="Please Select"
+          {...selectStyle}
+          _selectedItem={{
+            bg: "teal.600",
+            endIcon: <CheckIcon size="5" />,
+          }}
+          mt={1}
+          onValueChange={selectBuilding}
+        >
+          {buildList.map((rec) => (
+            <Select.Item
+              label={rec.building_name}
+              value={rec.id + ""}
+              key={rec.id}
+            />
+          ))}
+        </Select>
+        <Text style={styles.label}>Choose Floor</Text>
+        <Select
+          selectedValue={fID}
+          accessibilityLabel="Choose Floor (optional)"
+          placeholder="Please Select (optional)"
+          {...selectStyle}
+          _selectedItem={{
+            bg: "teal.600",
+            endIcon: <CheckIcon size="5" />,
+          }}
+          mt={1}
+          onValueChange={selectFloor}
+        >
+          {floorList.length != 0 ? (
+            floorList.map((rec) => (
+              <Select.Item
+                label={rec.floor_name}
+                value={rec.id + ""}
+                key={rec.id}
+              />
+            ))
+          ) : (
+            <Select.Item
+              label={
+                bID
+                  ? "This building has no valid floor"
+                  : "Select a building first"
+              }
+              value=""
+              disabled
+            />
+          )}
+        </Select>
+        <Text style={styles.label}>Choose Section</Text>
+        <Select
+          selectedValue={fcID}
+          accessibilityLabel="Choose Section (optional)"
+          placeholder="Please Select (optional)"
+          {...selectStyle}
+          _selectedItem={{
+            bg: "teal.600",
+            endIcon: <CheckIcon size="5" />,
+          }}
+          mt={1}
+          onValueChange={selectSection}
+        >
+          {fcList.length != 0 ? (
+            fcList.map((rec) => (
+              <Select.Item label={rec.label} value={rec.id + ""} key={rec.id} />
+            ))
+          ) : (
+            <Select.Item
+              label={
+                fID ? "This floor has no valid section" : "Select a floor first"
+              }
+              value=""
+              disabled
+            />
+          )}
+        </Select>
+        <Text style={styles.label}>Choose Date</Text>
+        <HStack space={2} mt={1} alignItems="center">
+          <Checkbox.Group
+            onChange={() => setIsMoreThan1Day((v) => !v)}
+            value={isMoreThan1Day ? ["1"] : []}
+            accessibilityLabel="choose"
           >
-            {buildList.map((rec) => {
-              return (
-                <Select.Item
-                  label={rec.building_name}
-                  value={rec.id + ""}
-                  key={rec.id}
-                />
-              );
-            })}
-          </Select>
-          <Select
-            selectedValue={fID}
-            accessibilityLabel="Choose Floor (optional)"
-            placeholder="Choose Floor (optional)"
-            placeholderTextColor={placeholder_color}
-            _selectedItem={{
-              bg: "teal.600",
-              endIcon: <CheckIcon size="5" />,
-            }}
-            mt={1}
-            onValueChange={(itemValue) => selectFloor(itemValue)}
-          >
-            {floorList.length != 0 ? (
-              floorList.map((rec) => {
-                return (
-                  <Select.Item
-                    label={rec.floor_name}
-                    value={rec.id + ""}
-                    key={rec.id}
-                  />
-                );
-              })
-            ) : bID ? (
-              <Select.Item
-                label="This building has no valid floor"
-                value=""
-                disabled={true}
-              />
-            ) : (
-              <Select.Item
-                label="Select a building first"
-                value=""
-                disabled={true}
-              />
-            )}
-          </Select>
-          <Select
-            selectedValue={fcID}
-            accessibilityLabel="Choose Section (optional)"
-            placeholder="Choose Section (optional)"
-            placeholderTextColor={placeholder_color}
-            _selectedItem={{
-              bg: "teal.600",
-              endIcon: <CheckIcon size="5" />,
-            }}
-            mt={1}
-            onValueChange={(itemValue) => selectSection(itemValue)}
-          >
-            {fcList.length != 0 ? (
-              fcList.map((rec) => {
-                return (
-                  <Select.Item
-                    label={rec.label}
-                    value={rec.id + ""}
-                    key={rec.id}
-                  />
-                );
-              })
-            ) : fID ? (
-              <Select.Item
-                label="This floor has no valid section"
-                value=""
-                disabled={true}
-              />
-            ) : (
-              <Select.Item
-                label="Select a floor first"
-                value=""
-                disabled={true}
-              />
-            )}
-          </Select>
-          <HStack my={3} alignItems="flex-start">
-            <Text fontSize="sm" style={{ fontFamily }}>
-              From :{" "}
-            </Text>
-            <Spacer />
-            <Text
-              fontSize="sm"
-              color={placeholder_color}
-              onPress={() => showChangeFromDate()}
-            >
-              {fromtime.toLocaleDateString()}
-            </Text>
-            <Spacer />
-            <Text
-              fontSize="sm"
-              color={placeholder_color}
-              onPress={() => showChangeFromTime()}
-            >
-              {fromtime.toLocaleTimeString()}
-            </Text>
-          </HStack>
+            <Checkbox borderColor="#1C04E3" value="1" />
+          </Checkbox.Group>
+          <Text style={{ fontSize: 14 }}>More Than One Day</Text>
+        </HStack>
 
-          <HStack mb={3} alignItems="flex-start">
-            <Text fontSize="sm" style={{ fontFamily }}>
-              To :{" "}
-            </Text>
-            <Spacer />
-            <Text
-              fontSize="sm"
-              color={placeholder_color}
-              onPress={() => showChangeToDate()}
-            >
-              {totime.toLocaleDateString()}
-            </Text>
-            <Spacer />
-            <Text
-              fontSize="sm"
-              color={placeholder_color}
-              onPress={() => showChangeToTime()}
-            >
-              {totime.toLocaleTimeString()}
-            </Text>
-          </HStack>
-
-          <Button
-            key="sm"
-            size="sm"
-            onPress={() => searchAvail()}
-            isLoading={isLoading}
-            isLoadingText="Please wait"
+        <HStack my={3} alignItems="flex-start">
+          <Text fontSize="sm" style={{ fontFamily }}>
+            From :
+          </Text>
+          <Spacer />
+          <Text
+            fontSize="sm"
+            color={placeholderTextColor}
+            onPress={showChangeFromDate}
           >
-            Search
-          </Button>
+            {fromtime.toLocaleDateString()}
+          </Text>
+          <Spacer />
+          <Text
+            fontSize="sm"
+            color={placeholderTextColor}
+            onPress={showChangeFromTime}
+          >
+            {fromtime.toLocaleTimeString()}
+          </Text>
+        </HStack>
 
-          {showFromDPicker && (
-            <DateTimePicker
-              testID="showFromDPicker"
-              value={fromtime}
-              mode="date"
-              is24Hour={true}
-              display="default"
-              onChange={changeFromDate}
-            />
-          )}
-          {showFromTPicker && (
-            <DateTimePicker
-              testID="showFromTPicker"
-              value={fromtime}
-              mode="time"
-              is24Hour={true}
-              display="default"
-              onChange={changeFromTime}
-            />
-          )}
-          {showToDPicker && (
-            <DateTimePicker
-              testID="showToDPicker"
-              value={totime}
-              mode="date"
-              is24Hour={true}
-              display="default"
-              onChange={changeToDate}
-            />
-          )}
-          {showToTPicker && (
-            <DateTimePicker
-              testID="showToTPicker"
-              value={totime}
-              mode="time"
-              is24Hour={true}
-              display="default"
-              onChange={changeToTime}
-            />
-          )}
-        </Box>
+        <HStack mb={3} alignItems="flex-start">
+          <Text fontSize="sm" style={{ fontFamily }}>
+            To :
+          </Text>
+          <Spacer />
+          <Text
+            fontSize="sm"
+            color={placeholderTextColor}
+            onPress={showChangeToDate}
+          >
+            {totime.toLocaleDateString()}
+          </Text>
+          <Spacer />
+          <Text
+            fontSize="sm"
+            color={placeholderTextColor}
+            onPress={showChangeToTime}
+          >
+            {totime.toLocaleTimeString()}
+          </Text>
+        </HStack>
+
+        <MainButton
+          label={isLoading ? "Please wait" : "Search"}
+          onPress={searchAvail}
+          loading={isLoading}
+        />
+
+        {showFromDPicker && (
+          <DateTimePicker
+            testID="showFromDPicker"
+            value={fromtime}
+            mode="date"
+            is24Hour
+            display="default"
+            onChange={changeFromDate}
+          />
+        )}
+        {showFromTPicker && (
+          <DateTimePicker
+            testID="showFromTPicker"
+            value={fromtime}
+            mode="time"
+            is24Hour
+            display="default"
+            onChange={changeFromTime}
+          />
+        )}
+        {showToDPicker && (
+          <DateTimePicker
+            testID="showToDPicker"
+            value={totime}
+            mode="date"
+            is24Hour
+            display="default"
+            onChange={changeToDate}
+          />
+        )}
+        {showToTPicker && (
+          <DateTimePicker
+            testID="showToTPicker"
+            value={totime}
+            mode="time"
+            is24Hour
+            display="default"
+            onChange={changeToTime}
+          />
+        )}
 
         {searchPressed && (
           <Box border={1} m={3} p={2} bg={form_bg_color} w="95%" rounded="10px">
@@ -635,78 +610,76 @@ export function AgileOfficeSeatAvail({ navigation }) {
               <>
                 <Text>Search Result</Text>
                 <Accordion>
-                  {sResult.map((rec) => {
-                    return (
-                      <Accordion.Item key={rec.id}>
-                        <Accordion.Summary _expanded={{ bg: acco_floor_color }}>
-                          <Text color={acco_text_color}>
-                            {rec.name} - {rec.count} seats
-                          </Text>
-                          <Accordion.Icon />
-                        </Accordion.Summary>
-                        <Accordion.Details>
-                          {rec.gotlayout && (
-                            <Button onPress={() => showFloorLayout(rec.id)}>
-                              View Floor Layout
-                            </Button>
-                          )}
-                          <Accordion>
-                            {rec.fcs.map((fc) => {
-                              return (
-                                <Accordion.Item key={fc.id}>
-                                  <Accordion.Summary
-                                    _expanded={{ bg: acco_fc_color }}
-                                  >
-                                    <Text color={acco_text_color}>
-                                      {fc.name} - {fc.count} seats
-                                    </Text>
-                                    <Accordion.Icon />
-                                  </Accordion.Summary>
-                                  <Accordion.Details>
-                                    {fc.gotlayout && (
-                                      <Button
-                                        onPress={() => showSectionLayout(fc.id)}
-                                      >
-                                        View Section Layout
-                                      </Button>
-                                    )}
-                                    <Flex
-                                      direction="row"
-                                      flexWrap="wrap"
-                                      justifyContent="space-evenly"
+                  {sResult.map((rec) => (
+                    <Accordion.Item key={rec.id}>
+                      <Accordion.Summary _expanded={{ bg: acco_floor_color }}>
+                        <Text color={acco_text_color}>
+                          {rec.name} - {rec.count} seats
+                        </Text>
+                        <Accordion.Icon />
+                      </Accordion.Summary>
+                      <Accordion.Details>
+                        {rec.gotlayout && (
+                          <Button onPress={() => showFloorLayout(rec.id)}>
+                            View Floor Layout
+                          </Button>
+                        )}
+                        <Accordion>
+                          {rec.fcs.map((fc) => {
+                            return (
+                              <Accordion.Item key={fc.id}>
+                                <Accordion.Summary
+                                  _expanded={{ bg: acco_fc_color }}
+                                >
+                                  <Text color={acco_text_color}>
+                                    {fc.name} - {fc.count} seats
+                                  </Text>
+                                  <Accordion.Icon />
+                                </Accordion.Summary>
+                                <Accordion.Details>
+                                  {fc.gotlayout && (
+                                    <Button
+                                      onPress={() => showSectionLayout(fc.id)}
                                     >
-                                      {fc.seats.map((seat) => {
-                                        return (
-                                          <Button
-                                            m={1}
-                                            p={1}
-                                            backgroundColor={btn_bg_color}
-                                            key={seat.id}
-                                            endIcon={
-                                              <Icon
-                                                as={FontAwesome5}
-                                                name="calendar-check"
-                                                size={4}
-                                              />
-                                            }
-                                            onPress={() =>
-                                              selectSeat(seat.id, seat.name)
-                                            }
-                                          >
-                                            {seat.name}
-                                          </Button>
-                                        );
-                                      })}
-                                    </Flex>
-                                  </Accordion.Details>
-                                </Accordion.Item>
-                              );
-                            })}
-                          </Accordion>
-                        </Accordion.Details>
-                      </Accordion.Item>
-                    );
-                  })}
+                                      View Section Layout
+                                    </Button>
+                                  )}
+                                  <Flex
+                                    direction="row"
+                                    flexWrap="wrap"
+                                    justifyContent="space-evenly"
+                                  >
+                                    {fc.seats.map((seat) => {
+                                      return (
+                                        <Button
+                                          m={1}
+                                          p={1}
+                                          backgroundColor={btn_bg_color}
+                                          key={seat.id}
+                                          endIcon={
+                                            <Icon
+                                              as={FontAwesome5}
+                                              name="calendar-check"
+                                              size={4}
+                                            />
+                                          }
+                                          onPress={() =>
+                                            selectSeat(seat.id, seat.name)
+                                          }
+                                        >
+                                          {seat.name}
+                                        </Button>
+                                      );
+                                    })}
+                                  </Flex>
+                                </Accordion.Details>
+                              </Accordion.Item>
+                            );
+                          })}
+                        </Accordion>
+                      </Accordion.Details>
+                    </Accordion.Item>
+                  ))}
                 </Accordion>
               </>
             ) : (
@@ -716,9 +689,7 @@ export function AgileOfficeSeatAvail({ navigation }) {
             <AlertDialog
               leastDestructiveRef={cancelRef}
               isOpen={showConfirm}
-              onClose={() => {
-                setShowConfirm(false);
-              }}
+              onClose={() => setShowConfirm(false)}
             >
               <AlertDialog.Content>
                 <AlertDialog.CloseButton
@@ -760,3 +731,7 @@ export function AgileOfficeSeatAvail({ navigation }) {
     </ScreenWrapper>
   );
 }
+
+const styles = StyleSheet.create({
+  label: { fontSize: 14, marginTop: 18, color: "#353535", fontWeight: "bold" },
+});
