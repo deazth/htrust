@@ -31,7 +31,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 export const unifi_c1 = "#f89c33";
 export const unifi_c2 = "#ec1c24";
 export const unifi_c3 = "#a32383";
-export const unifi_c4 = "#143e8c";
+export const unifi_c4 = "#1C03E3";
 export const unifi_c5 = "#cccccc";
 export const unifi_c6 = "#c4c4c4";
 export const unifi_c7 = "#666666";
@@ -132,46 +132,18 @@ export const ScreenWrapper: React.FC<IBoxProps> = ({ children, ...props }) => {
   );
 };
 
-export const ChartScreenWrapper = ({ children }) => {
-  return (
-    <Box
-      flex={1}
-      w="100%"
-      h="100%"
-      _light={{ bg: c_white }}
-      _dark={{ bg: unifi_c8 }}
-    >
-      {children}
-    </Box>
-  );
-};
-
 export const DarkModeToggle = () => {
   const { colorMode, toggleColorMode } = useColorMode();
-
+  const color = useColorModeValue(unifi_c4, unifi_c1);
   return (
-    <Center my="5px">
-      <HStack space={3} alignItems="center">
-        <FontAwesome5 color={useColorModeValue(c_black, unifi_c9)} name="sun" />
-        <Switch
-          ml="auto"
-          onToggle={async () => {
-            let newcolor = "dark";
-            if (colorMode == "dark") {
-              newcolor = "light";
-            }
-            toggleColorMode();
-            console.log("new color: " + newcolor);
-            await SecureStore.setItemAsync("color_mode", newcolor);
-          }}
-          isChecked={colorMode === "dark"}
-        />
-        <FontAwesome5
-          name="moon"
-          color={useColorModeValue(c_black, unifi_c9)}
-        />
-      </HStack>
-    </Center>
+    <Switch
+      size="sm"
+      isChecked={colorMode === "dark"}
+      offTrackColor="#000"
+      onTrackColor={color}
+      onChange={() => SecureStore.setItemAsync("color_mode", colorMode)}
+      onToggle={toggleColorMode}
+    />
   );
 };
 

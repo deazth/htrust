@@ -7,6 +7,16 @@ export const BaseTheme = extendTheme({
         fontSize: "lg",
       },
     },
+    Icon: {
+      baseStyle: ({ colorMode }) => {
+        return { color: colorMode === "light" ? "#1C03E3" : "white" };
+      },
+    },
+    Switch: {
+      baseStyle: ({ colorMode }) => {
+        return { color: colorMode === "light" ? "#1C03E3" : "white" };
+      },
+    },
   },
   colors: {
     slateGray: {
