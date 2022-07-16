@@ -34,38 +34,24 @@ const Button: React.FC<Props> = ({ label, loading, onPress, ...props }) => {
       }}
     >
       <LinearGradient
-        // colors={["#3353CF", "#3C51D6", "#241EDC", "#241EDC"]}
         colors={
           colorMode === "light"
             ? ["#3353CF", "#3C51D6", "#241EDC", "#241EDC"]
             : [unifi_primary, unifi_primary]
         }
-        style={{ borderRadius: 5, padding: 9 }}
+        style={{ borderRadius: 5, padding: 10 }}
       >
         <View
           style={{
-            borderRadius: 5,
-            padding: 8,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            {loading && <ActivityIndicator style={{ marginRight: 5 }} />}
-            <Text
-              style={{
-                color: "white",
-                textAlign: "center",
-                fontSize: 16,
-              }}
-            >
-              {label}
-            </Text>
-          </View>
+          {loading && <ActivityIndicator style={{ marginRight: 5 }} />}
+          <Text style={{ color: "white", textAlign: "center", fontSize: 16 }}>
+            {label}
+          </Text>
         </View>
       </LinearGradient>
     </Root>
