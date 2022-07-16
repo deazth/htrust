@@ -132,39 +132,17 @@ export const ScreenWrapper: React.FC<IBoxProps> = ({ children, ...props }) => {
   );
 };
 
-export const ChartScreenWrapper = ({ children }) => {
-  return (
-    <Box
-      flex={1}
-      w="100%"
-      h="100%"
-      _light={{ bg: c_white }}
-      _dark={{ bg: unifi_c8 }}
-    >
-      {children}
-    </Box>
-  );
-};
-
 export const DarkModeToggle = () => {
   const { colorMode, toggleColorMode } = useColorMode();
+  const color = useColorModeValue(unifi_c4, unifi_c1);
   return (
     <Switch
       size="sm"
       isChecked={colorMode === "dark"}
       offTrackColor="#000"
-      onTrackColor="#1C03E3"
-      onChange={async () =>
-        await SecureStore.setItemAsync("color_mode", colorMode)
-      }
-      onToggle={async () => {
-        let newcolor = "dark";
-        if (colorMode == "dark") {
-          newcolor = "light";
-        }
-        console.log("new color: " + newcolor);
-        toggleColorMode();
-      }}
+      onTrackColor={color}
+      onChange={() => SecureStore.setItemAsync("color_mode", colorMode)}
+      onToggle={toggleColorMode}
     />
   );
 };
