@@ -9,12 +9,12 @@ const Stack = createNativeStackNavigator();
 
 export function MoreTab() {
   const [assets] = useAssets([require("assets/logo-tm.png")]);
-  const headerTint = useColorModeValue(unifi_c4, unifi_c1);
-  const headerbgc = useColorModeValue(header_light, unifi_c7);
+  const headerTintColor = useColorModeValue(unifi_c4, unifi_c1);
+  const backgroundColor = useColorModeValue(header_light, unifi_c7);
   const options = {
-    headerTintColor: headerTint,
+    headerTintColor,
     headerStyle: {
-      backgroundColor: headerbgc,
+      backgroundColor,
       shadowColor: "#000",
       shadowOffset: {
         width: 0,

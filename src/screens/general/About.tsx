@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import { Text, ScrollView, View } from "native-base";
+import { Text, ScrollView, View, useColorModeValue } from "native-base";
+import { header_light, unifi_c1, unifi_c4, unifi_c7 } from "components/styles";
 import Constants from "expo-constants";
 
 import { LogoutButton } from "components/LogoutButton";
@@ -24,6 +25,9 @@ const styles = StyleSheet.create({
 
 const { version } = Constants.manifest;
 const About: React.FC = () => {
+  const color = useColorModeValue(unifi_c4, unifi_c1);
+  const backgroundColor = useColorModeValue(header_light, unifi_c7);
+
   return (
     <ScreenWrapper>
       <ScrollView
@@ -31,8 +35,8 @@ const About: React.FC = () => {
         w="100%"
         contentContainerStyle={{ paddingVertical: 15 }}
       >
-        <View style={{ backgroundColor: "white", padding: 18 }}>
-          <Text style={{ color: "#1C03E3", fontSize: 16 }}>About</Text>
+        <View style={{ backgroundColor, padding: 18 }}>
+          <Text style={{ color, fontSize: 16 }}>About</Text>
           <View style={styles.line} />
           <Text style={{ color: "#464646", fontSize: 14 }}>
             Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
@@ -44,7 +48,7 @@ const About: React.FC = () => {
           </Text>
         </View>
         <View style={{ padding: 20, marginTop: 40 }}>
-          <Text style={{ color: "#1C03E3", fontSize: 14, textAlign: "center" }}>
+          <Text style={{ color, fontSize: 14, textAlign: "center" }}>
             Version {version}
           </Text>
           <Text style={styles.copyright}>
