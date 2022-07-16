@@ -36,7 +36,7 @@ const About: React.FC = () => {
         contentContainerStyle={{ paddingVertical: 15 }}
       >
         <View style={{ backgroundColor, padding: 18 }}>
-          <Text style={{ color, fontSize: 16 }}>About</Text>
+          <Text style={{ color, fontSize: 16, fontWeight: "bold" }}>About</Text>
           <View style={styles.line} />
           <Text style={{ color: "#464646", fontSize: 14 }}>
             Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam

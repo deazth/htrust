@@ -48,7 +48,14 @@ export function Setting({ navigation }) {
         contentContainerStyle={{ paddingVertical: 15 }}
       >
         <View style={{ padding: 18 }}>
-          <Text style={{ color, fontSize: 16, marginBottom: 10 }}>
+          <Text
+            style={{
+              color,
+              fontSize: 16,
+              fontWeight: "bold",
+              marginBottom: 10,
+            }}
+          >
             Settings
           </Text>
           {[

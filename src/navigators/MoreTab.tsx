@@ -43,10 +43,18 @@ export function MoreTab() {
       <Stack.Screen
         name="MoreSetting"
         component={More}
-        options={{ title: "More" }}
+        options={{ title: "More", headerTitleAlign: "center" }}
       />
-      <Stack.Screen name="About" component={About} />
-      <Stack.Screen name="Settings" component={Setting} />
+      <Stack.Screen
+        name="About"
+        component={About}
+        options={{ headerTitleAlign: "center" }}
+      />
+      <Stack.Screen
+        name="Settings"
+        component={Setting}
+        options={{ headerTitleAlign: "center" }}
+      />
     </Stack.Navigator>
   );
 }

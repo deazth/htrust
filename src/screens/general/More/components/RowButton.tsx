@@ -75,6 +75,7 @@ const RowButton: React.FC<Props> = ({
         <Text
           style={{
             ...styles.label,
+            fontWeight: "bold",
             color: useColorModeValue(unifi_c4, c_white),
           }}
         >
