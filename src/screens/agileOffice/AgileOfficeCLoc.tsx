@@ -1,8 +1,7 @@
 import React from "react";
 import MapView, { Marker } from "react-native-maps";
-import { StyleSheet, Text, View, Dimensions } from "react-native";
+import { StyleSheet } from "react-native";
 import * as Location from "expo-location";
-import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -12,20 +11,16 @@ import {
   selectUserToken,
 } from "../../app/userSlice";
 import axios from "axios";
+import Button from "components/Button";
 
-import { Center, Button, Box } from "native-base";
+import { VStack, Text } from "native-base";
 
-import {
-  ClickableBox,
-  DarkModeToggle,
-  PageTitle,
-  ScreenWrapper,
-} from "../../components/styles";
+import { PageTitle, ScreenWrapper } from "components/styles";
 
 export function AgileOfficeCLoc({ navigation }) {
   const [locationc, setLocation] = React.useState(null);
   const [lastLoc, setLastloc] = React.useState("Waiting ...");
-  const [currAddr, setcuraddr] = React.useState(
+  const [address, setcuraddr] = React.useState(
     "Waiting for location permission"
   );
   const [lastCoord, setLastcoord] = React.useState(null);
@@ -33,7 +28,7 @@ export function AgileOfficeCLoc({ navigation }) {
 
   const [isClocked, setIsClocked] = React.useState(false);
   // const [errorMsg, setErrorMsg] = React.useState(null);
-  const [btnRefLoad, setBtnRefLoad] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const [locPermission, setLocpermission] = React.useState("not allowed");
   const baseurl = useSelector(selectBaseUrl);
   const stoken = useSelector(selectUserToken);
@@ -45,14 +40,14 @@ export function AgileOfficeCLoc({ navigation }) {
 
   async function getCurrLoc() {
     console.log("entered getCurrLoc");
-    setBtnRefLoad(true);
+    setLoading(true);
     if (locPermission !== "granted") {
       console.log("permissi not grantned yet");
       // get the permission if not granted yet
-      let { status } = await Location.requestForegroundPermissionsAsync();
+      const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         setcuraddr("Permission to access location was denied");
-        setBtnRefLoad(false);
+        setLoading(false);
         return;
       }
 
@@ -61,45 +56,37 @@ export function AgileOfficeCLoc({ navigation }) {
 
     setcuraddr("Location permission granted");
 
-    // setTimeout(() => {
-
-    // }, 500);
-
     console.log("Getting current coord");
 
-    let location = await Location.getCurrentPositionAsync({});
+    const {
+      coords: { latitude, longitude },
+    } = await Location.getCurrentPositionAsync({});
     console.log("Current coord obtained");
 
     console.log("saving the coord");
     setLocation({
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
+      latitude,
+      longitude,
       latitudeDelta: 0.001,
       longitudeDelta: 0.001,
     });
 
-    getLastKnownLoc(location.coords.latitude, location.coords.longitude);
+    getLastKnownLoc(latitude, longitude);
 
     console.log("translating the coord");
-    translateCurrLoc(location.coords.latitude, location.coords.longitude);
+    translateCurrLoc(latitude, longitude);
 
-    setBtnRefLoad(false);
-
-    setTimeout(() => {}, 500);
+    setLoading(false);
   }
 
-  async function translateCurrLoc(lat, long) {
+  async function translateCurrLoc(latitude, longitude) {
     setcuraddr("Translating current address");
     console.log("fetching addr");
-    let inputcoord = {
-      latitude: lat,
-      longitude: long,
-    };
+    const inputcoord = { latitude, longitude };
     console.log(locationc);
     axios
       .post(baseurl + "t/loc/CoordToAddr", inputcoord, config)
       .then(async (response) => {
-        // check for status code
         if (response.data.status_code != "200") {
           alert("response not 200");
         } else {
@@ -195,7 +182,7 @@ export function AgileOfficeCLoc({ navigation }) {
     const inparam = {
       lat: locationc.latitude,
       long: locationc.longitude,
-      address: currAddr,
+      address,
     };
     axios
       .post(baseurl + "t/loc/CheckInCoord", inparam, config)
@@ -226,7 +213,7 @@ export function AgileOfficeCLoc({ navigation }) {
     const inparam = {
       lat: locationc.latitude,
       long: locationc.longitude,
-      address: currAddr,
+      address,
     };
     axios
       .post(baseurl + "t/loc/CheckOutCoord", inparam, config)
@@ -257,7 +244,7 @@ export function AgileOfficeCLoc({ navigation }) {
     const inparam = {
       lat: locationc.latitude,
       long: locationc.longitude,
-      address: currAddr,
+      address,
     };
     axios
       .post(baseurl + "t/loc/UpdateCoord", inparam, config)
@@ -289,68 +276,59 @@ export function AgileOfficeCLoc({ navigation }) {
   }, []);
 
   return (
-    <ScreenWrapper>
-      <PageTitle>{lastLoc}</PageTitle>
+    <ScreenWrapper style={{ padding: 15 }}>
+      <Text style={{ fontSize: 14, marginBottom: 10, width: "100%" }}>
+        <Text style={{ fontSize: 14, fontWeight: "bold" }}>Last location:</Text>
+        {" " + lastLoc}
+      </Text>
       <MapView
         style={styles.map}
-        showsUserLocation={true}
-        followsUserLocation={true}
+        showsUserLocation
+        followsUserLocation
         region={locationc}
       >
-        {lastCoord ? (
+        {!!lastCoord && (
           <Marker
             coordinate={lastCoord}
             title="You was here"
             description="Last known location of you"
           />
-        ) : (
-          <></>
         )}
       </MapView>
 
-      <PageTitle>Current location: {currAddr}</PageTitle>
+      <Text style={styles.currentLocation}>
+        <Text style={{ fontSize: 14, fontWeight: "bold" }}>
+          Current location:
+        </Text>
+        {" " + address}
+      </Text>
 
-      {isClocked ? (
-        <>
-          <ClickableBox
-            btnText="Update Location"
-            clickAction={() => doUpdateLoc()}
-            iconClass={MaterialIcons}
-            iconName="edit-location"
-            isLoading={btnRefLoad}
-          />
-          <ClickableBox
-            btnText="Check-Out"
-            clickAction={() => doCheckOut()}
-            iconClass={MaterialIcons}
-            iconName="wrong-location"
-            isLoading={btnRefLoad}
-          />
-        </>
-      ) : (
-        <ClickableBox
-          btnText="Check-In"
-          clickAction={() => doCheckIn()}
-          iconClass={MaterialIcons}
-          iconName="add-location-alt"
-          isLoading={btnRefLoad}
-        />
-      )}
-      <ClickableBox
-        btnText="Reset Current Loc"
-        clickAction={() => getCurrLoc()}
-        iconClass={FontAwesome}
-        iconName="refresh"
-        isLoading={btnRefLoad}
-        minWidth="45%"
-      />
+      <VStack space={3} w="100%">
+        {[
+          ...(isClocked
+            ? [
+                { label: "Update Location", onPress: doUpdateLoc },
+                { label: "Check-Out Anywhere", onPress: doCheckOut },
+              ]
+            : [{ label: "Check-In Anywhere", onPress: doCheckIn }]),
+          { label: "Reset Current Loc", onPress: getCurrLoc },
+        ].map((i) => (
+          <Button {...i} loading={loading} />
+        ))}
+      </VStack>
     </ScreenWrapper>
   );
 }
 
 const styles = StyleSheet.create({
   map: {
-    width: 300,
+    width: "100%",
     height: 200,
+  },
+  currentLocation: {
+    fontSize: 14,
+    marginTop: 10,
+    marginBottom: 40,
+    width: "100%",
   },
 });
