@@ -15,12 +15,10 @@ const Stack = createNativeStackNavigator();
 export function AgileOfficeTab() {
   const [assets] = useAssets([require("assets/logo-tm.png")]);
 
-  const headerTintColor = useColorModeValue(unifi_c4, unifi_c1);
-  const backgroundColor = useColorModeValue(header_light, unifi_c7);
   const options = {
-    headerTintColor,
+    headerTintColor: useColorModeValue(unifi_c4, unifi_c1),
     headerStyle: {
-      backgroundColor,
+      backgroundColor: useColorModeValue(header_light, unifi_c7),
       shadowColor: "#000",
       shadowOffset: {
         width: 0,
