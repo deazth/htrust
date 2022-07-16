@@ -6,10 +6,16 @@ import {
   Switch,
   Icon,
   useColorMode,
+  useColorModeValue,
 } from "native-base";
 import Constants from "expo-constants";
 
-import { DarkModeToggle, ScreenWrapper } from "components/styles";
+import {
+  DarkModeToggle,
+  ScreenWrapper,
+  unifi_c1,
+  unifi_c4,
+} from "components/styles";
 import { StyleSheet } from "react-native";
 import { LogoutButton } from "components/LogoutButton";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -32,6 +38,8 @@ const styles = StyleSheet.create({
 const { version } = Constants.manifest;
 export function Setting({ navigation }) {
   const { colorMode } = useColorMode();
+  const color = useColorModeValue(unifi_c4, unifi_c1);
+
   return (
     <ScreenWrapper>
       <ScrollView
@@ -40,13 +48,7 @@ export function Setting({ navigation }) {
         contentContainerStyle={{ paddingVertical: 15 }}
       >
         <View style={{ padding: 18 }}>
-          <Text
-            style={{
-              color: colorMode === "light" ? "#1C03E3" : "#FFFFFF",
-              fontSize: 16,
-              marginBottom: 10,
-            }}
-          >
+          <Text style={{ color, fontSize: 16, marginBottom: 10 }}>
             Settings
           </Text>
           {[
@@ -75,13 +77,13 @@ export function Setting({ navigation }) {
               {i.label === "Dark Mode" ? (
                 <DarkModeToggle />
               ) : (
-                <Switch size="sm" offTrackColor="#000" onTrackColor="#1C03E3" />
+                <Switch size="sm" offTrackColor="#000" onTrackColor={color} />
               )}
             </View>
           ))}
         </View>
         <View style={{ padding: 20, marginTop: 40 }}>
-          <Text style={{ color: "#1C03E3", fontSize: 14, textAlign: "center" }}>
+          <Text style={{ color, fontSize: 14, textAlign: "center" }}>
             Version {version}
           </Text>
           <Text style={styles.copyright}>
