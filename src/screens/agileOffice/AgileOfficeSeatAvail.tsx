@@ -488,7 +488,7 @@ export function AgileOfficeSeatAvail({ navigation }) {
             value={isMoreThan1Day ? ["1"] : []}
             accessibilityLabel="choose"
           >
-            <Checkbox borderColor="#1C04E3" value="1" />
+            <Checkbox colorScheme="blue" bgColor="red" value="1" />
           </Checkbox.Group>
           <Text style={{ fontSize: 14 }}>More Than One Day</Text>
         </HStack>
