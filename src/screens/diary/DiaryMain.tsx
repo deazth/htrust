@@ -1,30 +1,27 @@
 import React from "react";
 import {
   Center,
-  Button,
   Text,
-  FlatList,
   ScrollView,
   HStack,
   Spacer,
   Icon,
   Modal,
   Spinner,
+  View,
 } from "native-base";
 import axios from "axios";
 import { Calendar } from "react-native-calendars";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 import {
-  DarkModeToggle,
   DiaryItemCards,
   FormBtnSubmit,
   InfoBox,
-  ItemCards,
   PageTitle,
   ScreenWrapper,
-} from "../../components/styles";
-import { RefreshControl, Alert } from "react-native";
+} from "components/styles";
+import { RefreshControl, Alert, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setTokerr,
@@ -43,7 +40,6 @@ export function DiaryMain({ navigation }) {
 
   var tomorrow = new Date();
 
-  const [textdisp, setTextdisp] = React.useState("Please select a date");
   const [refreshing, setRefreshing] = React.useState(false);
   const [isLoadingGwd, setIsLoadingGwd] = React.useState(false);
   const [isFutureDate, setIsFutureDate] = React.useState(false);
@@ -194,28 +190,21 @@ export function DiaryMain({ navigation }) {
 
   function loadCalendar(indate = selMonth) {
     console.log("GetMonCalendar input " + indate);
-    const theinput = {
-      indate: indate,
-    };
+    const theinput = { indate };
+
+    setRefreshing(true);
 
     axios
       .post(baseurl + "t/diary/GetMonCalendar", theinput, config)
-      .then(async (response) => {
+      .then((response) => {
         // check for status code
         if (response.data.status_code != "200") {
           alert(JSON.stringify(response.data));
         } else {
           if (response.data.msg == "Success") {
-            let reval = response.data.data;
-            console.log(reval);
-
-            if (reval) {
-              setMarkDates(reval);
-            }
-
-            if (inDate) {
-              selectedDate();
-            }
+            const reval = response.data.data;
+            if (reval) setMarkDates(reval);
+            if (inDate) selectedDate();
           }
         }
       })
@@ -238,8 +227,8 @@ export function DiaryMain({ navigation }) {
         }
 
         // navigation.goBack();
-        return;
-      });
+      })
+      .finally(() => setRefreshing(false));
   }
 
   React.useEffect(() => {
@@ -266,10 +255,11 @@ export function DiaryMain({ navigation }) {
           </Modal.Body>
         </Modal.Content>
       </Modal>
-      <ScreenWrapper justifyContent="center">
-        <PageTitle fontSize="xl">trUSt Diary</PageTitle>
+      <ScreenWrapper>
         <ScrollView
           w="100%"
+          h="100%"
+          contentContainerStyle={{ padding: 15 }}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
@@ -277,6 +267,33 @@ export function DiaryMain({ navigation }) {
             />
           }
         >
+          <View style={styles.header} shadow={4}>
+            <Text style={styles.headerItem}>Productivity</Text>
+            <View style={{ alignItems: "center" }}>
+              <Text style={styles.headerItem}>Daily</Text>
+              <Text
+                style={{
+                  ...styles.headerItem,
+                  color: "red",
+                  textDecorationLine: "underline",
+                }}
+              >
+                10%
+              </Text>
+            </View>
+            <View style={{ alignItems: "center" }}>
+              <Text style={styles.headerItem}>Weekly</Text>
+              <Text
+                style={{
+                  ...styles.headerItem,
+                  color: "green",
+                  textDecorationLine: "underline",
+                }}
+              >
+                80%
+              </Text>
+            </View>
+          </View>
           <Calendar
             maxDate={tomorrow}
             current={tomorrow}
@@ -286,11 +303,7 @@ export function DiaryMain({ navigation }) {
             }}
             markingType={"period"}
             markedDates={markDates}
-            onDayPress={(dateobj) => {
-              // dateobj.selected = true;
-              // alert(JSON.stringify(dateobj));
-              selectedDate(dateobj.dateString);
-            }}
+            onDayPress={(dateobj) => selectedDate(dateobj.dateString)}
           />
           <InfoBox m={3}>
             {inDate ? (
@@ -304,7 +317,7 @@ export function DiaryMain({ navigation }) {
                   {!isFutureDate && (
                     <FormBtnSubmit
                       size="xs"
-                      onPress={() => addEntry()}
+                      onPress={addEntry}
                       endIcon={<Icon as={FontAwesome5} name="plus" size={5} />}
                     >
                       Add
@@ -313,29 +326,23 @@ export function DiaryMain({ navigation }) {
                 </HStack>
 
                 {dayEntry.length > 0 ? (
-                  <>
-                    {dayEntry.map((item, index) => (
-                      <DiaryItemCards
-                        key={index}
-                        title={item.title}
-                        text1={item.tag_desc + " - " + item.type_desc}
-                        text2={item.hours_spent + " hours"}
-                        editAction={editEntry}
-                        deleteAction={deleteEntry}
-                        itemid={item.id}
-                      />
-                    ))}
-                  </>
+                  dayEntry.map((item, index) => (
+                    <DiaryItemCards
+                      key={index}
+                      title={item.title}
+                      text1={item.tag_desc + " - " + item.type_desc}
+                      text2={item.hours_spent + " hours"}
+                      editAction={editEntry}
+                      deleteAction={deleteEntry}
+                      itemid={item.id}
+                    />
+                  ))
                 ) : (
-                  <>
-                    <Text>No entry for this date</Text>
-                  </>
+                  <Text>No entry for this date</Text>
                 )}
               </>
             ) : (
-              <>
-                <Text>Please select a date</Text>
-              </>
+              <Text>Please select a date</Text>
             )}
           </InfoBox>
         </ScrollView>
@@ -343,3 +350,16 @@ export function DiaryMain({ navigation }) {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    padding: 10,
+    backgroundColor: "#EBEBEB",
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  headerItem: { fontSize: 13, fontWeight: "bold" },
+});

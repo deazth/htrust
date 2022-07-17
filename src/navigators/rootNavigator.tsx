@@ -7,8 +7,8 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import Login from "../screens/general/Login";
 import { Home } from "../screens/general/Home";
 import { Feedback } from "../screens/general/Feedback";
-import { DiaryMain } from "../screens/diary/DiaryMain";
 import { MoreTab } from "./MoreTab";
+import { DiaryTab } from "./DiaryTab";
 import { AgileOfficeTab } from "./AgileOfficeTab";
 import {
   unifi_c1,
@@ -29,7 +29,6 @@ import { selectIsLoading, selectUserID, selectUserObj } from "../app/userSlice";
 import { useSelector } from "react-redux";
 import { TeamMain } from "../screens/team/TeamMain";
 import { Inprogress } from "../screens/general/Inprogress";
-import { DiaryEdit } from "../screens/diary/DiaryEdit";
 import { useAssets } from "expo-asset";
 
 const Stack = createNativeStackNavigator();
@@ -43,6 +42,7 @@ export function RootTab() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        headerShown: false,
         tabBarIcon: ({ focused, size }) => {
           let name;
 
@@ -64,41 +64,11 @@ export function RootTab() {
         ),
       })}
     >
-      <Tab.Screen
-        name="Home"
-        component={Home}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Tab.Screen
-        name="Agile Office"
-        component={AgileOfficeTab}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Tab.Screen
-        name="Diary"
-        component={DiaryMain}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={TeamMain}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Tab.Screen
-        name="More"
-        component={MoreTab}
-        options={{
-          headerShown: false,
-        }}
-      />
+      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="Agile Office" component={AgileOfficeTab} />
+      <Tab.Screen name="Diary" component={DiaryTab} />
+      <Tab.Screen name="Profile" component={TeamMain} />
+      <Tab.Screen name="More" component={MoreTab} />
     </Tab.Navigator>
   );
 }
@@ -162,19 +132,6 @@ export function RootStack() {
           component={Inprogress}
           options={{
             title: "Under Development",
-            ...options,
-            headerShown: true,
-            headerTintColor: headerTint,
-            headerStyle: {
-              backgroundColor: headerbgc,
-            },
-          }}
-        />
-        <Stack.Screen
-          name="DiaryCrud"
-          component={DiaryEdit}
-          options={{
-            title: "Diary Entry",
             ...options,
             headerShown: true,
             headerTintColor: headerTint,
