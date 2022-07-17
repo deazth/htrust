@@ -56,11 +56,11 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
   const [dateTimePickerConfig, setDateTimePickerConfig] = React.useState<
     | {
         mode: "date" | "time";
-        onChange: (event: any, date?: Date) => void;
-        value?: Date;
+        onChange: (date?: Date) => void;
       }
     | undefined
   >();
+  const [tempDateTime, setTempDateTime] = React.useState<Date | undefined>();
   const [fromDate, setFromDate] = React.useState<Date | undefined>();
   const [toDate, setToDate] = React.useState<Date | undefined>();
   const [fromTime, setFromTime] = React.useState<Date | undefined>();
@@ -382,13 +382,10 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
         <HStack my={3} alignItems="flex-start">
           <Pressable
             style={dateTimeSelectStyle(isMoreThan1Day ? "left" : "full")}
-            onPress={() =>
-              setDateTimePickerConfig({
-                mode: "date",
-                onChange: (_, d) => setFromDate(d),
-                value: fromDate || new Date(),
-              })
-            }
+            onPress={() => {
+              setTempDateTime(fromDate || new Date());
+              setDateTimePickerConfig({ mode: "date", onChange: setFromDate });
+            }}
           >
             <Text style={fromDate ? textStyle : placeholderStyle}>
               {fromDate
@@ -402,13 +399,10 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
           {isMoreThan1Day && (
             <Pressable
               style={dateTimeSelectStyle("right")}
-              onPress={() =>
-                setDateTimePickerConfig({
-                  mode: "date",
-                  onChange: (_, d) => setToDate(d),
-                  value: toDate || new Date(),
-                })
-              }
+              onPress={() => {
+                setTempDateTime(toDate || new Date());
+                setDateTimePickerConfig({ mode: "date", onChange: setToDate });
+              }}
             >
               <Text style={toDate ? textStyle : placeholderStyle}>
                 {toDate ? toDate.toLocaleDateString(...dateFormat) : "End Date"}
@@ -421,13 +415,10 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
         <HStack my={3} alignItems="flex-start">
           <Pressable
             style={dateTimeSelectStyle("left")}
-            onPress={() =>
-              setDateTimePickerConfig({
-                mode: "time",
-                onChange: (_, d) => setFromTime(d),
-                value: fromTime || new Date(),
-              })
-            }
+            onPress={() => {
+              setTempDateTime(fromTime || new Date());
+              setDateTimePickerConfig({ mode: "time", onChange: setFromTime });
+            }}
           >
             <Text style={fromTime ? textStyle : placeholderStyle}>
               {fromTime
@@ -438,13 +429,10 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
           </Pressable>
           <Pressable
             style={dateTimeSelectStyle("right")}
-            onPress={() =>
-              setDateTimePickerConfig({
-                mode: "time",
-                onChange: (_, d) => setToTime(d),
-                value: toTime || new Date(),
-              })
-            }
+            onPress={() => {
+              setTempDateTime(toTime || new Date());
+              setDateTimePickerConfig({ mode: "time", onChange: setToTime });
+            }}
           >
             <Text style={toTime ? textStyle : placeholderStyle}>
               {toTime ? toTime.toLocaleTimeString(...timeFormat) : "End Time"}
@@ -468,16 +456,24 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
           {/* <Modal.CloseButton /> */}
           {/* <Modal.Header>Select</Modal.Header> */}
           <Modal.Body>
-            {!!dateTimePickerConfig && (
+            {!!dateTimePickerConfig && !!tempDateTime && (
               <DateTimePicker
-                value={dateTimePickerConfig.value}
+                value={tempDateTime}
                 mode={dateTimePickerConfig.mode}
                 display="spinner"
                 is24Hour
                 textColor={textColor}
-                onChange={dateTimePickerConfig.onChange}
+                onChange={(_, d) => setTempDateTime(d)}
               />
             )}
+            <Button
+              label="Confirm"
+              onPress={() => {
+                dateTimePickerConfig.onChange(tempDateTime);
+                setDateTimePickerConfig(undefined);
+              }}
+              loading={isLoading}
+            />
             <View style={{ height: 10 }} />
           </Modal.Body>
         </Modal.Content>
