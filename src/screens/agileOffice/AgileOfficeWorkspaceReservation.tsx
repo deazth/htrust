@@ -20,26 +20,12 @@ import {
   selectUserToken,
   setTokerr,
   setUserObj,
-} from "../../app/userSlice";
+} from "app/userSlice";
 import axios from "axios";
 import { Pressable, StyleSheet } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-const dateFormat = [
-  "en-UK",
-  {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  } as Intl.DateTimeFormatOptions,
-];
-const timeFormat = [
-  "en-US",
-  {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true,
-  } as Intl.DateTimeFormatOptions,
-];
+import { dateFormat, timeFormat } from "constants/datetime";
+
 export function AgileOfficeWorkspaceReservation({ navigation }) {
   const dispatch = useDispatch();
 
@@ -49,9 +35,9 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
     headers: { Authorization: `Bearer ${stoken}` },
   };
 
-  const [bID, setBid] = React.useState(null);
-  const [fID, setFid] = React.useState(null);
-  const [fcID, setFcid] = React.useState(null);
+  const [buildingId, setBuildingId] = React.useState(null);
+  const [floorId, setFloorId] = React.useState(null);
+  const [sectionId, setSectionId] = React.useState(null);
   const [isMoreThan1Day, setIsMoreThan1Day] = React.useState(false);
   const [dateTimePickerConfig, setDateTimePickerConfig] = React.useState<
     | {
@@ -70,7 +56,6 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
   const [fcList, setFcList] = React.useState([]);
 
   const [isLoading, setIsloading] = React.useState(false);
-  const [sResult, setSResult] = React.useState([]);
 
   const placeholderTextColor = useColorModeValue("#C2C2C2", unifi_c9);
   const textColor = useColorModeValue("black", unifi_c9);
@@ -104,19 +89,19 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
 
   function selectBuilding(building_id) {
     setIsloading(true);
-    setBid(building_id);
+    setBuildingId(building_id);
     loadFloorList(building_id);
     setFcList([]);
-    setFcid(null);
-    setFid(null);
+    setSectionId(null);
+    setFloorId(null);
     setIsloading(false);
   }
 
   function selectFloor(floor_id) {
     setIsloading(true);
-    setFid(floor_id);
+    setFloorId(floor_id);
     loadFcList(floor_id);
-    setFcid(null);
+    setSectionId(null);
     setIsloading(false);
   }
 
@@ -233,9 +218,9 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
     const dateLocalT = new Date(toTime.getTime() - offsetMs);
 
     const inputs = {
-      building_id: bID,
-      floor_id: fID,
-      floor_section_id: fcID,
+      building_id: buildingId,
+      floor_id: floorId,
+      floor_section_id: sectionId,
       start_time: dateLocalF.toISOString().slice(0, 19).replace("T", " "),
       end_time: dateLocalT.toISOString().slice(0, 19).replace("T", " "),
     };
@@ -247,7 +232,16 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
           alert(JSON.stringify(response.data.msg));
         } else {
           if (response.data.msg == "Success") {
-            setSResult(response.data.data);
+            navigation.navigate("AgileOfficeWorkspaceReservationSearchResult", {
+              fromDate,
+              toDate: isMoreThan1Day ? toDate : undefined,
+              fromTime,
+              toTime,
+              result: response.data.data,
+              sectionId,
+              buildingId,
+              floorId,
+            });
           } else {
             alert(response.data.msg);
           }
@@ -283,13 +277,13 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
 
   return (
     <ScreenWrapper>
-      <ScrollView w="100%" h="100%" contentContainerStyle={{ padding: 20 }}>
+      <ScrollView w="100%" h="100%" contentContainerStyle={{ padding: 15 }}>
         <Text style={{ color, fontSize: 14, fontWeight: "bold" }}>
           Search for available workspace
         </Text>
         <Text style={styles.label}>Choose Building</Text>
         <Select
-          selectedValue={bID}
+          selectedValue={buildingId}
           accessibilityLabel="Choose Building"
           placeholder="Please Select"
           {...selectStyle}
@@ -310,7 +304,7 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
         </Select>
         <Text style={styles.label}>Choose Floor</Text>
         <Select
-          selectedValue={fID}
+          selectedValue={floorId}
           accessibilityLabel="Choose Floor (optional)"
           placeholder="Please Select (optional)"
           {...selectStyle}
@@ -332,7 +326,7 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
           ) : (
             <Select.Item
               label={
-                bID
+                buildingId
                   ? "This building has no valid floor"
                   : "Select a building first"
               }
@@ -343,7 +337,7 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
         </Select>
         <Text style={styles.label}>Choose Section</Text>
         <Select
-          selectedValue={fcID}
+          selectedValue={sectionId}
           accessibilityLabel="Choose Section (optional)"
           placeholder="Please Select (optional)"
           {...selectStyle}
@@ -352,7 +346,7 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
             endIcon: <CheckIcon size="5" />,
           }}
           mt={1}
-          onValueChange={setFcid}
+          onValueChange={setSectionId}
         >
           {fcList.length != 0 ? (
             fcList.map((rec) => (
@@ -361,7 +355,9 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
           ) : (
             <Select.Item
               label={
-                fID ? "This floor has no valid section" : "Select a floor first"
+                floorId
+                  ? "This floor has no valid section"
+                  : "Select a floor first"
               }
               value=""
               disabled

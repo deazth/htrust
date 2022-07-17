@@ -6,6 +6,7 @@ import AgileOfficeMain from "screens/agileOffice";
 import { AgileOfficeCLoc } from "screens/agileOffice/AgileOfficeCLoc";
 import { AgileOfficeScanQR } from "screens/agileOffice/AgileOfficeScanQR";
 import { AgileOfficeWorkspaceReservation } from "screens/agileOffice/AgileOfficeWorkspaceReservation";
+import { AgileOfficeWorkspaceReservationSearchResult } from "screens/agileOffice/AgileOfficeWorkspaceReservationSearchResult";
 import { AgileOfficeScanResult } from "screens/agileOffice/AgileOfficeScanResult";
 import { AgileOfficeAreaBook } from "screens/agileOffice/AgileOfficeAreaBook";
 import { header_light, unifi_c1, unifi_c4, unifi_c7 } from "components/styles";
@@ -62,6 +63,11 @@ export function AgileOfficeTab() {
       <Stack.Screen
         name="AgileOfficeWorkspaceReservation"
         component={AgileOfficeWorkspaceReservation}
+        options={{ title: "Workspace Reservation" }}
+      />
+      <Stack.Screen
+        name="AgileOfficeWorkspaceReservationSearchResult"
+        component={AgileOfficeWorkspaceReservationSearchResult}
         options={{ title: "Workspace Reservation" }}
       />
       <Stack.Screen
