@@ -1,19 +1,5 @@
 import React from "react";
-import {
-  c_black,
-  c_white,
-  ScreenWrapper,
-  unifi_c1,
-  unifi_c2,
-  unifi_c3,
-  unifi_c4,
-  unifi_c5,
-  unifi_c6,
-  unifi_c7,
-  unifi_c8,
-  unifi_c9,
-  unifi_primary,
-} from "components/styles";
+import { ScreenWrapper, unifi_c1, unifi_c4, unifi_c9 } from "components/styles";
 import Button from "components/Button";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import {
@@ -54,7 +40,7 @@ const timeFormat = [
     hour12: true,
   } as Intl.DateTimeFormatOptions,
 ];
-export function AgileOfficeSeatAvail({ navigation }) {
+export function AgileOfficeWorkspaceReservation({ navigation }) {
   const dispatch = useDispatch();
 
   const baseurl = useSelector(selectBaseUrl);
@@ -66,8 +52,6 @@ export function AgileOfficeSeatAvail({ navigation }) {
   const [bID, setBid] = React.useState(null);
   const [fID, setFid] = React.useState(null);
   const [fcID, setFcid] = React.useState(null);
-  const [seatID, setSeatid] = React.useState(null);
-  const [seatLabel, setSeatLabel] = React.useState(null);
   const [isMoreThan1Day, setIsMoreThan1Day] = React.useState(false);
   const [dateTimePickerConfig, setDateTimePickerConfig] = React.useState<
     | {
@@ -85,13 +69,9 @@ export function AgileOfficeSeatAvail({ navigation }) {
   const [floorList, setFloorList] = React.useState([]);
   const [fcList, setFcList] = React.useState([]);
 
-  const [searchPressed, setSearchPressed] = React.useState(false);
   const [isLoading, setIsloading] = React.useState(false);
   const [sResult, setSResult] = React.useState([]);
-  const [showConfirm, setShowConfirm] = React.useState(false);
 
-  const [cfromtime, setCFromtime] = React.useState(new Date());
-  const [ctotime, setCTotime] = React.useState(new Date());
   const placeholderTextColor = useColorModeValue("#C2C2C2", unifi_c9);
   const textColor = useColorModeValue("black", unifi_c9);
   const selectBorderColor = useColorModeValue("#707070", undefined);
@@ -140,20 +120,15 @@ export function AgileOfficeSeatAvail({ navigation }) {
     setIsloading(false);
   }
 
-  function selectSection(fc_id) {
-    setFcid(fc_id);
-  }
-
   function loadBuildList() {
+    setIsloading(true);
     axios
       .post(baseurl + "t/ao/getBuildingList", [], config)
       .then((response) => {
-        // check for status code
         if (response.data.status_code != "200") {
           alert(JSON.stringify(response.data));
         } else {
           if (response.data.msg == "Success") {
-            // alert(JSON.stringify(response.data.data));
             const resptime = new Date(response.headers.date);
             const futtime = new Date(resptime.getTime() + 5 * 60000);
             setFromTime(futtime);
@@ -165,8 +140,6 @@ export function AgileOfficeSeatAvail({ navigation }) {
         }
       })
       .catch((error) => {
-        console.log("load building - got error");
-        // dispatch(setTokerr(error.message));
         if (error.response) {
           console.log("load building - got error with response");
           if (error.response.data.message == "Unauthenticated.") {
@@ -179,11 +152,9 @@ export function AgileOfficeSeatAvail({ navigation }) {
         } else {
           console.log("load building - got error without response");
           console.log(error);
-          // alert(JSON.stringify(error));
         }
-
-        // navigation.goBack();
-      });
+      })
+      .finally(() => setIsloading(false));
   }
 
   function loadFloorList(b_id) {
@@ -195,7 +166,6 @@ export function AgileOfficeSeatAvail({ navigation }) {
           alert(JSON.stringify(response.data));
         } else {
           if (response.data.msg == "Success") {
-            // alert(JSON.stringify(response.data.data));
             setFloorList(response.data.data);
           } else {
             alert("Failed to fetch building list from the server");
@@ -204,7 +174,6 @@ export function AgileOfficeSeatAvail({ navigation }) {
       })
       .catch((error) => {
         console.log("load building - got error");
-        // dispatch(setTokerr(error.message));
         if (error.response) {
           console.log("load building - got error with response");
           if (error.response.data.message == "Unauthenticated.") {
@@ -217,11 +186,7 @@ export function AgileOfficeSeatAvail({ navigation }) {
         } else {
           console.log("load building - got error without response");
           console.log(error);
-          // alert(JSON.stringify(error));
         }
-
-        // navigation.goBack();
-        return;
       });
   }
 
@@ -234,7 +199,6 @@ export function AgileOfficeSeatAvail({ navigation }) {
           alert(JSON.stringify(response.data));
         } else {
           if (response.data.msg == "Success") {
-            // alert(JSON.stringify(response.data.data));
             setFcList(response.data.data);
           } else {
             alert("Failed to fetch building list from the server");
@@ -243,7 +207,6 @@ export function AgileOfficeSeatAvail({ navigation }) {
       })
       .catch((error) => {
         console.log("load building - got error");
-        // dispatch(setTokerr(error.message));
         if (error.response) {
           console.log("load building - got error with response");
           if (error.response.data.message == "Unauthenticated.") {
@@ -256,19 +219,14 @@ export function AgileOfficeSeatAvail({ navigation }) {
         } else {
           console.log("load building - got error without response");
           console.log(error);
-          // alert(JSON.stringify(error));
         }
 
-        // navigation.goBack();
         return;
       });
   }
 
   function searchAvail() {
     setIsloading(true);
-    setCFromtime(fromTime);
-    setCTotime(toTime);
-    setSearchPressed(false);
 
     const offsetMs = fromTime.getTimezoneOffset() * 60 * 1000;
     const dateLocalF = new Date(fromTime.getTime() - offsetMs);
@@ -282,8 +240,6 @@ export function AgileOfficeSeatAvail({ navigation }) {
       end_time: dateLocalT.toISOString().slice(0, 19).replace("T", " "),
     };
 
-    console.log("search seat availability");
-    console.log(inputs);
     axios
       .post(baseurl + "t/ao/searchAvailableSeat", inputs, config)
       .then((response) => {
@@ -291,10 +247,7 @@ export function AgileOfficeSeatAvail({ navigation }) {
           alert(JSON.stringify(response.data.msg));
         } else {
           if (response.data.msg == "Success") {
-            // console.log(response.data.data);
-            // alert(JSON.stringify(response.data.data));
             setSResult(response.data.data);
-            setSearchPressed(true);
           } else {
             alert(response.data.msg);
           }
@@ -324,73 +277,7 @@ export function AgileOfficeSeatAvail({ navigation }) {
       .finally(() => setIsloading(false));
   }
 
-  function selectSeat(seatid, seatlabel) {
-    setSeatid(seatid);
-    setSeatLabel(seatlabel);
-    setShowConfirm(true);
-  }
-
-  function doSeatReserve() {
-    const offsetMs = cfromtime.getTimezoneOffset() * 60 * 1000;
-    const dateLocalF = new Date(cfromtime.getTime() - offsetMs);
-    const dateLocalT = new Date(ctotime.getTime() - offsetMs);
-
-    const inputs = {
-      seat_id: seatID,
-      stime: dateLocalF.toISOString().slice(0, 19).replace("T", " "),
-      etime: dateLocalT.toISOString().slice(0, 19).replace("T", " "),
-    };
-
-    console.log("do seat reserve");
-    console.log(inputs);
-
-    setIsloading(true);
-    axios
-      .post(baseurl + "t/ao/doSeatReserve", inputs, config)
-      .then((response) => {
-        // check for status code
-        if (response.data.status_code != "200") {
-          alert(JSON.stringify(response.data));
-        } else {
-          if (response.data.msg == "Success") {
-            console.log(response.data.data);
-            alert("Reservation successful");
-            navigation.goBack();
-            return;
-          } else {
-            alert(response.data.msg);
-          }
-        }
-      })
-      .catch((error) => {
-        console.log("Seat reserve error");
-        // dispatch(setTokerr(error.message));
-        if (error.response) {
-          console.log("Seat reserve - got error with response");
-          if (error.response.data.message == "Unauthenticated.") {
-            dispatch(setTokerr("Session expired 2"));
-            dispatch(setUserObj(null));
-          } else {
-            console.log(error);
-            alert(JSON.stringify(error.response));
-          }
-        } else {
-          console.log("Seat reserve - got error without response");
-          console.log(error);
-        }
-
-        // navigation.goBack();
-      })
-      .finally(() => setIsloading(false));
-
-    setShowConfirm(false);
-  }
-
-  React.useEffect(() => {
-    setIsloading(true);
-    loadBuildList();
-    setIsloading(false);
-  }, []);
+  React.useEffect(loadBuildList, []);
 
   const color = useColorModeValue(unifi_c4, unifi_c1);
 
@@ -465,7 +352,7 @@ export function AgileOfficeSeatAvail({ navigation }) {
             endIcon: <CheckIcon size="5" />,
           }}
           mt={1}
-          onValueChange={selectSection}
+          onValueChange={setFcid}
         >
           {fcList.length != 0 ? (
             fcList.map((rec) => (

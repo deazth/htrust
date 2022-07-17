@@ -38,9 +38,9 @@ const AgileOfficeMain = ({ navigation }) => {
 
           <Button
             label="Reserve Workspace"
-            onPress={() => {
-              navigation.navigate("AgileOfficeSeatAvail");
-            }}
+            onPress={() =>
+              navigation.navigate("AgileOfficeWorkspaceReservation")
+            }
           />
           <Button
             label="Check-in (Scan QR)"
