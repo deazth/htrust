@@ -586,6 +586,7 @@ export function AgileOfficeSeatAvail({ navigation }) {
                 mode={dateTimePickerConfig.mode}
                 display="spinner"
                 is24Hour
+                textColor={textColor}
                 onChange={dateTimePickerConfig.onChange}
               />
             )}
