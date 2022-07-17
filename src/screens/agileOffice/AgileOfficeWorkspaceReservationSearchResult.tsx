@@ -95,14 +95,14 @@ export function AgileOfficeWorkspaceReservationSearchResult({
   }
 
   function doSeatReserve() {
-    // const offsetMs = cfromtime.getTimezoneOffset() * 60 * 1000;
-    // const dateLocalF = new Date(cfromtime.getTime() - offsetMs);
-    // const dateLocalT = new Date(ctotime.getTime() - offsetMs);
+    const offsetMs = fromTime.getTimezoneOffset() * 60 * 1000;
+    const dateLocalF = new Date(fromTime.getTime() - offsetMs);
+    const dateLocalT = new Date(toTime.getTime() - offsetMs);
 
     const inputs = {
-      // seat_id: seatID,
-      // stime: dateLocalF.toISOString().slice(0, 19).replace("T", " "),
-      // etime: dateLocalT.toISOString().slice(0, 19).replace("T", " "),
+      seat_id: seatID,
+      stime: dateLocalF.toISOString().slice(0, 19).replace("T", " "),
+      etime: dateLocalT.toISOString().slice(0, 19).replace("T", " "),
     };
     setIsloading(true);
 
@@ -137,7 +137,6 @@ export function AgileOfficeWorkspaceReservationSearchResult({
         } else {
           console.log("Seat reserve - got error without response");
           console.log(error);
-          // alert(JSON.stringify(error));
         }
       })
       .finally(() => {
@@ -239,6 +238,20 @@ export function AgileOfficeWorkspaceReservationSearchResult({
         ) : (
           <Text>No seat available for the selected parameter</Text>
         )}
+        <View style={styles.legendContainer}>
+          <View style={{ flexDirection: "row" }}>
+            <View
+              style={{ ...styles.colorLegend, backgroundColor: "#FF622D" }}
+            />
+            <Text style={{ fontSize: 14, color }}>AVAILABLE</Text>
+          </View>
+          <View style={{ flexDirection: "row" }}>
+            <View
+              style={{ ...styles.colorLegend, backgroundColor: "#B5B5B5" }}
+            />
+            <Text style={{ fontSize: 14, color }}>BOOKED</Text>
+          </View>
+        </View>
 
         <AlertDialog
           leastDestructiveRef={cancelRef}
@@ -286,6 +299,12 @@ const styles = StyleSheet.create({
   datetimeRow: {
     flexDirection: "row",
     justifyContent: "space-between",
+    marginVertical: 20,
+  },
+  colorLegend: { width: 25, borderRadius: 5, marginRight: 10 },
+  legendContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
     marginVertical: 20,
   },
 });
