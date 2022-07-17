@@ -575,6 +575,7 @@ export function AgileOfficeSeatAvail({ navigation }) {
       <Modal
         isOpen={!!dateTimePickerConfig}
         onClose={() => setDateTimePickerConfig(undefined)}
+        animationPreset="slide"
       >
         <Modal.Content w="100%" marginBottom={0} marginTop="auto">
           {/* <Modal.CloseButton /> */}
