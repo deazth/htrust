@@ -7,7 +7,6 @@ import {
   unifi_c2,
   unifi_c3,
   unifi_c4,
-  unifi_c7,
   unifi_c9,
   unifi_primary,
 } from "components/styles";
@@ -33,7 +32,7 @@ import axios from "axios";
 import { StyleSheet } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import * as WebBrowser from "expo-web-browser";
-import { dateFormat, timeFormat } from "constants/datetime";
+import moment from "moment";
 
 export function AgileOfficeWorkspaceReservationSearchResult({
   route,
@@ -45,17 +44,15 @@ export function AgileOfficeWorkspaceReservationSearchResult({
   let displayDate: string;
   if (toDate) {
     displayDate = fromDate.getDate() + " ";
-    const fromDateMonth = fromDate.toLocaleDateString("en-UK", {
-      month: "short",
-    });
-    const toDateMonth = toDate.toLocaleDateString("en-UK", { month: "short" });
+    const fromDateMonth = moment(fromDate).format("MMM");
+    const toDateMonth = moment(toDate).format("MMM");
     const fromDateYear = fromDate.getFullYear();
     const toDateYear = toDate.getFullYear();
     if (fromDateMonth !== toDateMonth || fromDateYear !== toDateYear)
       displayDate += fromDateMonth + " ";
     if (fromDateYear !== toDateYear) displayDate += fromDateYear + " ";
-    displayDate += "- " + toDate.toLocaleDateString(...dateFormat);
-  } else displayDate = fromDate.toLocaleDateString(...dateFormat);
+    displayDate += "- " + moment(toDate).format("D MMM YYYY");
+  } else displayDate = moment(fromDate).format("D MMM YYYY");
 
   const baseurl = useSelector(selectBaseUrl);
   const stoken = useSelector(selectUserToken);
@@ -164,9 +161,9 @@ export function AgileOfficeWorkspaceReservationSearchResult({
               textAlign: "right",
             }}
           >
-            Time: {fromTime.toLocaleTimeString(...timeFormat)}
+            Time: {moment(fromTime).format("h:mm A")}
             {" - "}
-            {toTime.toLocaleTimeString(...timeFormat)}
+            {moment(toTime).format("h:mm A")}
           </Text>
         </View>
         {result.length > 0 ? (

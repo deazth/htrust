@@ -2,6 +2,7 @@ import React from "react";
 import { ScreenWrapper, unifi_c1, unifi_c4, unifi_c9 } from "components/styles";
 import Button from "components/Button";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import moment from "moment";
 import {
   CheckIcon,
   HStack,
@@ -24,7 +25,6 @@ import {
 import axios from "axios";
 import { Platform, Pressable, StyleSheet } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { dateFormat, timeFormat } from "constants/datetime";
 
 export function AgileOfficeWorkspaceReservation({ navigation }) {
   const dispatch = useDispatch();
@@ -385,7 +385,7 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
           >
             <Text style={fromDate ? textStyle : placeholderStyle}>
               {fromDate
-                ? fromDate.toLocaleDateString(...dateFormat)
+                ? moment(fromDate).format("D MMM YYYY")
                 : isMoreThan1Day
                 ? "Start Date"
                 : "Please Select"}
@@ -401,7 +401,7 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
               }}
             >
               <Text style={toDate ? textStyle : placeholderStyle}>
-                {toDate ? toDate.toLocaleDateString(...dateFormat) : "End Date"}
+                {toDate ? moment(toDate).format("D MMM YYYY") : "End Date"}
               </Text>
               <Icon as={FontAwesome5} name="chevron-down" size={4} />
             </Pressable>
@@ -417,9 +417,7 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
             }}
           >
             <Text style={fromTime ? textStyle : placeholderStyle}>
-              {fromTime
-                ? fromTime.toLocaleTimeString(...timeFormat)
-                : "Start Time"}
+              {fromTime ? moment(fromTime).format("h:mm A") : "Start Time"}
             </Text>
             <Icon as={FontAwesome5} name="chevron-down" size={4} />
           </Pressable>
@@ -431,7 +429,7 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
             }}
           >
             <Text style={toTime ? textStyle : placeholderStyle}>
-              {toTime ? toTime.toLocaleTimeString(...timeFormat) : "End Time"}
+              {toTime ? moment(toTime).format("h:mm A") : "End Time"}
             </Text>
             <Icon as={FontAwesome5} name="chevron-down" size={4} />
           </Pressable>
