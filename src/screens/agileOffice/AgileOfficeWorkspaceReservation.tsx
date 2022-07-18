@@ -22,7 +22,7 @@ import {
   setUserObj,
 } from "app/userSlice";
 import axios from "axios";
-import { Pressable, StyleSheet } from "react-native";
+import { Platform, Pressable, StyleSheet } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { dateFormat, timeFormat } from "constants/datetime";
 
@@ -443,37 +443,52 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
           loading={isLoading}
         />
       </ScrollView>
-      <Modal
-        isOpen={!!dateTimePickerConfig}
-        onClose={() => setDateTimePickerConfig(undefined)}
-        animationPreset="slide"
-      >
-        <Modal.Content w="100%" marginBottom={0} marginTop="auto">
-          {/* <Modal.CloseButton /> */}
-          {/* <Modal.Header>Select</Modal.Header> */}
-          <Modal.Body>
-            {!!dateTimePickerConfig && !!tempDateTime && (
-              <DateTimePicker
-                value={tempDateTime}
-                mode={dateTimePickerConfig.mode}
-                display="spinner"
-                is24Hour
-                textColor={textColor}
-                onChange={(_, d) => setTempDateTime(d)}
+      {Platform.OS === "android" && !!dateTimePickerConfig && !!tempDateTime && (
+        <DateTimePicker
+          value={tempDateTime}
+          mode={dateTimePickerConfig.mode}
+          is24Hour
+          textColor={textColor}
+          onTouchCancel={() => setDateTimePickerConfig(undefined)}
+          onChange={(_, d) => {
+            setDateTimePickerConfig(undefined);
+            dateTimePickerConfig.onChange(d);
+          }}
+        />
+      )}
+      {Platform.OS === "ios" && (
+        <Modal
+          isOpen={!!dateTimePickerConfig}
+          onClose={() => setDateTimePickerConfig(undefined)}
+          animationPreset="slide"
+        >
+          <Modal.Content w="100%" marginBottom={0} marginTop="auto">
+            {/* <Modal.CloseButton /> */}
+            {/* <Modal.Header>Select</Modal.Header> */}
+            <Modal.Body>
+              {!!dateTimePickerConfig && !!tempDateTime && (
+                <DateTimePicker
+                  value={tempDateTime}
+                  mode={dateTimePickerConfig.mode}
+                  display="spinner"
+                  is24Hour
+                  textColor={textColor}
+                  onChange={(_, d) => setTempDateTime(d)}
+                />
+              )}
+              <Button
+                label="Confirm"
+                onPress={() => {
+                  dateTimePickerConfig.onChange(tempDateTime);
+                  setDateTimePickerConfig(undefined);
+                }}
+                loading={isLoading}
               />
-            )}
-            <Button
-              label="Confirm"
-              onPress={() => {
-                dateTimePickerConfig.onChange(tempDateTime);
-                setDateTimePickerConfig(undefined);
-              }}
-              loading={isLoading}
-            />
-            <View style={{ height: 10 }} />
-          </Modal.Body>
-        </Modal.Content>
-      </Modal>
+              <View style={{ height: 10 }} />
+            </Modal.Body>
+          </Modal.Content>
+        </Modal>
+      )}
     </ScreenWrapper>
   );
 }
