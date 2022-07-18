@@ -43,7 +43,7 @@ const AgileOfficeMain = ({ navigation }) => {
             }
           />
           <Button
-            label="Check-in (Scan QR)"
+            label="Check-in Workspace"
             onPress={() => navigation.navigate("AgileOfficeScanQR")}
           />
           <Button
