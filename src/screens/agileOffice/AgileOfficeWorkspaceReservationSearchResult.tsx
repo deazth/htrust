@@ -39,7 +39,16 @@ export function AgileOfficeWorkspaceReservationSearchResult({
   navigation,
 }) {
   const dispatch = useDispatch();
-  const { fromDate, toDate, fromTime, toTime, result } = route.params;
+  const {
+    fromDate,
+    toDate,
+    fromTime,
+    toTime,
+    result,
+    building,
+    floor,
+    section,
+  } = route.params;
 
   let displayDate: string;
   if (toDate) {
@@ -71,7 +80,7 @@ export function AgileOfficeWorkspaceReservationSearchResult({
   const acco_text_color = useColorModeValue(c_black, c_white);
   const acco_floor_color = useColorModeValue(unifi_primary, unifi_c3);
   const acco_fc_color = useColorModeValue(unifi_c9, unifi_c2);
-  const btn_bg_color = useColorModeValue(unifi_c4, unifi_primary);
+  const bg_color = useColorModeValue(unifi_c4, unifi_primary);
 
   function showFloorLayout(floor_id) {
     // setLayoutUrl(baseurl + 'ao/getFloorLayout?id=' + floor_id);
@@ -150,25 +159,43 @@ export function AgileOfficeWorkspaceReservationSearchResult({
           Search for available workspace
         </Text>
         <View style={styles.datetimeRow}>
-          <Text style={{ fontWeight: "bold", fontSize: 13, width: "50%" }}>
-            Date: {displayDate}
-          </Text>
-          <Text
-            style={{
-              fontWeight: "bold",
-              fontSize: 13,
-              width: "50%",
-              textAlign: "right",
-            }}
-          >
+          <Text style={styles.datetime}>Date: {displayDate}</Text>
+          <Text style={{ ...styles.datetime, textAlign: "right" }}>
             Time: {moment(fromTime).format("h:mm A")}
             {" - "}
             {moment(toTime).format("h:mm A")}
           </Text>
         </View>
+        <View style={{ ...styles.headerContainer, backgroundColor: bg_color }}>
+          <Text style={{ fontSize: 14, color: "white", fontWeight: "bold" }}>
+            {building?.building_name}
+            {floor && " - " + floor.floor_name}
+          </Text>
+          {section && (
+            <View style={styles.sectionContainer}>
+              <Text style={{ fontSize: 12, color: bg_color, marginRight: 10 }}>
+                {section.label}
+              </Text>
+              <Icon as={FontAwesome5} name="chevron-down" size={4} />
+            </View>
+          )}
+        </View>
+        <View style={styles.legendContainer}>
+          <View style={{ flexDirection: "row" }}>
+            <View
+              style={{ ...styles.colorLegend, backgroundColor: "#FF622D" }}
+            />
+            <Text style={{ fontSize: 14, color }}>AVAILABLE</Text>
+          </View>
+          <View style={{ flexDirection: "row" }}>
+            <View
+              style={{ ...styles.colorLegend, backgroundColor: "#B5B5B5" }}
+            />
+            <Text style={{ fontSize: 14, color }}>BOOKED</Text>
+          </View>
+        </View>
         {result.length > 0 ? (
           <>
-            <Text>Search Result</Text>
             <Accordion>
               {result.map((rec) => (
                 <Accordion.Item key={rec.id}>
@@ -208,7 +235,7 @@ export function AgileOfficeWorkspaceReservationSearchResult({
                                 <Button
                                   m={1}
                                   p={1}
-                                  backgroundColor={btn_bg_color}
+                                  backgroundColor={bg_color}
                                   key={seat.id}
                                   endIcon={
                                     <Icon
@@ -235,20 +262,6 @@ export function AgileOfficeWorkspaceReservationSearchResult({
         ) : (
           <Text>No seat available for the selected parameter</Text>
         )}
-        <View style={styles.legendContainer}>
-          <View style={{ flexDirection: "row" }}>
-            <View
-              style={{ ...styles.colorLegend, backgroundColor: "#FF622D" }}
-            />
-            <Text style={{ fontSize: 14, color }}>AVAILABLE</Text>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <View
-              style={{ ...styles.colorLegend, backgroundColor: "#B5B5B5" }}
-            />
-            <Text style={{ fontSize: 14, color }}>BOOKED</Text>
-          </View>
-        </View>
 
         <AlertDialog
           leastDestructiveRef={cancelRef}
@@ -279,7 +292,7 @@ export function AgileOfficeWorkspaceReservationSearchResult({
                   isLoading={isLoading}
                   isLoadingText="Please Wait"
                   colorScheme="primary"
-                  onPress={() => doSeatReserve()}
+                  onPress={doSeatReserve}
                 >
                   Reserve
                 </Button>
@@ -298,10 +311,28 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginVertical: 20,
   },
+  datetime: {
+    fontWeight: "bold",
+    fontSize: 13,
+    width: "50%",
+  },
   colorLegend: { width: 25, borderRadius: 5, marginRight: 10 },
   legendContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
     marginVertical: 20,
+  },
+  headerContainer: {
+    padding: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  sectionContainer: {
+    backgroundColor: "white",
+    borderRadius: 20,
+    paddingVertical: 3,
+    paddingHorizontal: 15,
+    flexDirection: "row",
   },
 });

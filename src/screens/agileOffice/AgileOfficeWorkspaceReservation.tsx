@@ -53,7 +53,7 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
   const [toTime, setToTime] = React.useState<Date | undefined>();
   const [buildList, setBuildList] = React.useState([]);
   const [floorList, setFloorList] = React.useState([]);
-  const [fcList, setFcList] = React.useState([]);
+  const [sectionList, setSectionList] = React.useState([]);
 
   const [isLoading, setIsloading] = React.useState(false);
 
@@ -91,7 +91,7 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
     setIsloading(true);
     setBuildingId(building_id);
     loadFloorList(building_id);
-    setFcList([]);
+    setSectionList([]);
     setSectionId(null);
     setFloorId(null);
     setIsloading(false);
@@ -184,7 +184,7 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
           alert(JSON.stringify(response.data));
         } else {
           if (response.data.msg == "Success") {
-            setFcList(response.data.data);
+            setSectionList(response.data.data);
           } else {
             alert("Failed to fetch building list from the server");
           }
@@ -205,8 +205,6 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
           console.log("load building - got error without response");
           console.log(error);
         }
-
-        return;
       });
   }
 
@@ -238,9 +236,9 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
               fromTime,
               toTime,
               result: response.data.data,
-              sectionId,
-              buildingId,
-              floorId,
+              section: sectionList.find((s) => s.id === +sectionId),
+              building: buildList.find((b) => b.id === +buildingId),
+              floor: floorList.find((f) => f.id === +floorId),
             });
           } else {
             alert(response.data.msg);
@@ -263,10 +261,7 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
         } else {
           console.log("Seat finder - got error without response");
           console.log(error);
-          // alert(JSON.stringify(error));
         }
-
-        // navigation.goBack();
       })
       .finally(() => setIsloading(false));
   }
@@ -348,9 +343,9 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
           mt={1}
           onValueChange={setSectionId}
         >
-          {fcList.length != 0 ? (
-            fcList.map((rec) => (
-              <Select.Item label={rec.label} value={rec.id + ""} key={rec.id} />
+          {sectionList.length != 0 ? (
+            sectionList.map((s) => (
+              <Select.Item label={s.label} value={s.id + ""} key={s.id} />
             ))
           ) : (
             <Select.Item

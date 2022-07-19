@@ -43,6 +43,10 @@ const AgileOfficeMain = ({ navigation }) => {
             }
           />
           <Button
+            label="Reserve Meeting Room"
+            onPress={() => /** TODO: add navigation here */ null}
+          />
+          <Button
             label="Check-in Workspace"
             onPress={() => navigation.navigate("AgileOfficeScanQR")}
           />
