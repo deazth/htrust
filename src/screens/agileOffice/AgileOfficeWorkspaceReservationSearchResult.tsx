@@ -12,14 +12,16 @@ import {
 } from "components/styles";
 import {
   Button,
-  ScrollView,
   Text,
   useColorModeValue,
-  Accordion,
   Icon,
-  Flex,
   AlertDialog,
   View,
+  Image,
+  Select,
+  CheckIcon,
+  Pressable,
+  FlatList,
 } from "native-base";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -29,9 +31,8 @@ import {
   setUserObj,
 } from "app/userSlice";
 import axios from "axios";
-import { StyleSheet } from "react-native";
+import { StyleSheet, useWindowDimensions } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import * as WebBrowser from "expo-web-browser";
 import moment from "moment";
 
 export function AgileOfficeWorkspaceReservationSearchResult({
@@ -39,16 +40,8 @@ export function AgileOfficeWorkspaceReservationSearchResult({
   navigation,
 }) {
   const dispatch = useDispatch();
-  const {
-    fromDate,
-    toDate,
-    fromTime,
-    toTime,
-    result,
-    building,
-    floor,
-    section,
-  } = route.params;
+  const { fromDate, toDate, fromTime, toTime, result, building, floor } =
+    route.params;
 
   let displayDate: string;
   if (toDate) {
@@ -71,28 +64,15 @@ export function AgileOfficeWorkspaceReservationSearchResult({
 
   const [seatID, setSeatid] = React.useState(null);
   const [seatLabel, setSeatLabel] = React.useState(null);
+  const [sectionId, setSectionId] = React.useState(result?.fcs?.[0]?.id);
+  const { width } = useWindowDimensions();
 
   const [isLoading, setIsloading] = React.useState(false);
   const [showConfirm, setShowConfirm] = React.useState(false);
 
   const cancelRef = React.useRef(null);
 
-  const acco_text_color = useColorModeValue(c_black, c_white);
-  const acco_floor_color = useColorModeValue(unifi_primary, unifi_c3);
-  const acco_fc_color = useColorModeValue(unifi_c9, unifi_c2);
   const bg_color = useColorModeValue(unifi_c4, unifi_primary);
-
-  function showFloorLayout(floor_id) {
-    // setLayoutUrl(baseurl + 'ao/getFloorLayout?id=' + floor_id);
-    WebBrowser.openBrowserAsync(baseurl + "ao/getFloorLayout?id=" + floor_id);
-    // setShowLayout(true);
-  }
-
-  function showSectionLayout(fcc_id) {
-    // setLayoutUrl(baseurl + 'ao/getSectionLayout?id=' + fcc_id);
-    WebBrowser.openBrowserAsync(baseurl + "ao/getSectionLayout?id=" + fcc_id);
-    // setShowLayout(true);
-  }
 
   function selectSeat(seatid, seatlabel) {
     setSeatid(seatid);
@@ -151,10 +131,13 @@ export function AgileOfficeWorkspaceReservationSearchResult({
       });
   }
   const color = useColorModeValue(unifi_c4, unifi_c1);
+  const seats = result?.fcs?.filter((f) => f.id === +sectionId);
+
+  const padding = 15;
 
   return (
     <ScreenWrapper>
-      <ScrollView w="100%" h="100%" contentContainerStyle={{ padding: 15 }}>
+      <View w="100%" h="100%" style={{ padding }}>
         <Text style={{ color, fontSize: 14, fontWeight: "bold" }}>
           Search for available workspace
         </Text>
@@ -171,95 +154,100 @@ export function AgileOfficeWorkspaceReservationSearchResult({
             {building?.building_name}
             {floor && " - " + floor.floor_name}
           </Text>
-          {section && (
+          {/* {section && (
             <View style={styles.sectionContainer}>
               <Text style={{ fontSize: 12, color: bg_color, marginRight: 10 }}>
                 {section.label}
               </Text>
               <Icon as={FontAwesome5} name="chevron-down" size={4} />
             </View>
+          )} */}
+          {!!result?.fcs?.length && (
+            <Select
+              selectedValue={"" + sectionId}
+              _selectedItem={{
+                bg: "teal.600",
+                endIcon: <CheckIcon size="5" />,
+              }}
+              borderColor="transparent"
+              backgroundColor="white"
+              style={{ fontSize: 13 }}
+              w={110}
+              h={6}
+              pt={2.5}
+              onValueChange={setSectionId}
+            >
+              {result.fcs.map((r) => (
+                <Select.Item label={r.name} value={"" + r.id} key={"" + r.id} />
+              ))}
+            </Select>
           )}
         </View>
-        <View style={styles.legendContainer}>
-          <View style={{ flexDirection: "row" }}>
-            <View
-              style={{ ...styles.colorLegend, backgroundColor: "#FF622D" }}
-            />
-            <Text style={{ fontSize: 14, color }}>AVAILABLE</Text>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <View
-              style={{ ...styles.colorLegend, backgroundColor: "#B5B5B5" }}
-            />
-            <Text style={{ fontSize: 14, color }}>BOOKED</Text>
-          </View>
-        </View>
-        {result.length > 0 ? (
+        {seats.map((fc) => (
           <>
-            <Accordion>
-              {result.map((rec) => (
-                <Accordion.Item key={rec.id}>
-                  <Accordion.Summary _expanded={{ bg: acco_floor_color }}>
-                    <Text color={acco_text_color}>
-                      {rec.name} - {rec.count} seats
-                    </Text>
-                    <Accordion.Icon />
-                  </Accordion.Summary>
-                  <Accordion.Details>
-                    {rec.gotlayout && (
-                      <Button onPress={() => showFloorLayout(rec.id)}>
-                        View Floor Layout
-                      </Button>
-                    )}
-                    <Accordion>
-                      {rec.fcs.map((fc) => (
-                        <Accordion.Item key={fc.id}>
-                          <Accordion.Summary _expanded={{ bg: acco_fc_color }}>
-                            <Text color={acco_text_color}>
-                              {fc.name} - {fc.count} seats
-                            </Text>
-                            <Accordion.Icon />
-                          </Accordion.Summary>
-                          <Accordion.Details>
-                            {fc.gotlayout && (
-                              <Button onPress={() => showSectionLayout(fc.id)}>
-                                View Section Layout
-                              </Button>
-                            )}
-                            <Flex
-                              direction="row"
-                              flexWrap="wrap"
-                              justifyContent="space-evenly"
-                            >
-                              {fc.seats.map((seat) => (
-                                <Button
-                                  m={1}
-                                  p={1}
-                                  backgroundColor={bg_color}
-                                  key={seat.id}
-                                  endIcon={
-                                    <Icon
-                                      as={FontAwesome5}
-                                      name="calendar-check"
-                                      size={4}
-                                    />
-                                  }
-                                  onPress={() => selectSeat(seat.id, seat.name)}
-                                >
-                                  {seat.name}
-                                </Button>
-                              ))}
-                            </Flex>
-                          </Accordion.Details>
-                        </Accordion.Item>
-                      ))}
-                    </Accordion>
-                  </Accordion.Details>
-                </Accordion.Item>
-              ))}
-            </Accordion>
+            <Image
+              alt="layout"
+              style={{
+                width: "100%",
+                height: 200,
+                resizeMode: "contain",
+              }}
+              source={{
+                // uri: baseurl + "ao/getSectionLayout?id=" + result.id, // floor layout
+                uri: baseurl + "ao/getSectionLayout?id=" + fc.id, // section layout
+              }}
+            />
+            <View style={styles.legendContainer}>
+              <View style={{ flexDirection: "row" }}>
+                <View
+                  style={{
+                    ...styles.colorLegend,
+                    backgroundColor: "#FF622D",
+                  }}
+                />
+                <Text style={{ fontSize: 14, color }}>AVAILABLE</Text>
+              </View>
+              <View style={{ flexDirection: "row" }}>
+                <View
+                  style={{
+                    ...styles.colorLegend,
+                    backgroundColor: "#B5B5B5",
+                  }}
+                />
+                <Text style={{ fontSize: 14, color }}>BOOKED</Text>
+              </View>
+            </View>
+            <FlatList
+              style={{ backgroundColor: "#E2E4E8" }}
+              numColumns={5}
+              data={fc.seats}
+              keyExtractor={(item) => item.id + ""}
+              renderItem={({ item }) => (
+                <Pressable
+                  style={{
+                    width: width / 5 - padding - 1,
+                    margin: 5,
+                    borderRadius: 5,
+                    padding: 3,
+                    backgroundColor: "#FF622D",
+                  }}
+                  onPress={() => selectSeat(item.id, item.name)}
+                >
+                  <Text
+                    style={{
+                      fontSize: 10,
+                      textAlign: "center",
+                      color: "white",
+                    }}
+                  >
+                    {item.name}
+                  </Text>
+                </Pressable>
+              )}
+            />
           </>
-        ) : (
+        ))}
+        {!seats.length && (
           <Text>No seat available for the selected parameter</Text>
         )}
 
@@ -300,7 +288,7 @@ export function AgileOfficeWorkspaceReservationSearchResult({
             </AlertDialog.Footer>
           </AlertDialog.Content>
         </AlertDialog>
-      </ScrollView>
+      </View>
     </ScreenWrapper>
   );
 }

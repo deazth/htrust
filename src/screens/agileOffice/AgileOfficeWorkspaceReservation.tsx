@@ -235,8 +235,7 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
               toDate: isMoreThan1Day ? toDate : undefined,
               fromTime,
               toTime,
-              result: response.data.data,
-              section: sectionList.find((s) => s.id === +sectionId),
+              result: response.data.data[0],
               building: buildList.find((b) => b.id === +buildingId),
               floor: floorList.find((f) => f.id === +floorId),
             });
