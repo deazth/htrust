@@ -63,22 +63,14 @@ export function AgileOfficeWorkspaceReservationSearchResult({
   };
 
   const [seatID, setSeatid] = React.useState(null);
-  const [seatLabel, setSeatLabel] = React.useState(null);
   const [sectionId, setSectionId] = React.useState(result?.fcs?.[0]?.id);
   const { width } = useWindowDimensions();
 
   const [isLoading, setIsloading] = React.useState(false);
-  const [showConfirm, setShowConfirm] = React.useState(false);
 
   const cancelRef = React.useRef(null);
 
   const bg_color = useColorModeValue(unifi_c4, unifi_primary);
-
-  function selectSeat(seatid, seatlabel) {
-    setSeatid(seatid);
-    setSeatLabel(seatlabel);
-    setShowConfirm(true);
-  }
 
   function doSeatReserve() {
     const offsetMs = fromTime.getTimezoneOffset() * 60 * 1000;
@@ -126,7 +118,7 @@ export function AgileOfficeWorkspaceReservationSearchResult({
         }
       })
       .finally(() => {
-        setShowConfirm(false);
+        setSeatid();
         setIsloading(false);
       });
   }
@@ -231,7 +223,7 @@ export function AgileOfficeWorkspaceReservationSearchResult({
                     padding: 3,
                     backgroundColor: "#FF622D",
                   }}
-                  onPress={() => selectSeat(item.id, item.name)}
+                  onPress={() => setSeatid(item.id)}
                 >
                   <Text
                     style={{
@@ -253,14 +245,16 @@ export function AgileOfficeWorkspaceReservationSearchResult({
 
         <AlertDialog
           leastDestructiveRef={cancelRef}
-          isOpen={showConfirm}
-          onClose={() => setShowConfirm(false)}
+          isOpen={!!seatID}
+          onClose={() => setSeatid()}
         >
           <AlertDialog.Content>
             <AlertDialog.CloseButton
               icon={<Icon as={FontAwesome5} name="times" size={4} />}
             />
-            <AlertDialog.Header>{seatLabel}</AlertDialog.Header>
+            <AlertDialog.Header>
+              {seats.find((s) => s.id === +seatID)?.name}
+            </AlertDialog.Header>
             <AlertDialog.Body>
               <Text>Confirm reserve this workspace?</Text>
               {/* <Text>From: {cfromtime.toLocaleString()}</Text>
@@ -271,7 +265,7 @@ export function AgileOfficeWorkspaceReservationSearchResult({
                 <Button
                   variant="unstyled"
                   colorScheme="coolGray"
-                  onPress={() => setShowConfirm(false)}
+                  onPress={() => setSeatid()}
                   ref={cancelRef}
                 >
                   Cancel
