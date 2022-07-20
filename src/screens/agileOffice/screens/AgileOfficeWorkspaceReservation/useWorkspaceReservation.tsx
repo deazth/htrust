@@ -176,7 +176,6 @@ const useWorkspaceReservation = (
         start_time: dateLocalF.toISOString().slice(0, 19).replace("T", " "),
         end_time: dateLocalT.toISOString().slice(0, 19).replace("T", " "),
       };
-      console.log(inputs);
       axios
         .post(baseurl + "t/ao/searchAvailableSeat", inputs, config)
         .then((response) => {
