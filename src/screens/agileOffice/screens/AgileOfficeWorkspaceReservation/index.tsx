@@ -1,8 +1,11 @@
 import React from "react";
-import { ScreenWrapper, unifi_c1, unifi_c4, unifi_c9 } from "components/styles";
-import Button from "components/Button";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import { Platform, Pressable, StyleSheet } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
+import axios from "axios";
+import { FontAwesome5 } from "@expo/vector-icons";
+import DateTimePicker from "@react-native-community/datetimepicker";
+
 import {
   CheckIcon,
   HStack,
@@ -15,16 +18,23 @@ import {
   Modal,
   View,
 } from "native-base";
-import { useDispatch, useSelector } from "react-redux";
+
+import Button from "components/Button";
+import { ScreenWrapper, unifi_c1, unifi_c4 } from "components/styles";
+
 import {
   selectBaseUrl,
   selectUserToken,
   setTokerr,
   setUserObj,
 } from "app/userSlice";
-import axios from "axios";
-import { Platform, Pressable, StyleSheet } from "react-native";
-import { FontAwesome5 } from "@expo/vector-icons";
+import {
+  dateTimeSelectStyle,
+  placeholderStyle,
+  selectStyle,
+  textStyle,
+  textColor,
+} from "./styles";
 
 export function AgileOfficeWorkspaceReservation({ navigation }) {
   const dispatch = useDispatch();
@@ -56,36 +66,6 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
   const [sectionList, setSectionList] = React.useState([]);
 
   const [isLoading, setIsloading] = React.useState(false);
-
-  const placeholderTextColor = useColorModeValue("#C2C2C2", unifi_c9);
-  const textColor = useColorModeValue("black", unifi_c9);
-  const selectBorderColor = useColorModeValue("#707070", undefined);
-  const selectBackgroundColor = useColorModeValue("white", "#707070");
-
-  const selectStyle = {
-    placeholderTextColor,
-    borderColor: selectBorderColor,
-    backgroundColor: selectBackgroundColor,
-  };
-
-  const dateTimeSelectStyle = (type: string): {} => ({
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: type === "full" ? "100%" : "50%",
-    alignItems: "center",
-    backgroundColor: selectBackgroundColor,
-    padding: 10,
-    borderColor: selectBorderColor,
-    borderWidth: 1,
-    borderLeftWidth: type === "right" ? 0 : undefined,
-    borderTopLeftRadius: type === "right" ? 0 : 6,
-    borderBottomLeftRadius: type === "right" ? 0 : 6,
-    borderTopRightRadius: type === "left" ? 0 : 6,
-    borderBottomRightRadius: type === "left" ? 0 : 6,
-  });
-
-  const placeholderStyle = { fontSize: 16, color: placeholderTextColor };
-  const textStyle = { fontSize: 16, color: textColor };
 
   function selectBuilding(building_id) {
     setIsloading(true);
@@ -452,7 +432,7 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
         <Modal
           isOpen={!!dateTimePickerConfig}
           onClose={() => setDateTimePickerConfig(undefined)}
-          animationPreset="slide"
+          animation="slide"
         >
           <Modal.Content w="100%" marginBottom={0} marginTop="auto">
             {/* <Modal.CloseButton /> */}
