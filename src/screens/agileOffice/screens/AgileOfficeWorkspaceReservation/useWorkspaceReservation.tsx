@@ -189,8 +189,8 @@ const useWorkspaceReservation = (
                   date,
                   time,
                   result: response.data.data[0],
-                  building: buildList.find((b) => b.id === +buildingId),
-                  floor: floorList.find((f) => f.id === +floorId),
+                  building: buildList.find((b) => b.id == buildingId),
+                  floor: floorList.find((f) => f.id == floorId),
                 }
               );
             } else {
