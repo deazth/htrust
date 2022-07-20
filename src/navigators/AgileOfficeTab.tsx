@@ -12,7 +12,10 @@ import { AgileOfficeAreaBook } from "screens/agileOffice/AgileOfficeAreaBook";
 import { header_light, unifi_c1, unifi_c4, unifi_c7 } from "components/styles";
 
 const Stack = createNativeStackNavigator();
-
+export type AgileOfficeTabStackParamList = {
+  AgileOfficeMain: undefined;
+  AgileOfficeWorkspaceReservation: undefined;
+};
 export function AgileOfficeTab() {
   const [assets] = useAssets([require("assets/logo-tm.png")]);
 

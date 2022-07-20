@@ -37,7 +37,7 @@ const Select: React.FC<SelectProps> = ({ list, sectionError, ...props }) => {
           />
         ))
       ) : (
-        <NativeSelect.Item label={sectionError} value="" disabled />
+        <NativeSelect.Item label={sectionError || ""} value="" disabled />
       )}
     </NativeSelect>
   );

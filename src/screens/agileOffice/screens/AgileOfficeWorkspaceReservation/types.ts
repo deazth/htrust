@@ -1,4 +1,4 @@
 export type TimeType = {
-  from: Date;
-  to: Date;
+  from: Date | undefined;
+  to: Date | undefined;
 };

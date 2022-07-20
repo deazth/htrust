@@ -22,8 +22,22 @@ import { ScreenWrapper, unifi_c1, unifi_c4, unifi_c9 } from "components/styles";
 import { Select, Pressable } from "./components";
 
 import useWorkspaceReservation from "./useWorkspaceReservation";
+import {
+  NativeStackNavigationOptions,
+  NativeStackNavigationProp,
+} from "@react-navigation/native-stack";
+import { AgileOfficeTabStackParamList } from "navigators/AgileOfficeTab";
 
-export function AgileOfficeWorkspaceReservation({ navigation }) {
+interface Props {
+  navigation: NativeStackNavigationProp<
+    AgileOfficeTabStackParamList,
+    "AgileOfficeWorkspaceReservation"
+  >;
+}
+
+export const AgileOfficeWorkspaceReservation: React.FC<Props> = ({
+  navigation,
+}) => {
   const {
     buildingId,
     floorId,
@@ -48,7 +62,7 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
   const [dateTimePickerConfig, setDateTimePickerConfig] = React.useState<
     | {
         mode: "date" | "time";
-        onChange: (date?: Date) => void;
+        onChange: (date: Date | undefined) => void;
       }
     | undefined
   >();
@@ -219,7 +233,7 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
             {/* <Modal.CloseButton /> */}
             {/* <Modal.Header>Select</Modal.Header> */}
             <Modal.Body>
-              {!!dateTimePickerConfig && !!tempDateTime && (
+              {dateTimePickerConfig && tempDateTime && (
                 <DateTimePicker
                   value={tempDateTime}
                   mode={dateTimePickerConfig.mode}
@@ -232,7 +246,7 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
               <Button
                 label="Confirm"
                 onPress={() => {
-                  dateTimePickerConfig.onChange(tempDateTime);
+                  dateTimePickerConfig?.onChange(tempDateTime);
                   setDateTimePickerConfig(undefined);
                 }}
                 loading={isLoading}
@@ -244,7 +258,7 @@ export function AgileOfficeWorkspaceReservation({ navigation }) {
       )}
     </ScreenWrapper>
   );
-}
+};
 
 const styles = StyleSheet.create({
   label: { fontSize: 14, marginTop: 18, color: "#353535", fontWeight: "bold" },

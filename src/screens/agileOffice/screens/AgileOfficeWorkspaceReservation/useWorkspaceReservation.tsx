@@ -8,39 +8,56 @@ import {
   setUserObj,
 } from "app/userSlice";
 import { TimeType } from "./types";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { AgileOfficeTabStackParamList } from "navigators/AgileOfficeTab";
 
-const useWorkspaceReservation = (navigation) => {
+const useWorkspaceReservation = (
+  navigation: NativeStackNavigationProp<
+    AgileOfficeTabStackParamList,
+    "AgileOfficeWorkspaceReservation"
+  >
+) => {
   const dispatch = useDispatch();
   const baseurl = useSelector(selectBaseUrl);
   const stoken = useSelector(selectUserToken);
 
-  const [buildList, setBuildList] = useState([]);
-  const [floorList, setFloorList] = useState([]);
-  const [sectionList, setSectionList] = useState([]);
-  const [time, setTime] = useState<TimeType | undefined>(undefined);
+  const [buildList, setBuildList] = useState<
+    { id: string; building_name: string }[]
+  >([]);
+  const [floorList, setFloorList] = useState<
+    { id: string; floor_name: string }[]
+  >([]);
+  const [sectionList, setSectionList] = useState<
+    { id: string; floor_name: string }[]
+  >([]);
+  const [time, setTime] = useState<TimeType>({
+    from: undefined,
+    to: undefined,
+  });
 
   const [isLoading, setIsloading] = useState<boolean>(false);
-  const [buildingId, setBuildingId] = useState<string | null>(null);
-  const [sectionId, setSectionId] = useState<string | null>(null);
-  const [floorId, setFloorId] = useState<string | null>(null);
+  const [buildingId, setBuildingId] = useState<string | undefined>(undefined);
+  const [sectionId, setSectionId] = useState<string | undefined>(undefined);
+  const [floorId, setFloorId] = useState<string | undefined>(undefined);
   const config = {
     headers: { Authorization: `Bearer ${stoken}` },
   };
-  function selectBuilding(building_id) {
+
+  function selectBuilding(building_id: string) {
     setIsloading(true);
     setBuildingId(building_id);
     loadFloorList(building_id);
     setSectionList([]);
-    setSectionId(null);
-    setFloorId(null);
+    setSectionId(undefined);
+    setFloorId(undefined);
     setIsloading(false);
   }
 
-  function selectFloor(floor_id) {
+  function selectFloor(floor_id: string) {
     setIsloading(true);
     setFloorId(floor_id);
     loadFcList(floor_id);
-    setSectionId(null);
+    setSectionId(undefined);
     setIsloading(false);
   }
   const loadBuildList = () => {
@@ -79,7 +96,7 @@ const useWorkspaceReservation = (navigation) => {
       .finally(() => setIsloading(false));
   };
 
-  const loadFloorList = (b_id) => {
+  const loadFloorList = (b_id: string) => {
     axios
       .post(baseurl + "t/ao/getFloorList", { building_id: b_id }, config)
       .then((response) => {
@@ -111,7 +128,7 @@ const useWorkspaceReservation = (navigation) => {
         }
       });
   };
-  function loadFcList(f_id) {
+  function loadFcList(f_id: string) {
     axios
       .post(baseurl + "t/ao/getSectionList", { floor_id: f_id }, config)
       .then((response) => {
@@ -145,60 +162,65 @@ const useWorkspaceReservation = (navigation) => {
   }
 
   function searchAvailableSeat(fromDate, isMoreThan1Day, toDate) {
-    setIsloading(true);
+    if (time.to && time.from) {
+      setIsloading(true);
 
-    const offsetMs = time.from.getTimezoneOffset() * 60 * 1000;
-    const dateLocalF = new Date(time.from.getTime() - offsetMs);
-    const dateLocalT = new Date(time.to.getTime() - offsetMs);
+      const offsetMs = time.from.getTimezoneOffset() * 60 * 1000;
+      const dateLocalF = new Date(time.from.getTime() - offsetMs);
+      const dateLocalT = new Date(time.to.getTime() - offsetMs);
 
-    const inputs = {
-      building_id: buildingId,
-      floor_id: floorId,
-      floor_section_id: sectionId,
-      start_time: dateLocalF.toISOString().slice(0, 19).replace("T", " "),
-      end_time: dateLocalT.toISOString().slice(0, 19).replace("T", " "),
-    };
-
-    axios
-      .post(baseurl + "t/ao/searchAvailableSeat", inputs, config)
-      .then((response) => {
-        if (response.data.status_code != "200") {
-          alert(JSON.stringify(response.data.msg));
-        } else {
-          if (response.data.msg == "Success") {
-            navigation.navigate("AgileOfficeWorkspaceReservationSearchResult", {
-              fromDate,
-              toDate: isMoreThan1Day ? toDate : undefined,
-              fromTime: time.from,
-              toTime: time.to,
-              result: response.data.data[0],
-              building: buildList.find((b) => b.id === +buildingId),
-              floor: floorList.find((f) => f.id === +floorId),
-            });
+      const inputs = {
+        building_id: buildingId,
+        floor_id: floorId,
+        floor_section_id: sectionId,
+        start_time: dateLocalF.toISOString().slice(0, 19).replace("T", " "),
+        end_time: dateLocalT.toISOString().slice(0, 19).replace("T", " "),
+      };
+      console.log(inputs);
+      axios
+        .post(baseurl + "t/ao/searchAvailableSeat", inputs, config)
+        .then((response) => {
+          if (response.data.status_code != "200") {
+            alert(JSON.stringify(response.data.msg));
           } else {
-            alert(response.data.msg);
+            if (response.data.msg == "Success" && time) {
+              navigation.navigate(
+                "AgileOfficeWorkspaceReservationSearchResult",
+                {
+                  fromDate,
+                  toDate: isMoreThan1Day ? toDate : undefined,
+                  fromTime: time.from,
+                  toTime: time.to,
+                  result: response.data.data[0],
+                  building: buildList.find((b) => b.id === +buildingId),
+                  floor: floorList.find((f) => f.id === +floorId),
+                }
+              );
+            } else {
+              alert(response.data.msg);
+            }
           }
-        }
-      })
-      .catch((error) => {
-        console.log("Seat finder error");
-        // dispatch(setTokerr(error.message));
-        if (error.response) {
-          console.log("Seat finder - got error with response");
-          if (error.response.data.message == "Unauthenticated.") {
-            alert("Your session has expired");
-            dispatch(setTokerr("Session expired 2"));
-            dispatch(setUserObj(null));
+        })
+        .catch((error) => {
+          console.log("Seat finder error");
+          // dispatch(setTokerr(error.message));
+          if (error.response) {
+            console.log("Seat finder - got error with response");
+            if (error.response.data.message == "Unauthenticated.") {
+              alert("Your session has expired");
+              dispatch(setTokerr("Session expired 2"));
+              dispatch(setUserObj(null));
+            } else {
+              console.log(error);
+              alert(JSON.stringify(error.response));
+            }
           } else {
+            console.log("Seat finder - got error without response");
             console.log(error);
-            alert(JSON.stringify(error.response));
           }
-        } else {
-          console.log("Seat finder - got error without response");
-          console.log(error);
-        }
-      })
-      .finally(() => setIsloading(false));
+        })
+        .finally(() => setIsloading(false));
+    }
   }
 
   useEffect(loadBuildList, []);
