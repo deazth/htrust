@@ -22,10 +22,7 @@ import { ScreenWrapper, unifi_c1, unifi_c4, unifi_c9 } from "components/styles";
 import { Select, Pressable } from "./components";
 
 import useWorkspaceReservation from "./useWorkspaceReservation";
-import {
-  NativeStackNavigationOptions,
-  NativeStackNavigationProp,
-} from "@react-navigation/native-stack";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AgileOfficeTabStackParamList } from "navigators/AgileOfficeTab";
 
 interface Props {
@@ -58,7 +55,7 @@ export const AgileOfficeWorkspaceReservation: React.FC<Props> = ({
 
   const placeholderStyle = { fontSize: 16, color: placeholderTextColor };
   const textStyle = { fontSize: 16, color: textColor };
-  const [isMoreThan1Day, setIsMoreThan1Day] = React.useState(false);
+  const [isDateRange, setIsDateRange] = React.useState(false);
   const [dateTimePickerConfig, setDateTimePickerConfig] = React.useState<
     | {
         mode: "date" | "time";
@@ -130,8 +127,8 @@ export const AgileOfficeWorkspaceReservation: React.FC<Props> = ({
         <Text style={styles.label}>Choose Date</Text>
         <HStack space={2} mt={1} alignItems="center">
           <Checkbox.Group
-            onChange={() => setIsMoreThan1Day((v) => !v)}
-            value={isMoreThan1Day ? ["1"] : []}
+            onChange={() => setIsDateRange((v) => !v)}
+            value={isDateRange ? ["1"] : []}
             accessibilityLabel="choose"
           >
             <Checkbox colorScheme="blue" bgColor="red" value="1" />
@@ -140,7 +137,7 @@ export const AgileOfficeWorkspaceReservation: React.FC<Props> = ({
         </HStack>
         <HStack my={3} alignItems="flex-start">
           <Pressable
-            type={isMoreThan1Day ? "left" : "full"}
+            type={isDateRange ? "left" : "full"}
             onPress={() => {
               setTempDateTime(fromDate || new Date());
               setDateTimePickerConfig({ mode: "date", onChange: setFromDate });
@@ -149,13 +146,13 @@ export const AgileOfficeWorkspaceReservation: React.FC<Props> = ({
             <Text style={fromDate ? textStyle : placeholderStyle}>
               {fromDate
                 ? moment(fromDate).format("D MMM YYYY")
-                : isMoreThan1Day
+                : isDateRange
                 ? "Start Date"
                 : "Please Select"}
             </Text>
             <Icon as={FontAwesome5} name="chevron-down" size={4} />
           </Pressable>
-          {isMoreThan1Day && (
+          {isDateRange && (
             <Pressable
               type="right"
               onPress={() => {
@@ -206,7 +203,7 @@ export const AgileOfficeWorkspaceReservation: React.FC<Props> = ({
         <Button
           style={{ marginTop: 20 }}
           label={isLoading ? "Please wait" : "Search"}
-          onPress={() => searchAvailableSeat(fromDate, isMoreThan1Day, toDate)}
+          onPress={() => searchAvailableSeat(fromDate, isDateRange, toDate)}
           loading={isLoading}
         />
       </ScrollView>
