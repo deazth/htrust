@@ -213,7 +213,7 @@ export const AgileOfficeWorkspaceReservation: React.FC<Props> = ({
         <Button
           style={{ marginTop: 20 }}
           label={isLoading ? "Please wait" : "Search"}
-          onPress={() => searchAvailableSeat(date, isDateRange)}
+          onPress={() => searchAvailableSeat(date)}
           loading={isLoading}
         />
       </ScrollView>
