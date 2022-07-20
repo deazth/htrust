@@ -3,6 +3,7 @@ import { Platform, StyleSheet } from "react-native";
 import moment from "moment";
 import { FontAwesome5 } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import {
   CheckIcon,
@@ -18,12 +19,11 @@ import {
 
 import Button from "components/Button";
 import { ScreenWrapper, unifi_c1, unifi_c4, unifi_c9 } from "components/styles";
+import { AgileOfficeTabStackParamList } from "navigators/AgileOfficeTab";
 
 import { Select, Pressable } from "./components";
-
 import useWorkspaceReservation from "./useWorkspaceReservation";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { AgileOfficeTabStackParamList } from "navigators/AgileOfficeTab";
+import { DateType } from "./types";
 
 interface Props {
   navigation: NativeStackNavigationProp<
@@ -64,8 +64,10 @@ export const AgileOfficeWorkspaceReservation: React.FC<Props> = ({
     | undefined
   >();
   const [tempDateTime, setTempDateTime] = React.useState<Date | undefined>();
-  const [fromDate, setFromDate] = React.useState<Date | undefined>();
-  const [toDate, setToDate] = React.useState<Date | undefined>();
+  const [date, setFromDate] = React.useState<DateType>({
+    from: undefined,
+    to: undefined,
+  });
 
   const color = useColorModeValue(unifi_c4, unifi_c1);
 
@@ -139,13 +141,17 @@ export const AgileOfficeWorkspaceReservation: React.FC<Props> = ({
           <Pressable
             type={isDateRange ? "left" : "full"}
             onPress={() => {
-              setTempDateTime(fromDate || new Date());
-              setDateTimePickerConfig({ mode: "date", onChange: setFromDate });
+              setTempDateTime(date.from || new Date());
+              setDateTimePickerConfig({
+                mode: "date",
+                onChange: (dateChange: Date) =>
+                  setFromDate({ ...date, from: dateChange }),
+              });
             }}
           >
-            <Text style={fromDate ? textStyle : placeholderStyle}>
-              {fromDate
-                ? moment(fromDate).format("D MMM YYYY")
+            <Text style={date.from ? textStyle : placeholderStyle}>
+              {date.from
+                ? moment(date.from).format("D MMM YYYY")
                 : isDateRange
                 ? "Start Date"
                 : "Please Select"}
@@ -156,12 +162,16 @@ export const AgileOfficeWorkspaceReservation: React.FC<Props> = ({
             <Pressable
               type="right"
               onPress={() => {
-                setTempDateTime(toDate || new Date());
-                setDateTimePickerConfig({ mode: "date", onChange: setToDate });
+                setTempDateTime(date.to || new Date());
+                setDateTimePickerConfig({
+                  mode: "date",
+                  onChange: (dateChange: Date) =>
+                    setFromDate({ ...date, to: dateChange }),
+                });
               }}
             >
-              <Text style={toDate ? textStyle : placeholderStyle}>
-                {toDate ? moment(toDate).format("D MMM YYYY") : "End Date"}
+              <Text style={date.to ? textStyle : placeholderStyle}>
+                {date.to ? moment(date.to).format("D MMM YYYY") : "End Date"}
               </Text>
               <Icon as={FontAwesome5} name="chevron-down" size={4} />
             </Pressable>
@@ -203,7 +213,7 @@ export const AgileOfficeWorkspaceReservation: React.FC<Props> = ({
         <Button
           style={{ marginTop: 20 }}
           label={isLoading ? "Please wait" : "Search"}
-          onPress={() => searchAvailableSeat(fromDate, isDateRange, toDate)}
+          onPress={() => searchAvailableSeat(date, isDateRange)}
           loading={isLoading}
         />
       </ScrollView>

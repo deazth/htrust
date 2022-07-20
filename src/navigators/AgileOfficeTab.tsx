@@ -15,6 +15,7 @@ const Stack = createNativeStackNavigator();
 export type AgileOfficeTabStackParamList = {
   AgileOfficeMain: undefined;
   AgileOfficeWorkspaceReservation: undefined;
+  AgileOfficeWorkspaceReservationSearchResult: {};
 };
 export function AgileOfficeTab() {
   const [assets] = useAssets([require("assets/logo-tm.png")]);
@@ -32,18 +33,19 @@ export function AgileOfficeTab() {
       shadowRadius: 4.65,
       elevation: 8,
     },
-    headerRight: () => (
-      <Image
-        source={assets?.[0]}
-        alt="logo"
-        style={{
-          resizeMode: "contain",
-          width: 50,
-          height: 20,
-          marginTop: -10,
-        }}
-      />
-    ),
+    headerRight: () =>
+      assets ? (
+        <Image
+          source={assets[0]}
+          alt="logo"
+          style={{
+            resizeMode: "contain",
+            width: 50,
+            height: 20,
+            marginTop: -10,
+          }}
+        />
+      ) : null,
   };
 
   return (

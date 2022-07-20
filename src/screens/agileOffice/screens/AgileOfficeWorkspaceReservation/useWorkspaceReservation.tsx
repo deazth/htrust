@@ -7,7 +7,7 @@ import {
   setTokerr,
   setUserObj,
 } from "app/userSlice";
-import { TimeType } from "./types";
+import { DateType, TimeType } from "./types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AgileOfficeTabStackParamList } from "navigators/AgileOfficeTab";
 
@@ -161,7 +161,7 @@ const useWorkspaceReservation = (
       });
   }
 
-  function searchAvailableSeat(fromDate, isMoreThan1Day, toDate) {
+  function searchAvailableSeat(date: DateType) {
     if (time.to && time.from) {
       setIsloading(true);
 
@@ -186,10 +186,8 @@ const useWorkspaceReservation = (
               navigation.navigate(
                 "AgileOfficeWorkspaceReservationSearchResult",
                 {
-                  fromDate,
-                  toDate: isMoreThan1Day ? toDate : undefined,
-                  fromTime: time.from,
-                  toTime: time.to,
+                  date,
+                  time,
                   result: response.data.data[0],
                   building: buildList.find((b) => b.id === +buildingId),
                   floor: floorList.find((f) => f.id === +floorId),
