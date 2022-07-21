@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Center,
   Text,
@@ -9,6 +9,7 @@ import {
   Modal,
   Spinner,
   View,
+  useColorModeValue,
 } from "native-base";
 import axios from "axios";
 import { Calendar } from "react-native-calendars";
@@ -20,6 +21,8 @@ import {
   InfoBox,
   PageTitle,
   ScreenWrapper,
+  unifi_c1,
+  unifi_c4,
 } from "components/styles";
 import { RefreshControl, Alert, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,7 +33,7 @@ import {
   selectUserToken,
 } from "../../app/userSlice";
 
-export function DiaryMain({ navigation }) {
+export const DiaryMain = ({ navigation }) => {
   const dispatch = useDispatch();
   const baseurl = useSelector(selectBaseUrl);
   const stoken = useSelector(selectUserToken);
@@ -38,23 +41,21 @@ export function DiaryMain({ navigation }) {
     headers: { Authorization: `Bearer ${stoken}` },
   };
 
-  var tomorrow = new Date();
+  const tomorrow = new Date();
 
-  const [refreshing, setRefreshing] = React.useState(false);
-  const [isLoadingGwd, setIsLoadingGwd] = React.useState(false);
-  const [isFutureDate, setIsFutureDate] = React.useState(false);
-  const [dayTotalHours, setDayTotalHours] = React.useState(0);
-  const [inDate, setInDate] = React.useState(null);
-  const [dayEntry, setDayEntry] = React.useState([]);
-  const [markDates, setMarkDates] = React.useState({});
-  const [selMonth, setSelMonth] = React.useState(tomorrow);
-
-  var tomorrow = new Date();
+  const [refreshing, setRefreshing] = useState(false);
+  const [isLoadingGwd, setIsLoadingGwd] = useState(false);
+  const [isFutureDate, setIsFutureDate] = useState(false);
+  const [dayTotalHours, setDayTotalHours] = useState(0);
+  const [inDate, setInDate] = useState(null);
+  const [dayEntry, setDayEntry] = useState([]);
+  const [markDates, setMarkDates] = useState({});
+  const [selMonth, setSelMonth] = useState(tomorrow);
 
   function selectedDate(indate = inDate) {
-    var d1 = new Date();
+    const d1 = new Date();
     d1.setHours(0, 0, 0, 0);
-    var d2 = new Date(indate);
+    const d2 = new Date(indate);
     d2.setHours(0, 0, 0, 0);
 
     setIsFutureDate(d2 > d1);
@@ -71,9 +72,7 @@ export function DiaryMain({ navigation }) {
 
     // fetch from db
     console.log("GetGwdEntries input " + indate);
-    const theinput = {
-      indate: indate,
-    };
+    const theinput = { indate };
 
     axios
       .post(baseurl + "t/diary/GetGwdEntries", theinput, config)
@@ -84,11 +83,11 @@ export function DiaryMain({ navigation }) {
           setIsLoadingGwd(true);
         } else {
           if (response.data.msg == "Success") {
-            let reval = response.data.data.entries;
-            console.log(reval);
-            setDayEntry(reval);
-            console.log(response.data.data.total);
-            setDayTotalHours(response.data.data.total);
+            const { entries, total } = response.data.data;
+            console.log(entries);
+            setDayEntry(entries);
+            console.log(total);
+            setDayTotalHours(total);
             setIsLoadingGwd(false);
           }
         }
@@ -147,10 +146,7 @@ export function DiaryMain({ navigation }) {
 
   function doDeleteEntry(gwd_id) {
     setIsLoadingGwd(true);
-    console.log("DelGwd input: " + gwd_id);
-    const theinput = {
-      gwd_id: gwd_id,
-    };
+    const theinput = { gwd_id };
 
     axios
       .post(baseurl + "t/diary/DelGwd", theinput, config)
@@ -158,10 +154,8 @@ export function DiaryMain({ navigation }) {
         // check for status code
         if (response.data.status_code != "200") {
           alert(JSON.stringify(response.data));
-        } else {
-          if (response.data.msg == "Success") {
-            alert("Record deleted");
-          }
+        } else if (response.data.msg == "Success") {
+          alert("Record deleted");
         }
       })
       .catch((error) => {
@@ -225,21 +219,19 @@ export function DiaryMain({ navigation }) {
         } else {
           alert("Unknown error. ref: GetMonCalendar");
         }
-
-        // navigation.goBack();
       })
       .finally(() => setRefreshing(false));
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     loadCalendar();
 
-    const willFocusSubscription = navigation.addListener("focus", () => {
-      loadCalendar();
-    });
+    const listener = navigation.addListener("focus", () => loadCalendar());
 
-    return willFocusSubscription;
+    return listener;
   }, []);
+
+  const backgroundColor = useColorModeValue(unifi_c4, unifi_c1);
 
   return (
     <>
@@ -304,6 +296,33 @@ export function DiaryMain({ navigation }) {
             markingType={"period"}
             markedDates={markDates}
             onDayPress={(dateobj) => selectedDate(dateobj.dateString)}
+            theme={{
+              "stylesheet.calendar.header": {
+                header: {
+                  backgroundColor,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  paddingVertical: 7,
+                },
+                arrowImage: {
+                  tintColor: "white",
+                },
+                monthText: {
+                  color: "#fff",
+                  fontWeight: "700",
+                  fontSize: 16,
+                },
+                dayHeader: {
+                  marginTop: 2,
+                  marginBottom: 7,
+                  width: 30,
+                  textAlign: "center",
+                  fontSize: 14,
+                  color: "#fff",
+                },
+              },
+            }}
           />
           <InfoBox m={3}>
             {inDate ? (
@@ -349,7 +368,7 @@ export function DiaryMain({ navigation }) {
       </ScreenWrapper>
     </>
   );
-}
+};
 
 const styles = StyleSheet.create({
   header: {

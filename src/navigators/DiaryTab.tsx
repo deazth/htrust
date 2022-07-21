@@ -7,7 +7,7 @@ import { DiaryEdit } from "screens/diary/DiaryEdit";
 
 const Stack = createNativeStackNavigator();
 
-export function DiaryTab() {
+export const DiaryTab = () => {
   const [assets] = useAssets([require("assets/logo-tm.png")]);
   const headerTintColor = useColorModeValue(unifi_c4, unifi_c1);
   const backgroundColor = useColorModeValue(header_light, unifi_c7);
@@ -52,4 +52,4 @@ export function DiaryTab() {
       />
     </Stack.Navigator>
   );
-}
+};
