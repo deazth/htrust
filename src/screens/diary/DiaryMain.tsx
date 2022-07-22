@@ -194,12 +194,10 @@ export const DiaryMain = ({ navigation }) => {
         // check for status code
         if (response.data.status_code != "200") {
           alert(JSON.stringify(response.data));
-        } else {
-          if (response.data.msg == "Success") {
-            const reval = response.data.data;
-            if (reval) setMarkDates(reval);
-            if (inDate) selectedDate();
-          }
+        } else if (response.data.msg == "Success") {
+          const reval = response.data.data;
+          if (reval) setMarkDates(reval);
+          if (inDate) selectedDate();
         }
       })
       .catch((error) => {
@@ -225,9 +223,7 @@ export const DiaryMain = ({ navigation }) => {
 
   useEffect(() => {
     loadCalendar();
-
     const listener = navigation.addListener("focus", () => loadCalendar());
-
     return listener;
   }, []);
 
@@ -314,12 +310,8 @@ export const DiaryMain = ({ navigation }) => {
                   fontSize: 16,
                 },
                 dayHeader: {
-                  marginTop: 2,
-                  marginBottom: 7,
-                  width: 30,
-                  textAlign: "center",
-                  fontSize: 14,
-                  color: "#fff",
+                  // backgroundColor: "#EBEBEB",
+                  color: "black",
                 },
               },
             }}
