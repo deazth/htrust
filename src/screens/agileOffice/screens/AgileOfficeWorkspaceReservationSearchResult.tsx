@@ -61,7 +61,7 @@ export function AgileOfficeWorkspaceReservationSearchResult({
   const config = {
     headers: { Authorization: `Bearer ${stoken}` },
   };
-
+  //TODO : this should be typescripted as this can be unsafe data handling
   const [seatID, setSeatid] = React.useState(null);
   const [sectionId, setSectionId] = React.useState(result?.fcs?.[0]?.id);
   const { width } = useWindowDimensions();
@@ -123,6 +123,7 @@ export function AgileOfficeWorkspaceReservationSearchResult({
       });
   }
   const color = useColorModeValue(unifi_c4, unifi_c1);
+  //TODO : this should be typescripted as this can be unsafe data handling
   const seats = result?.fcs?.filter((f) => f.id == sectionId);
 
   const padding = 15;

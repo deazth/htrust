@@ -189,6 +189,7 @@ const useWorkspaceReservation = (
                   date,
                   time,
                   result: response.data.data[0],
+                  //TODO : this should be typescripted as this can be unsafe data handling
                   building: buildList.find((b) => b.id == buildingId),
                   floor: floorList.find((f) => f.id == floorId),
                 }
