@@ -13,6 +13,7 @@ import { LinearGradient } from "expo-linear-gradient";
 interface Props extends IPressableProps {
   label: string;
   loading?: boolean;
+  style?: {};
 }
 
 const Root = Animated.createAnimatedComponent(Pressable);
@@ -29,6 +30,7 @@ const Button: React.FC<Props> = ({ label, loading, onPress, ...props }) => {
       onPressOut={() => scale(1)}
       {...props}
       style={{
+        ...props.style,
         transform: [{ scale: scaleAnim }],
         width: "100%",
       }}
