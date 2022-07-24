@@ -38,9 +38,13 @@ const AgileOfficeMain = ({ navigation }) => {
 
           <Button
             label="Reserve Workspace"
-            onPress={() => {
-              navigation.navigate("AgileOfficeSeatAvail");
-            }}
+            onPress={() =>
+              navigation.navigate("AgileOfficeWorkspaceReservation")
+            }
+          />
+          <Button
+            label="Reserve Meeting Room"
+            onPress={() => /** TODO: add navigation here */ null}
           />
           <Button
             label="Check-in Workspace"

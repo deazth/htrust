@@ -26,7 +26,6 @@ import {
   IBoxProps,
 } from "native-base";
 import { FontAwesome5 } from "@expo/vector-icons";
-//  import {  } from '@react-navigation/native';
 
 export const unifi_c1 = "#f89c33";
 export const unifi_c2 = "#ec1c24";
@@ -64,9 +63,7 @@ export const FormWrapper = ({ children, offset = -40 }) => {
       h="100%"
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView keyboardShouldPersistTaps={"handled"}>
-          {children}
-        </ScrollView>
+        <ScrollView keyboardShouldPersistTaps="handled">{children}</ScrollView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
@@ -147,108 +144,98 @@ export const DarkModeToggle = () => {
   );
 };
 
-export const PageTitle = ({ children, ...props }) => {
-  return (
-    <VStack space={2} alignItems="center">
-      <Text m={2} bold color={useColorModeValue(unifi_c4, unifi_c1)} {...props}>
-        {children}
-      </Text>
-    </VStack>
-  );
-};
-
-export const TrustLogo = () => {
-  return (
-    <Center
-      w="70%"
-      // bgColor={c_white}
-      borderRadius="50px"
-    >
-      <Image
-        source={require("../../assets/thrust-loading-logo.png")}
-        alt="TrustLogo.png"
-        resizeMode="contain"
-        width="150px"
-        height="150px"
-      />
-    </Center>
-  );
-};
-
-export const FormContainer = ({ children, baseHeight, ...props }) => {
-  return (
-    <View
-      w="95%"
-      marginTop="15px"
-      borderRadius="5px"
-      h={{
-        base: baseHeight,
-        lg: "auto",
-      }}
-      _light={{
-        bg: unifi_c4,
-      }}
-      _dark={{
-        bg: unifi_c1,
-      }}
-      {...props}
-    >
+export const PageTitle = ({ children, ...props }) => (
+  <VStack space={2} alignItems="center">
+    <Text m={2} bold color={useColorModeValue(unifi_c4, unifi_c1)} {...props}>
       {children}
-    </View>
-  );
-};
+    </Text>
+  </VStack>
+);
 
-export const FormBtnSubmit = ({ children, ...props }) => {
-  return (
-    <Button
+export const TrustLogo = () => (
+  <Center
+    w="70%"
+    // bgColor={c_white}
+    borderRadius="50px"
+  >
+    <Image
+      source={require("../../assets/thrust-loading-logo.png")}
+      alt="TrustLogo.png"
+      resizeMode="contain"
+      width="150px"
+      height="150px"
+    />
+  </Center>
+);
+
+export const FormContainer = ({ children, baseHeight, ...props }) => (
+  <View
+    w="95%"
+    marginTop="15px"
+    borderRadius="5px"
+    h={{
+      base: baseHeight,
+      lg: "auto",
+    }}
+    _light={{
+      bg: unifi_c4,
+    }}
+    _dark={{
+      bg: unifi_c1,
+    }}
+    {...props}
+  >
+    {children}
+  </View>
+);
+
+export const FormBtnSubmit = ({ children, ...props }) => (
+  <Button
+    _light={{
+      color: unifi_c4,
+      bg: unifi_primary,
+    }}
+    _dark={{
+      color: unifi_primary,
+      bg: unifi_c4,
+    }}
+    {...props}
+  >
+    {children}
+  </Button>
+);
+
+export const FormTextInput = ({ icon, placeholder, ...props }) => (
+  <Box w="100%">
+    <Input
+      InputLeftElement={
+        <Icon
+          as={<FontAwesome5 name={icon} />}
+          size="md"
+          m={2}
+          _light={{
+            color: unifi_c3,
+          }}
+          _dark={{
+            color: unifi_primary,
+          }}
+        />
+      }
+      placeholder={placeholder}
       _light={{
+        placeholderTextColor: unifi_c3,
+        // bg: "#cccccc",
         color: unifi_c4,
-        bg: unifi_primary,
       }}
       _dark={{
-        color: unifi_primary,
-        bg: unifi_c4,
+        placeholderTextColor: unifi_c7,
+        // bg: "#363636",
+        color: "#f89c33",
       }}
       {...props}
-    >
-      {children}
-    </Button>
-  );
-};
-
-export const FormTextInput = ({ icon, placeholder, ...props }) => {
-  return (
-    <Box w="100%">
-      <Input
-        InputLeftElement={
-          <Icon
-            as={<FontAwesome5 name={icon} />}
-            size="md"
-            m={2}
-            _light={{
-              color: unifi_c3,
-            }}
-            _dark={{
-              color: unifi_primary,
-            }}
-          />
-        }
-        placeholder={placeholder}
-        _light={{
-          placeholderTextColor: unifi_c3,
-          // bg: "#cccccc",
-          color: unifi_c4,
-        }}
-        _dark={{
-          placeholderTextColor: unifi_c7,
-          // bg: "#363636",
-          color: "#f89c33",
-        }}
-        {...props}
-      />
-    </Box>
-  );
-};
+    />
+  </Box>
+);
 
 export const ItemCards = ({
   title,

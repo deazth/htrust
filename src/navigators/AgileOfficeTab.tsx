@@ -5,13 +5,18 @@ import { Image, useColorModeValue } from "native-base";
 import AgileOfficeMain from "screens/agileOffice";
 import { AgileOfficeCLoc } from "screens/agileOffice/AgileOfficeCLoc";
 import { AgileOfficeScanQR } from "screens/agileOffice/AgileOfficeScanQR";
-import { AgileOfficeSeatAvail } from "screens/agileOffice/AgileOfficeSeatAvail";
+import { AgileOfficeWorkspaceReservation } from "screens/agileOffice/screens/AgileOfficeWorkspaceReservation";
+import { AgileOfficeWorkspaceReservationSearchResult } from "screens/agileOffice/screens/AgileOfficeWorkspaceReservationSearchResult";
 import { AgileOfficeScanResult } from "screens/agileOffice/AgileOfficeScanResult";
 import { AgileOfficeAreaBook } from "screens/agileOffice/AgileOfficeAreaBook";
 import { header_light, unifi_c1, unifi_c4, unifi_c7 } from "components/styles";
 
 const Stack = createNativeStackNavigator();
-
+export type AgileOfficeTabStackParamList = {
+  AgileOfficeMain: undefined;
+  AgileOfficeWorkspaceReservation: undefined;
+  AgileOfficeWorkspaceReservationSearchResult: {};
+};
 export function AgileOfficeTab() {
   const [assets] = useAssets([require("assets/logo-tm.png")]);
 
@@ -28,18 +33,19 @@ export function AgileOfficeTab() {
       shadowRadius: 4.65,
       elevation: 8,
     },
-    headerRight: () => (
-      <Image
-        source={assets?.[0]}
-        alt="logo"
-        style={{
-          resizeMode: "contain",
-          width: 50,
-          height: 20,
-          marginTop: -10,
-        }}
-      />
-    ),
+    headerRight: () =>
+      assets ? (
+        <Image
+          source={assets[0]}
+          alt="logo"
+          style={{
+            resizeMode: "contain",
+            width: 50,
+            height: 20,
+            marginTop: -10,
+          }}
+        />
+      ) : null,
   };
 
   return (
@@ -60,8 +66,13 @@ export function AgileOfficeTab() {
         options={{ title: "Check-In Workspace" }}
       />
       <Stack.Screen
-        name="AgileOfficeSeatAvail"
-        component={AgileOfficeSeatAvail}
+        name="AgileOfficeWorkspaceReservation"
+        component={AgileOfficeWorkspaceReservation}
+        options={{ title: "Workspace Reservation" }}
+      />
+      <Stack.Screen
+        name="AgileOfficeWorkspaceReservationSearchResult"
+        component={AgileOfficeWorkspaceReservationSearchResult}
         options={{ title: "Workspace Reservation" }}
       />
       <Stack.Screen
