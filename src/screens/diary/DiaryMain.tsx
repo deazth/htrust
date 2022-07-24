@@ -289,6 +289,20 @@ export const DiaryMain = ({ navigation }) => {
               setSelMonth(month.dateString);
               loadCalendar(month.dateString);
             }}
+            // dayComponent={({ date, state }) => {
+            //   return (
+            //     <View>
+            //       <Text
+            //         style={{
+            //           textAlign: "center",
+            //           color: state === "disabled" ? "gray" : "black",
+            //         }}
+            //       >
+            //         {date.day}
+            //       </Text>
+            //     </View>
+            //   );
+            // }}
             markingType={"period"}
             markedDates={markDates}
             onDayPress={(dateobj) => selectedDate(dateobj.dateString)}
