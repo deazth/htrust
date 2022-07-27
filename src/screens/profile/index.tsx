@@ -85,20 +85,24 @@ export const Profile = ({ navigation }) => {
         </View>
         <VStack space={2} style={{ ...styles.box, backgroundColor }}>
           <View style={styles.row}>
-            <Text style={{ color: highlightColor }}>Skillsets</Text>
+            <Text style={{ color: highlightColor, fontSize: 16 }}>
+              Skillsets
+            </Text>
             <RowIcon name="plus-circle" />
           </View>
           <View style={{ width: "100%", height: 1, backgroundColor: "#ddd" }} />
           {data.skillsets.map((s) => (
             <View style={styles.row}>
-              <Text>{s.name}</Text>
+              <Text style={{ fontSize: 14 }}>{s.name}</Text>
               <RowIcon name="edit" />
             </View>
           ))}
         </VStack>
         <VStack space={2} style={{ ...styles.box, backgroundColor }}>
           <View style={styles.row}>
-            <Text style={{ color: highlightColor }}>Direct Supervisor</Text>
+            <Text style={{ color: highlightColor, fontSize: 16 }}>
+              Direct Supervisor
+            </Text>
           </View>
           <Border />
           <HStack space={2}>
